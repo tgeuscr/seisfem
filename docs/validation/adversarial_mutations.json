@@ -1,0 +1,38 @@
+[
+  {
+    "mutation": "one_step_source_shift",
+    "suite": "baseline",
+    "returncode": 1,
+    "summary": "1 failed, 7 passed in 6.63s"
+  },
+  {
+    "mutation": "one_step_source_shift",
+    "suite": "audit",
+    "returncode": 1,
+    "summary": "1 failed in 0.36s"
+  },
+  {
+    "mutation": "force_sign",
+    "suite": "baseline",
+    "returncode": 1,
+    "summary": "2 failed in 2.37s"
+  },
+  {
+    "mutation": "force_sign",
+    "suite": "audit",
+    "returncode": 1,
+    "summary": "1 failed in 0.35s"
+  },
+  {
+    "mutation": "omit_mass_reverse_add",
+    "suite": "baseline",
+    "returncode": 1,
+    "summary": "2 failed in 1.83s"
+  },
+  {
+    "mutation": "omit_mass_reverse_add",
+    "suite": "audit",
+    "returncode": 1,
+    "summary": "1 failed in 0.79s"
+  }
+]

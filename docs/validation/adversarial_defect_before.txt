@@ -1,0 +1,28 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+__________ test_unrepresentable_derived_speed_rejected[1e+300-1e-300] __________
+
+density = 1e+300, modulus = 1e-300
+
+    @pytest.mark.parametrize("density,modulus", [(1e300, 1e-300), (1e-300, 1e300)])
+    def test_unrepresentable_derived_speed_rejected(density, modulus):
+>       with pytest.raises(ValidationError, match="speed"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValidationError
+
+tests/audit/test_independent_numerics.py:139: Failed
+__________ test_unrepresentable_derived_speed_rejected[1e-300-1e+300] __________
+
+density = 1e-300, modulus = 1e+300
+
+    @pytest.mark.parametrize("density,modulus", [(1e300, 1e-300), (1e-300, 1e300)])
+    def test_unrepresentable_derived_speed_rejected(density, modulus):
+>       with pytest.raises(ValidationError, match="speed"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValidationError
+
+tests/audit/test_independent_numerics.py:139: Failed
+=========================== short test summary info ============================
+FAILED tests/audit/test_independent_numerics.py::test_unrepresentable_derived_speed_rejected[1e+300-1e-300]
+FAILED tests/audit/test_independent_numerics.py::test_unrepresentable_derived_speed_rejected[1e-300-1e+300]
+2 failed, 39 deselected in 0.33s

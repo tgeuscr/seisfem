@@ -1,0 +1,31 @@
+{
+  "reflection": -0.2857142857142857,
+  "transmission": 0.7142857142857143,
+  "measurements": [
+    {
+      "receiver": "incident_reflected",
+      "phase": "direct",
+      "predicted_peak_s": 0.35,
+      "measured_peak_s": 0.35000000000000003,
+      "predicted_velocity_m_s": 1.0,
+      "measured_velocity_m_s": 1.0006030188928048
+    },
+    {
+      "receiver": "incident_reflected",
+      "phase": "reflected",
+      "predicted_peak_s": 0.9500000000000001,
+      "measured_peak_s": 0.9504,
+      "predicted_velocity_m_s": -0.2857142857142857,
+      "measured_velocity_m_s": -0.2860426649031512
+    },
+    {
+      "receiver": "transmitted",
+      "phase": "transmitted",
+      "predicted_peak_s": 0.85,
+      "measured_peak_s": 0.8500000000000001,
+      "predicted_velocity_m_s": 0.7142857142857143,
+      "measured_velocity_m_s": 0.7144269535091401
+    }
+  ],
+  "note": "Analytical curves omit finite-domain boundary returns."
+}

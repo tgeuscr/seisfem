@@ -1,0 +1,78 @@
+Command: python -m pytest -ra -s
+
+============================= test session starts ==============================
+platform linux -- Python 3.14.6, pytest-9.1.1, pluggy-1.6.0
+rootdir: /home/m/projects/seisfem
+configfile: pyproject.toml
+testpaths: tests
+plugins: anyio-4.15.1
+collected 98 items
+
+tests/analytical/test_operators_energy.py .discrete energy relative range 1.0454660554186524e-13
+.spatial errors/rates [np.float64(0.002268848917955533), np.float64(0.0005676682455455823), np.float64(0.00014194214267161068)] [1.9988406  1.99974505]
+.temporal errors/rates [np.float64(0.00017528238084871156), np.float64(4.3813227349838326e-05), np.float64(1.095284645617064e-05)] [2.00024259 2.00006064]
+.impedance energy residual, remaining fraction 1.740817689876548e-13 1.195155527200908e-06
+..
+tests/analytical/test_pulses.py P arrival error, relative amplitude error, waveform L2: (np.float64(0.00020000000000003348), np.float64(-0.0003768077503201184), np.float64(0.006606319976104965))
+P displacement relative waveform error 0.003807464719843233
+P acceleration relative waveform error 0.009819481707205827
+.S arrival error, relative amplitude error, waveform L2: (np.float64(1.1102230246251565e-16), np.float64(-0.0002109960344955919), np.float64(0.002892931747055474))
+S displacement relative waveform error 0.0016668615783683866
+S acceleration relative waveform error 0.004297573007683801
+.P layer arrival 0.34979999999999994 metrics (np.float64(5.551115123125783e-17), np.float64(-0.00036631848854240534), np.float64(0.004409221664355464))
+P layer arrival 0.9495 metrics (np.float64(0.000300000000000078), np.float64(0.00020139359551074598), np.float64(0.017626536071434266))
+P layer arrival 0.84975 metrics (np.float64(0.0002500000000000835), np.float64(-0.00045972153368356583), np.float64(0.012862338489176315))
+.S layer arrival 0.5495999999999999 metrics (np.float64(1.1102230246251565e-16), np.float64(-0.0002048130916256774), np.float64(0.0019339169572838055))
+S layer arrival 1.7489999999999999 metrics (np.float64(0.00020000000000020002), np.float64(-6.857722055131354e-05), np.float64(0.007695120707129524))
+S layer arrival 1.5495 metrics (np.float64(9.999999999998899e-05), np.float64(-0.00017866379372133423), np.float64(0.005463677200453319))
+.pulse refinement L2 [np.float64(0.108209834005539), np.float64(0.026534662536928492), np.float64(0.006606319976104965)]
+.free (np.float64(0.000400000000000178), np.float64(0.0001604208202286017), np.float64(0.019273723171052415))
+.fixed (np.float64(0.000400000000000178), np.float64(0.0007834328841878069), np.float64(0.01930409802015835))
+.absorbing residual reflection 0.0006230121903952902
+.
+tests/audit/test_distributed_io.py actual partitions 1 []
+.actual partitions 2 [0.0]
+.actual partitions 3 [-0.33333333333333337, 0.33333333333333326]
+.actual partitions 4 [-0.5, 0.0, 0.5]
+...
+tests/audit/test_independent_numerics.py ....................................physical/invariant energy ranges 0.08009018309558906 3.609413557253549e-15
+..dense temporal 12 2 [np.float64(3.861777934802996e-05), np.float64(9.65417197784423e-06), np.float64(2.413525822016174e-06), np.float64(6.033803113006475e-07)] [2.00004077 2.00001026 2.00000274]
+.dense temporal 18 3 [np.float64(7.714397665282035e-05), np.float64(1.928089227102844e-05), np.float64(4.819904281168169e-06), np.float64(1.204956181139962e-06)] [2.0003817  2.00009542 2.00002381]
+.independent spatial [np.float64(0.006857203218076052), np.float64(0.0017473256399465446), np.float64(0.0004389211322266274), np.float64(0.00010986120063441103)] [1.97247178 1.99311486 1.99827977]
+..sufficient vs true fixed one-mode limits 0.5 0.7071067811865475
+.damped oscillator [np.float64(6.050611970608022e-05), np.float64(1.5123968300473356e-05), np.float64(3.780832024402603e-06), np.float64(9.451979818969614e-07)] [2.00024434 2.00006107 2.0000153 ]
+.
+tests/audit/test_independent_waves.py independent interface P False R/T -0.45194734791373714 0.5480526520862626 L2 [np.float64(0.0005266320707842401), np.float64(0.0029433233917101503), np.float64(0.0019564022825250198)]
+.independent interface S False R/T -0.4041442142103216 0.5958557857896783 L2 [np.float64(0.001060105310819623), np.float64(0.005981500411717143), np.float64(0.00417808307536033)]
+.independent interface P True R/T 0.45194734791373736 1.4519473479137373 L2 [np.float64(0.00010110202288549903), np.float64(0.0005426139423692859), np.float64(0.0015339402751969279)]
+.independent interface S True R/T 0.40414421421032154 1.4041442142103218 L2 [np.float64(0.000286291521485026), np.float64(0.001600327958686676), np.float64(0.003407477998355389)]
+...near-equal impedance R, reflected absolute error / incident -4.999750012503146e-05 5.738862917629104e-06
+.source fractions 1000 [np.float64(0.01735017004782224), np.float64(0.017350170029537624), np.float64(0.017285367749698143), np.float64(0.01735017004589677)]
+.source fractions 2000 [np.float64(0.004285072535028418), np.float64(0.0042850725318561884), np.float64(0.004289098222126208), np.float64(0.004285072534369094)]
+.source fractions 4000 [np.float64(0.0010397956408898456), np.float64(0.0010397956405047092), np.float64(0.0010450452344668002), np.float64(0.0010397956407335474)]
+.absorber sweep P 6 0.2 [np.float64(0.0010265174534493586), np.float64(0.00025603737419619744), np.float64(6.396894135347122e-05)]
+.absorber sweep P 12 0.6 [np.float64(0.0027365463205892633), np.float64(0.0006837364155483658), np.float64(0.00017067409577320824)]
+.absorber sweep S 6 0.6 [np.float64(0.0027365463205892633), np.float64(0.0006837364155483658), np.float64(0.00017067409577320824)]
+.absorber sweep S 12 0.2 [np.float64(0.013755125546869753), np.float64(0.0038549865453929417), np.float64(0.0010215737260497522)]
+.fixed-h absorber dt sweep [np.float64(0.0010255171891055714), np.float64(0.0006837364155503098), np.float64(0.0002963056827743353)]
+.
+tests/integration/test_frontends_mpi.py .....
+tests/unit/test_config_sources.py ..............
+
+======================== 98 passed in 93.72s (0:01:33) =========================
+
+Final readback assertion strengthening:
+Command: python -m pytest tests/audit/test_distributed_io.py -q -s
+actual partitions 1 []
+.actual partitions 2 [0.0]
+.actual partitions 3 [-0.33333333333333337, 0.33333333333333326]
+.actual partitions 4 [-0.5, 0.0, 0.5]
+...
+6 passed in 5.15s
+
+Command: python -m ruff check src tests examples
+All checks passed!
+Command: python -m ruff format --check src tests examples
+23 files already formatted
+Command: git diff --check
+Passed (no output).
