@@ -1,0 +1,22 @@
+name: seisfem
+channels:
+  - conda-forge
+  - nodefaults
+dependencies:
+  - python=3.14
+  - fenics-dolfinx=0.11.0
+  - fenics-basix=0.11.0
+  - petsc=3.25.5=real_*
+  - petsc4py=3.25.5
+  - mpich=5.0.1
+  - mpi4py
+  - numpy
+  - pydantic>=2.10,<3
+  - pyyaml
+  - typer
+  - pytest
+  - ruff
+  - pre-commit
+  - pip
+  - pip:
+      - -e .[cli,dev]

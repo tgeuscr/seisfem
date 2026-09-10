@@ -1,0 +1,32 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "seisfem"
+version = "0.1.0"
+description = "Verified finite-element reductions of seismic elastodynamics"
+requires-python = ">=3.11"
+dependencies = ["numpy>=2", "pydantic>=2.10,<3", "PyYAML>=6"]
+
+[project.optional-dependencies]
+cli = ["typer>=0.16,<1"]
+notebook = ["jupyterlab>=4", "xarray>=2025.1", "matplotlib>=3.9"]
+gui = ["PySide6>=6.8"]
+viz = ["matplotlib>=3.9", "xarray>=2025.1"]
+dev = ["pytest>=8", "ruff>=0.12", "pre-commit>=4"]
+
+[project.scripts]
+seisfem = "seisfem.cli:app"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+markers = ["mpi: subprocess MPI verification", "analytical: numerical analytical verification"]

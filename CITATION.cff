@@ -1,0 +1,6 @@
+cff-version: 1.2.0
+message: "Citation metadata is provisional; add project authors before publication."
+title: "seisfem: verified finite-element seismic elastodynamics"
+type: software
+version: 0.1.0
+abstract: "A verified 1D P/S elastic-wave laboratory using DOLFINx 0.11."

@@ -1,0 +1,32 @@
+# Positive-up z. Incident wave travels toward increasing z.
+schema_version: 1
+mode: P
+domain: {lower: 0, upper: 4000}
+mesh: {cells: 2000}
+fem: {family: Lagrange, degree: 1}
+materials:
+  type: layered
+  layers:
+    - lower: 0
+      upper: 2000
+      material: {density: 2000, vp: 2000, vs: 1000}
+    - lower: 2000
+      upper: 4000
+      material: {density: 2400, vp: 3000, vs: 1500}
+time: {dt: 0.0004, duration: 1.4}
+source:
+  type: point_force
+  position: 1000
+  amplitude: 8000000
+  frequency: 10
+  time_shift: 0.15
+  f_max: 30
+receivers:
+  - {name: incident_reflected, position: 1400}
+  - {name: transmitted, position: 2600}
+boundaries: {lower: absorbing, upper: absorbing}
+output:
+  directory: outputs/layered
+  receiver_stride: 1
+  snapshot_stride: 250
+  energy_stride: 25
