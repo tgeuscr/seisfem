@@ -27,6 +27,11 @@ Git commit; it is recorded as null, not fabricated. The source digest identifies
 code but cannot replace archiving that code. Archive the checkout, locks, config
 and result directory together for a scientific record.
 
+When Git is unavailable, `git_commit` is null and the current metadata reports
+`git_dirty: false`; that false value is not evidence of a clean checkout. Interpret
+the dirty flag only when Git identity is available. A detached HEAD still records
+its commit normally. The Python source digest does not cover dependency binaries.
+
 No initial-condition files, imported meshes or external material assets are used
 in this milestone. A complete config therefore specifies all model inputs. Source
 code updates and changed dependency builds can still change numerical results.

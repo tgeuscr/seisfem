@@ -5,6 +5,12 @@ The [measured report](results.md) specifies evidence and resolutions. Verificati
 means agreement with mathematical reference problems; no field-data validation
 or claim of geological predictive accuracy is made.
 
+This is the original milestone review. The subsequent
+[adversarial audit](adversarial_audit.md) supplies independent matrix/spectral,
+interface, source-timing, partition-ownership and full field-value readback
+evidence, with its own findings and remaining limits. In particular, its readback
+tests supersede the field-value gap listed below; other unverified regimes remain.
+
 ## Implemented
 
 A single DOLFINx 0.11 backend runs homogeneous/layered 1D P or S from immutable
@@ -119,7 +125,7 @@ Do not add GUI widgets, generic factories or inheritance solely for future featu
    length explicitly. Gate: test-space action, partition of unity/linear moments,
    source/receiver points at vertices/facets/rank boundaries; serial versus 2/4
    ranks for all components. Extend the planar 1D invariant subspace across a
-   rectangular strip and compare with the validated 1D P and S solutions.
+   rectangular strip and compare with the verified 1D P and S solutions.
 5. Verify homogeneous radiation before adding absorbers: force orientations
    along each axis, P/S arrival slopes within 1% on a converged mesh, symmetry
    errors decreasing with h, longitudinal/transverse projections and angular
@@ -143,5 +149,5 @@ Do not add GUI widgets, generic factories or inheritance solely for future featu
    ownership, bounded memory per rank and reproducible manifests on every frontend.
 
 Only after these gates should the 3D path reuse the vector formulation and
-validated element-specific algorithms. New tetrahedral/hexahedral discretizations
+verified element-specific algorithms. New tetrahedral/hexahedral discretizations
 will need their own mass, dispersion, boundary and scaling evidence.

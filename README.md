@@ -85,6 +85,10 @@ completion; this is a documented scale limit.
 [Measured verification](docs/validation/results.md) ·
 [Critical review and 2D gates](docs/validation/scientific_review.md)
 
+The [independent adversarial audit](docs/validation/adversarial_audit.md) records
+the baseline, claim-to-evidence matrix, additional counterexamples, demonstrated
+validation correction, and limits of the 1D trust assessment.
+
 ![Layered velocity seismograms](docs/validation/layered_seismograms.svg)
 
 ## Develop and verify

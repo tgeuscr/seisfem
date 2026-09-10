@@ -1,6 +1,9 @@
 # Verification gates
 
-All solver tests use DOLFINx. Analytical tests precede regression fixtures.
+FE solver tests use DOLFINx; independent small-ODE tests also exercise the
+integrator directly. Analytical tests precede regression fixtures. The
+[adversarial audit](adversarial_audit.md) maps claims to specific executable tests
+and distinguishes identity checks from independent physical references.
 
 1. Ricker symmetry, peak, roots; material conversion and stable-solid constraints;
    config round-trip and rejection of unsupported, misaligned and unstable cases.

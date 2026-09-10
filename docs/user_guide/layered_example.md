@@ -27,3 +27,10 @@ For S propagation change `mode` to S and use a finer mesh/longer duration. The
 automated S interface test uses 8000 cells, dt=0.0002 s and duration=2.2 s to resolve
 the shorter wavelength and later arrivals; merely changing the mode in this
 example is not an accuracy guarantee.
+
+The analysis script is scoped to this example: its peak windows are fixed at
+±0.07 s and its reference imports the package's wavelet and material conversion.
+It is a diagnostic plot, not an independent verification gate. Use only a
+completed run with every receiver ID present exactly once; the script itself
+does not enforce completion or reject duplicate IDs. Different frequencies,
+receiver geometry or overlapping arrivals require a new window analysis.

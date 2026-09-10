@@ -1,0 +1,370 @@
+
+adversarial_mutation_force_sign_audit.txt
+F                                                                        [100%]
+=================================== FAILURES ===================================
+___________ test_public_source_timing_all_quantities_and_final_state ___________
+
+    def test_public_source_timing_all_quantities_and_final_state():
+        # Two unit cells, rho=3, cP=2: the only free DOF has D=3 and K=24.
+        data = config(cells=2, densities=(3, 3), speeds=(2, 2), boundary=("fixed", "fixed")).model_dump(
+            mode="json", by_alias=True
+        )
+        data.update(
+            time=dict(dt=0.02, duration=0.2),
+            source=dict(position=0, amplitude=-7, frequency=3, time_shift=0),
+            receivers=[
+                dict(name="left", position=-1),
+                dict(name="center", position=0),
+                dict(name="quarter", position=0.25),
+                dict(name="right", position=1),
+            ],
+        )
+        result = Simulation(SimulationConfig.model_validate(data), comm=MPI.COMM_SELF).run()
+        dt = 0.02
+        phase = np.pi * 3 * result.time
+        force = -7 * (1 - 2 * phase**2) * np.exp(-(phase**2))
+        q = result.displacement[:, 1, 0]
+        v = result.velocity[:, 1, 0]
+        a = result.acceleration[:, 1, 0]
+        assert q[0] == 0 and abs(v[0]) < 1e-15
+>       assert a[0] == pytest.approx(-7 / 3, abs=1e-14)
+E       assert np.float64(2.333333333333333) == -2.3333333333333335 ± 1.0e-14
+E         
+E         comparison failed
+E         Obtained: 2.333333333333333
+E         Expected: -2.3333333333333335 ± 1.0e-14
+
+tests/audit/test_independent_numerics.py:383: AssertionError
+------------------------------ Captured log call -------------------------------
+WARNING  seisfem.simulation:simulation.py:80 Fewer than 12 elements/minimum wavelength; test dispersion
+WARNING  seisfem.simulation:simulation.py:80 Ricker startup tail is appreciable; consider time_shift >= 1.5/f0
+=========================== short test summary info ============================
+FAILED tests/audit/test_independent_numerics.py::test_public_source_timing_all_quantities_and_final_state
+1 failed in 0.35s
+
+adversarial_mutation_force_sign_baseline.txt
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+_________________ test_homogeneous_speed_and_amplitude[P-2000] _________________
+
+mode = 'P', c = 2000
+
+    @pytest.mark.parametrize("mode,c", [("P", 2000), ("S", 1000)])
+    def test_homogeneous_speed_and_amplitude(mode, c):
+        cfg = pulse_config(
+            mode,
+            cells=2000 if mode == "P" else 8000,
+            time=dict(dt=0.0002, duration=1.4),
+            receivers=[dict(name="r", position=1600.3)],
+        )
+        result = Simulation(cfg).run()
+        arrival = 0.15 + (1600.3 - 1000.7) / c
+        metrics = pulse_metrics(result, 0, arrival, 8e6 / (2 * 2000 * c))
+        print(mode, "arrival error, relative amplitude error, waveform L2:", metrics)
+        # 2 ms bounds subcell sampling plus resolved P1 phase error (>=16 cells/lambda).
+>       assert abs(metrics[0]) < 0.002
+E       assert np.float64(0.039000000000000035) < 0.002
+E        +  where np.float64(0.039000000000000035) = abs(np.float64(0.039000000000000035))
+
+tests/analytical/test_pulses.py:38: AssertionError
+----------------------------- Captured stdout call -----------------------------
+P arrival error, relative amplitude error, waveform L2: (np.float64(0.039000000000000035), np.float64(-0.5514424045428897), np.float64(1.9997043208867091))
+_________________ test_homogeneous_speed_and_amplitude[S-1000] _________________
+
+mode = 'S', c = 1000
+
+    @pytest.mark.parametrize("mode,c", [("P", 2000), ("S", 1000)])
+    def test_homogeneous_speed_and_amplitude(mode, c):
+        cfg = pulse_config(
+            mode,
+            cells=2000 if mode == "P" else 8000,
+            time=dict(dt=0.0002, duration=1.4),
+            receivers=[dict(name="r", position=1600.3)],
+        )
+        result = Simulation(cfg).run()
+        arrival = 0.15 + (1600.3 - 1000.7) / c
+        metrics = pulse_metrics(result, 0, arrival, 8e6 / (2 * 2000 * c))
+        print(mode, "arrival error, relative amplitude error, waveform L2:", metrics)
+        # 2 ms bounds subcell sampling plus resolved P1 phase error (>=16 cells/lambda).
+>       assert abs(metrics[0]) < 0.002
+E       assert np.float64(0.039000000000000146) < 0.002
+E        +  where np.float64(0.039000000000000146) = abs(np.float64(0.039000000000000146))
+
+tests/analytical/test_pulses.py:38: AssertionError
+----------------------------- Captured stdout call -----------------------------
+S arrival error, relative amplitude error, waveform L2: (np.float64(0.039000000000000146), np.float64(-0.5527595942343465), np.float64(1.9998306968321848))
+=========================== short test summary info ============================
+FAILED tests/analytical/test_pulses.py::test_homogeneous_speed_and_amplitude[P-2000]
+FAILED tests/analytical/test_pulses.py::test_homogeneous_speed_and_amplitude[S-1000]
+2 failed in 2.37s
+
+adversarial_mutation_omit_mass_reverse_add_audit.txt
+F                                                                        [100%]
+=================================== FAILURES ===================================
+______________ test_actual_partition_edges_and_field_readback[2] _______________
+
+tmp_path = PosixPath('/tmp/pytest-of-m/pytest-9/test_actual_partition_edges_an0')
+ranks = 2
+
+    @pytest.mark.mpi
+    @pytest.mark.parametrize("ranks", [1, 2, 3, 4])
+    def test_actual_partition_edges_and_field_readback(tmp_path, ranks):
+        assert shutil.which("h5dump"), "Locked HDF5 reader is required for independent value readback"
+        directory = tmp_path / "distributed"
+        result = subprocess.run(
+            [
+                "mpiexec",
+                "-n",
+                str(ranks),
+                sys.executable,
+                "-m",
+                "tests.audit.mpi_probe",
+                str(directory),
+            ],
+            capture_output=True,
+            text=True,
+            timeout=60,
+            env={**os.environ, "OMP_NUM_THREADS": "1", "OPENBLAS_NUM_THREADS": "1"},
+        )
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: Traceback (most recent call last):
+E           File "/home/m/projects/seisfem/tests/audit/mpi_probe.py", line 122, in <module>
+E             main()
+E             ~~~~^^
+E           File "/home/m/projects/seisfem/tests/audit/mpi_probe.py", line 41, in main
+E             np.testing.assert_allclose(op.mass, expected_m[node_ids], rtol=3e-14)
+E             ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "/home/m/packages/anaconda3/envs/fenicsx0.11/lib/python3.14/site-packages/numpy/testing/_private/utils.py", line 1780, in assert_allclose
+E             assert_array_compare(compare, actual, desired, err_msg=str(err_msg),
+E             ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E                                  verbose=verbose, header=header, equal_nan=equal_nan,
+E                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E                                  strict=strict)
+E                                  ^^^^^^^^^^^^^^
+E           File "/home/m/packages/anaconda3/envs/fenicsx0.11/lib/python3.14/site-packages/numpy/testing/_private/utils.py", line 988, in assert_array_compare
+E             raise AssertionError(msg)
+E         AssertionError: 
+E         Not equal to tolerance rtol=3e-14, atol=0
+E         
+E         Mismatched elements: 1 / 7 (14.3%)
+E         Mismatch at index:
+E          [0]: 0.39166666666666633 (ACTUAL), 0.5 (DESIRED)
+E         Max absolute difference among violations: 0.10833333
+E         Max relative difference among violations: 0.21666667
+E          ACTUAL: array([0.391667, 0.783333, 0.783333, 0.783333, 0.783333, 0.783333,
+E                0.391667])
+E          DESIRED: array([0.5     , 0.783333, 0.783333, 0.783333, 0.783333, 0.783333,
+E                0.391667])
+E         Abort(1) on node 1 (rank 1 in comm 0): application called MPI_Abort(MPI_COMM_WORLD, 1) - process 1
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['mpiexec', '-n', '2', '/home/m/packages/anaconda3/envs/fenicsx0.11/bin/python', '-m', 'tests.au...     0.391667])\nAbort(1) on node 1 (rank 1 in comm 0): application called MPI_Abort(MPI_COMM_WORLD, 1) - process 1\n').returncode
+
+tests/audit/test_distributed_io.py:110: AssertionError
+=========================== short test summary info ============================
+FAILED tests/audit/test_distributed_io.py::test_actual_partition_edges_and_field_readback[2]
+1 failed in 0.79s
+
+adversarial_mutation_omit_mass_reverse_add_baseline.txt
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+____________ test_mpi_matches_serial_and_single_source_insertion[2] ____________
+
+tmp_path = PosixPath('/tmp/pytest-of-m/pytest-8/test_mpi_matches_serial_and_si0')
+ranks = 2
+
+    @pytest.mark.mpi
+    @pytest.mark.parametrize("ranks", [2, 4])
+    def test_mpi_matches_serial_and_single_source_insertion(tmp_path, ranks):
+        # All these points lie on vertices, including interface/partition candidates.
+        # Fewer receivers than ranks ensures empty shards in the 4-rank run.
+        data = pulse_config(
+            cells=400,
+            layered=True,
+            source=dict(position=2000, amplitude=8e6, frequency=10, time_shift=0.15),
+            receivers=[dict(name="interface", position=2000), dict(name="left", position=1000)],
+            time=dict(dt=0.001, duration=0.8),
+            output=dict(directory=str(tmp_path / "mpi"), snapshot_stride=200, energy_stride=50),
+        ).model_dump(mode="json", by_alias=True)
+        cfg = SimulationConfig.model_validate(data)
+        yaml_path = tmp_path / "mpi.yaml"
+        cfg.to_yaml(yaml_path)
+        env = {**os.environ, "OMP_NUM_THREADS": "1", "OPENBLAS_NUM_THREADS": "1"}
+        command = ["mpiexec", "-n", str(ranks), sys.executable, "-m", "seisfem", "run", str(yaml_path)]
+        completed = subprocess.run(command, capture_output=True, text=True, env=env, timeout=90)
+        assert completed.returncode == 0, completed.stdout + completed.stderr
+        data["output"] = dict(energy_stride=50)
+        serial = Simulation(SimulationConfig.model_validate(data)).run()
+        count = np.zeros(2, dtype=int)
+        for rank in range(ranks):
+            with np.load(tmp_path / "mpi" / f"receivers.rank{rank:05d}.npz") as shard:
+                ids = shard["receiver_ids"]
+                count[ids] += 1
+                for quantity in ("displacement", "velocity", "acceleration"):
+                    # Roundoff accumulates differently across MPI partitions. Acceleration
+                    # involves dt^-2 cancellation, so use a scale-relative absolute bound.
+                    reference = getattr(serial, quantity)[:, ids, :]
+                    scale = max(np.max(abs(reference), initial=0), 1)
+>                   np.testing.assert_allclose(
+                        shard[quantity], reference, rtol=2e-10, atol=2e-10 * scale
+                    )
+E                   AssertionError: 
+E                   Not equal to tolerance rtol=2e-10, atol=2e-10
+E                   
+E                   Mismatched elements: 316 / 801 (39.5%)
+E                   First 5 mismatches are at indices:
+E                    [41, 0, 0]: -5.819296409488628e-07 (ACTUAL), -5.817270817940444e-07 (DESIRED)
+E                    [42, 0, 0]: -7.153989534317366e-07 (ACTUAL), -7.15138982709459e-07 (DESIRED)
+E                    [43, 0, 0]: -8.776617569478408e-07 (ACTUAL), -8.773288293527736e-07 (DESIRED)
+E                    [44, 0, 0]: -1.074500382031832e-06 (ACTUAL), -1.0740748539585164e-06 (DESIRED)
+E                    [45, 0, 0]: -1.3127616737426808e-06 (ACTUAL), -1.3122187796632668e-06 (DESIRED)
+E                   Max absolute difference among violations: 0.00064261
+E                   Max relative difference among violations: 7485796.98996836
+E                    ACTUAL: array([[[ 0.000000e+00]],
+E                   
+E                          [[-1.790817e-12]],...
+E                    DESIRED: array([[[ 0.000000e+00]],
+E                   
+E                          [[-1.790817e-12]],...
+
+tests/integration/test_frontends_mpi.py:109: AssertionError
+------------------------------ Captured log call -------------------------------
+WARNING  seisfem.simulation:simulation.py:80 Fewer than 12 elements/minimum wavelength; test dispersion
+____________ test_mpi_matches_serial_and_single_source_insertion[4] ____________
+
+tmp_path = PosixPath('/tmp/pytest-of-m/pytest-8/test_mpi_matches_serial_and_si1')
+ranks = 4
+
+    @pytest.mark.mpi
+    @pytest.mark.parametrize("ranks", [2, 4])
+    def test_mpi_matches_serial_and_single_source_insertion(tmp_path, ranks):
+        # All these points lie on vertices, including interface/partition candidates.
+        # Fewer receivers than ranks ensures empty shards in the 4-rank run.
+        data = pulse_config(
+            cells=400,
+            layered=True,
+            source=dict(position=2000, amplitude=8e6, frequency=10, time_shift=0.15),
+            receivers=[dict(name="interface", position=2000), dict(name="left", position=1000)],
+            time=dict(dt=0.001, duration=0.8),
+            output=dict(directory=str(tmp_path / "mpi"), snapshot_stride=200, energy_stride=50),
+        ).model_dump(mode="json", by_alias=True)
+        cfg = SimulationConfig.model_validate(data)
+        yaml_path = tmp_path / "mpi.yaml"
+        cfg.to_yaml(yaml_path)
+        env = {**os.environ, "OMP_NUM_THREADS": "1", "OPENBLAS_NUM_THREADS": "1"}
+        command = ["mpiexec", "-n", str(ranks), sys.executable, "-m", "seisfem", "run", str(yaml_path)]
+        completed = subprocess.run(command, capture_output=True, text=True, env=env, timeout=90)
+        assert completed.returncode == 0, completed.stdout + completed.stderr
+        data["output"] = dict(energy_stride=50)
+        serial = Simulation(SimulationConfig.model_validate(data)).run()
+        count = np.zeros(2, dtype=int)
+        for rank in range(ranks):
+            with np.load(tmp_path / "mpi" / f"receivers.rank{rank:05d}.npz") as shard:
+                ids = shard["receiver_ids"]
+                count[ids] += 1
+                for quantity in ("displacement", "velocity", "acceleration"):
+                    # Roundoff accumulates differently across MPI partitions. Acceleration
+                    # involves dt^-2 cancellation, so use a scale-relative absolute bound.
+                    reference = getattr(serial, quantity)[:, ids, :]
+                    scale = max(np.max(abs(reference), initial=0), 1)
+                    np.testing.assert_allclose(
+                        shard[quantity], reference, rtol=2e-10, atol=2e-10 * scale
+                    )
+>               np.testing.assert_allclose(shard["energy"], serial.energy, rtol=1e-11, atol=1e-12)
+E               AssertionError: 
+E               Not equal to tolerance rtol=1e-11, atol=1e-12
+E               
+E               Mismatched elements: 15 / 16 (93.8%)
+E               First 5 mismatches are at indices:
+E                [1]: 0.01670727316610492 (ACTUAL), 0.01662755249865798 (DESIRED)
+E                [2]: 5097.755062442303 (ACTUAL), 5007.065041325426 (DESIRED)
+E                [3]: 92828.83647077781 (ACTUAL), 89190.50451991081 (DESIRED)
+E                [4]: 177415.72340854013 (ACTUAL), 168231.2860233783 (DESIRED)
+E                [5]: 181789.87443921395 (ACTUAL), 172600.8537148158 (DESIRED)
+E               Max absolute difference among violations: 9189.0207244
+E               Max relative difference among violations: 0.05459411
+E                ACTUAL: array([3.527727e-14, 1.670727e-02, 5.097755e+03, 9.282884e+04,
+E                      1.774157e+05, 1.817899e+05, 1.817898e+05, 1.817898e+05,
+E                      1.817898e+05, 1.817898e+05, 1.817898e+05, 1.817898e+05,
+E                      1.817898e+05, 1.817898e+05, 1.817898e+05, 1.815367e+05])
+E                DESIRED: array([3.527727e-14, 1.662755e-02, 5.007065e+03, 8.919050e+04,
+E                      1.682313e+05, 1.726009e+05, 1.726009e+05, 1.726009e+05,
+E                      1.726009e+05, 1.726009e+05, 1.726009e+05, 1.726009e+05,
+E                      1.726009e+05, 1.726009e+05, 1.726009e+05, 1.723908e+05])
+
+tests/integration/test_frontends_mpi.py:112: AssertionError
+------------------------------ Captured log call -------------------------------
+WARNING  seisfem.simulation:simulation.py:80 Fewer than 12 elements/minimum wavelength; test dispersion
+=========================== short test summary info ============================
+FAILED tests/integration/test_frontends_mpi.py::test_mpi_matches_serial_and_single_source_insertion[2]
+FAILED tests/integration/test_frontends_mpi.py::test_mpi_matches_serial_and_single_source_insertion[4]
+2 failed in 1.83s
+
+adversarial_mutation_one_step_source_shift_audit.txt
+F                                                                        [100%]
+=================================== FAILURES ===================================
+___________ test_public_source_timing_all_quantities_and_final_state ___________
+
+    def test_public_source_timing_all_quantities_and_final_state():
+        # Two unit cells, rho=3, cP=2: the only free DOF has D=3 and K=24.
+        data = config(cells=2, densities=(3, 3), speeds=(2, 2), boundary=("fixed", "fixed")).model_dump(
+            mode="json", by_alias=True
+        )
+        data.update(
+            time=dict(dt=0.02, duration=0.2),
+            source=dict(position=0, amplitude=-7, frequency=3, time_shift=0),
+            receivers=[
+                dict(name="left", position=-1),
+                dict(name="center", position=0),
+                dict(name="quarter", position=0.25),
+                dict(name="right", position=1),
+            ],
+        )
+        result = Simulation(SimulationConfig.model_validate(data), comm=MPI.COMM_SELF).run()
+        dt = 0.02
+        phase = np.pi * 3 * result.time
+        force = -7 * (1 - 2 * phase**2) * np.exp(-(phase**2))
+        q = result.displacement[:, 1, 0]
+        v = result.velocity[:, 1, 0]
+        a = result.acceleration[:, 1, 0]
+>       assert q[0] == 0 and abs(v[0]) < 1e-15
+E       assert (np.float64(0.0) == 0 and np.float64(0.0024147062527600906) < 1e-15)
+E        +  where np.float64(0.0024147062527600906) = abs(np.float64(0.0024147062527600906))
+
+tests/audit/test_independent_numerics.py:382: AssertionError
+------------------------------ Captured log call -------------------------------
+WARNING  seisfem.simulation:simulation.py:80 Fewer than 12 elements/minimum wavelength; test dispersion
+WARNING  seisfem.simulation:simulation.py:80 Ricker startup tail is appreciable; consider time_shift >= 1.5/f0
+=========================== short test summary info ============================
+FAILED tests/audit/test_independent_numerics.py::test_public_source_timing_all_quantities_and_final_state
+1 failed in 0.36s
+
+adversarial_mutation_one_step_source_shift_baseline.txt
+....F...                                                                 [100%]
+=================================== FAILURES ===================================
+_____________________ test_source_and_waveform_refinement ______________________
+
+    def test_source_and_waveform_refinement():
+        errors = []
+        for cells in (500, 1000, 2000):
+            cfg = pulse_config(
+                cells=cells,
+                receivers=[dict(name="r", position=1600.3)],
+                time=dict(dt=0.2 * (4000 / cells) / 2000, duration=0.8),
+            )
+            result = Simulation(cfg).run()
+            errors.append(pulse_metrics(result, 0, 0.15 + (1600.3 - 1000.7) / 2000, 1)[2])
+        print("pulse refinement L2", errors)
+        # Point forcing is singular: require improvement, not smooth-field asymptotics.
+        assert errors[1] < 0.5 * errors[0]
+>       assert errors[2] < 0.5 * errors[1]
+E       assert np.float64(0.008724566489690036) < (0.5 * np.float64(0.013056253729189797))
+
+tests/analytical/test_pulses.py:93: AssertionError
+----------------------------- Captured stdout call -----------------------------
+pulse refinement L2 [np.float64(0.06427107247046336), np.float64(0.013056253729189797), np.float64(0.008724566489690036)]
+------------------------------ Captured log call -------------------------------
+WARNING  seisfem.simulation:simulation.py:80 Fewer than 12 elements/minimum wavelength; test dispersion
+=========================== short test summary info ============================
+FAILED tests/analytical/test_pulses.py::test_source_and_waveform_refinement
+1 failed, 7 passed in 6.63s

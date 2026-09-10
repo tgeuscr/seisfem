@@ -56,6 +56,11 @@ class Isotropic(Config):
             raise ValueError("Derived elastic moduli must be finite")
         if mu <= 0 or lam + 2 * mu / 3 <= 0:
             raise ValueError("A stable 3D solid requires mu>0 and lambda+2mu/3>0")
+        if not all(
+            math.isfinite(squared_speed) and squared_speed > 0
+            for squared_speed in (mu / self.density, (lam + 2 * mu) / self.density)
+        ):
+            raise ValueError("Derived squared wave speeds must be finite and positive")
         return self
 
     @property

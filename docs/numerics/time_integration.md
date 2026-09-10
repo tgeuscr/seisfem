@@ -52,6 +52,12 @@ omega_h=(2c/h)sin(kappa h/2); central differences give
 sin(omega_num dt/2)=(c dt/h)sin(kappa h/2). These expose separate spatial and
 temporal dispersion. Numerical anisotropy requires multidimensional tests.
 
+The impedance endpoint is exact for the continuous outgoing 1D wave, but its
+discrete reflected amplitude depends on both h and dt. Reducing dt at fixed h
+need not reduce that reflection: spatial and temporal dispersion can partly
+cancel. The [adversarial audit](../validation/adversarial_audit.md) measures both
+mesh refinement and a separate fixed-mesh timestep sweep.
+
 Convergence tests use standing waves and exact semidiscrete frequencies to
 isolate errors. No smooth-solution convergence claim applies at a point source.
 References: Hughes (2000), transient dynamics; Hairer, Lubich & Wanner (2006),

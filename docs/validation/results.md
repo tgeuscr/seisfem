@@ -1,5 +1,9 @@
 # Measured verification: 2026-09-10
 
+This report preserves the original milestone measurements. See the subsequent
+[adversarial audit](adversarial_audit.md) for the independent review, additional
+tests, correction and current trust assessment.
+
 **33 tests passed**, including serial/2-rank/4-rank execution, in a separately
 recreated **headless** environment from the repository lock files
 `environments/linux-64.explicit.txt` and `environments/pip-lock.txt`. The first
