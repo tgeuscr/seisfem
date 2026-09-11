@@ -57,9 +57,14 @@ def test_manufactured_spatial_convergence(diagonal):
                 for i in range(round(2 * final / dt)):
                     nxt, _, _, _ = half.evaluate(load * time_factor(i * dt / 2))
                     half.advance(nxt)
-                temporal_change = np.sqrt(np.dot(op.mass, (half.current - step.current) ** 2))
+                # Compare like norms: integrate the FE difference, without a density weight.
+                op.field.x.array[: op.n] = half.current - step.current
+                op.field.x.scatter_forward()
+                temporal_change = np.sqrt(
+                    fem.assemble_scalar(fem.form(ufl.inner(op.field, op.field) * ufl.dx))
+                )
                 assert temporal_change < 0.001 * measurements[-1][0]
-                print("spatial temporal-contamination check", diagonal, temporal_change)
+                print("spatial temporal-contamination L2 check", diagonal, temporal_change)
     values = np.array(measurements)
     rates = np.log2(values[:-1] / values[1:])
     print("MMS spatial", diagonal, "L2/H1 errors", values.tolist(), "rates", rates.tolist())
