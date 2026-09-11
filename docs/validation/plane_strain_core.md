@@ -4,12 +4,12 @@ Date: 2026-09-11. Branch: `feature/2d-plane-strain-core`.
 Base: `main` / `v0.1.1`, commit
 `43f3dd70c1875a7dafe37910fc98e7c490e9b5dd`. The baseline branch/tag are preserved.
 This is a **verified 2D vector-elastic numerical foundation**, not a complete
-2D seismic Simulation/CLI workflow. It is ready for a second independent audit.
+2D seismic Simulation/CLI workflow. The independent review at `7cb5e4e` is complete; this corrective pass awaits final audit.
 
 ## Baseline and implementation
 
 The original suite passed **98 tests in 87.81 s** before implementation:
-[baseline output](plane_strain_baseline.txt). The new dedicated suite passed
+[baseline output](plane_strain_baseline.txt). The pre-review dedicated suite passed
 **57 tests in 98.35 s**: [numerical measurements](plane_strain_test_run.txt).
 The final combined run and code checks are recorded below.
 
@@ -40,7 +40,7 @@ performance refactor, adaptive mesh, local stepping, higher order or 3D was adde
 The pre-existing user `.gitignore` edit and untracked `scripts/` remain excluded
 from milestone commits.
 
-## Files and verification coverage
+## Original implementation files and verification coverage
 
 | Files added/modified | Purpose and independent evidence |
 |---|---|
@@ -71,7 +71,7 @@ three. A translated nonsquare rectangle separately checks coordinate extents,
 triangle count, mass/area and affine energy. These checks do not certify arbitrary
 imported, curved or highly skewed mesh families.
 
-## Measured spatial convergence
+## Original t=.31 spatial measurements (retained for comparison)
 
 Material: rho=2.3, lambda=1.7, mu=1.2. Unit square with homogeneous fixed displacement
 on every side. Both components of the smooth manufactured solution are nonzero;
@@ -99,11 +99,11 @@ All raw values for each family are retained in the run log.
 | 32 → 64 | 1.99117 | 0.99971 | 2.02201 | 1.03553 |
 | 64 → 128 | 1.99770 | 0.99993 | 1.96407 | 0.94165 |
 
-Acceptance uses all three rates from N=16 through 128: L2 in [1.8,2.2], H1 in
-[.9,1.1]. N=8 is retained and explicitly not described as asymptotic for every
-family. The alternating H1 rates oscillate around one; no claim of a monotone
-approach to the limiting rate is made. P1 convergence is measured across three
-finer refinements, not inferred from one favorable mesh.
+The original acceptance gated all three N=16→128 pairwise H1 rates in [.9,1.1].
+The independent review showed this pointwise gate was observation-time sensitive,
+including at t=.2 on the same problem. That H1 methodology is superseded below;
+the original L2 gate at t=.31 is retained. These historical numbers alone do not
+establish arbitrary-time pairwise H1 rates near one.
 
 Repeating N=128 at half dt changes the integrated FE L2 displacement by
 **1.78e-11** (left), **1.79e-11** (right), and **1.21e-8** (alternating). The
@@ -173,7 +173,8 @@ invoke the existing low-level integrator to demonstrate instability.
    N=128 was added, and the timestep was reduced. An initial conservative screen
    compared a density-weighted lumped norm against the spatial L2 norm and rejected
    dt=5e-5. The final check consistently integrates the FE L2 norm on both sides;
-   the smaller dt=2.5e-5 was retained. No convergence-order gate was widened.
+   the smaller dt=2.5e-5 was retained. The corrective pass below replaces the
+   original single-time H1 gate with multi-time evidence; the L2 gate is unchanged.
 2. Mapped P1 DOF coordinates at a nominal zero boundary can be about 5.4e-18 rather
    than exactly zero. The independent constraint test initially used exact equality;
    it was corrected to a 1e-14 geometric tolerance. Production facet localization
@@ -192,7 +193,8 @@ and multidimensional radiation are unverified. The sparse eigenvalue calculation
 is diagnostic and requires convergence; a residual is not by itself a guarantee
 that an unobserved larger eigenvalue does not exist. The independent row-sum bound
 is the default timestep guard. Geometry and fields remain small in MPI tests;
-no many-rank/multi-node scaling or asymmetric-failure recovery is claimed. Both
+no many-rank/multi-node scaling or general asymmetric-failure recovery is claimed.
+Ordinary initial-array argument rejection is now MPI-coherent, as detailed below. Both
 consistent M and K are retained for verification, without a memory optimization
 claim. The inherited package version string remains unchanged; identify this
 milestone by its feature-branch commit, not by a new release tag.
@@ -228,7 +230,7 @@ pytest's file ordering is not a dependency. The full suite also executes the
 original 1D serial/2/3/4-rank audit checks. No tests depend on a pre-existing result
 file or use regression snapshots as the analytic oracle.
 
-Final combined regression: **155 passed in 189.05 s**, including all 98 original
+Original pre-review combined regression: **155 passed in 189.05 s**, including all 98 original
 1D tests and 57 new 2D cases. After correcting the contamination comparison to
 use like FE L2 norms, its three spatial cases passed again in **92.39 s** with
 unchanged convergence errors/rates. Ruff check, Ruff format-check, pre-commit
@@ -265,3 +267,220 @@ mesh with a rank owning no DOFs at four ranks; serial/distributed explicit zero
 loading; and independently collapsed component maps on a translated nonsquare
 rectangle. Existing serial-versus-MPI field comparisons remain in place.
 The focused operator, spectral and MPI selection passed **51 tests in 4.56 s**.
+
+### Revised H1 evidence
+
+The spatial test now observes t=.13,.20,.31,.37 s and integrates squared FE errors
+over [0,.4] s on the same three diagonal families, N=8,16,32,64,128, dt=2.5e-5 s.
+The diagnostic is the time-RMS seminorm
+`sqrt(integral_0^.4 |u_h-u|_H1² dt / .4)`. Spatial quadrature remains degree 12;
+a time Constant permits reusing the error forms without compiling each sample.
+Time integration uses the trapezoidal rule with spacing .00125 s (321 samples),
+and comparison with spacing .0025 must change either RMS norm by less than .1%.
+
+Fit `log(E)=p log(1/N)+C` over N=16,32,64,128. The H1 order gate now applies to
+the integrated fit (.9<p<1.1), accompanied by a pointwise O(h) envelope: at each
+observation time the largest E_h/h divided by its smallest over those four
+refinements must be <1.5. That is a finite-refinement regression guard against
+loss of the envelope, not a theorem about arbitrary times or all mesh sizes.
+All raw pointwise errors, pairwise rates, fitted orders, and all 321 H1 samples
+per mesh are retained in the corrective regression output. N=8 remains a reported
+coarse diagnostic. The original three L2 gates [1.8,2.2] at t=.31 are unchanged.
+
+The finest solution is repeated at dt/2. Compare **FE field differences**, using
+both L2 and H1, at the four observation times and over the time interval; every
+relative change must be <.1% of its corresponding spatial error. This directly
+checks H1 temporal contamination, which the old L2-only comparison did not do.
+Neither timestep nor H1 acceptance is chosen to make a single observation time
+look favorable. Oscillating pairwise rates are retained as evidence.
+
+### Initial acceleration qualification
+
+The counterexample is reproduced with FE L2 integration of
+`D^-1(F0-K I_h U0)` against the continuum `-omega² U0`, without a time-difference
+approximation. Thus the initial defect exists before time stepping or MPI.
+For N=8,16,32,64, alternating-mesh errors are
+**4.41689012, 5.06746640, 5.32381022, 5.44183736** despite nodal displacement
+interpolation errors **.04509489, .01149321, .00288718, .00072266**.
+Single-diagonal initial acceleration errors are **.81209656, .25501969,
+.06990469, .01817533** on both left and right families.
+
+An independently hand-assembled interior quadratic patch makes the mechanism
+explicit: for U=(x²,0), the continuum `-div sigma(U)/rho` is
+`(-2*(lambda+2*mu)/rho,0)`. Alternating nodal stars give .75 and 1.5 times its x
+component from `D^-1 K I_h U`, at both N=4 and N=8; the factors do not approach
+one on refinement. Single-diagonal patches give the continuum value. Weak FEM
+consistency does not imply this strong nodal-operator consistency. The mismatch
+from nodal initialization can excite mesh-scale semidiscrete transients; it is
+consistent with oscillatory H1 errors and displacement convergence.
+
+A test-only Ritz projection uses the independently expanded elastic load:
+`K_ff R_h U0 = F0 + omega² integral rho phi_f U0`. Its initial acceleration is
+therefore `-omega² D_f^-1 integral rho phi_f U0`, with fixed components zero.
+The test verifies this identity and the existing start/evaluate initialization,
+and separately measures the continuum FE L2 error. The alternating errors become
+**.56442384, .14830262, .03754367, .00941546**, with rates **1.928235,
+1.981903, 1.995466**. Left/right errors become **.57533737, .15300037,
+.03900179, .00981552**, with rates **1.910873, 1.971923, 1.990404**.
+Projected displacement also converges at order two. This supplies meaningful
+compatible-initial-data evidence; no new production projection API was added.
+
+This verifies a specific continuum **initial** acceleration with compatible
+data. It does not establish acceleration convergence throughout a simulation.
+The existing serial/MPI acceleration comparison establishes partition consistency
+only. No acceleration receiver or method redesign is introduced.
+
+### Scope and remaining limitations after correction
+
+Only two production paths changed: ordinary initial-array validation and exact
+zero load assembly. Constitutive law, mass/stiffness formulas, component masks,
+spectral algorithm, 1D modules and CentralDifference remain unchanged. Added tests
+complement the existing hand-matrix, rigid-mode, affine-energy, component-mask,
+serial/MPI field and spectrum comparisons instead of duplicating them.
+
+Each `stable_dt` access rebuilds, scales and destroys a free submatrix; `start()`
+accesses it again. Consistent mass is retained for the operator lifetime. These
+are setup and memory costs to account for in larger workflows, not optimized
+paths. Collective object lifetime and borrowed `apply()` views remain caller
+responsibilities. No caching was introduced. General rank-asymmetric runtime
+exceptions, callback failures and MPI fault recovery remain outside the contract.
+
+The evidence remains limited to the documented homogeneous rectangular vector-P1
+foundation and finite refinement/time studies. Dynamic convergence still uses
+the unit-square MMS with a shared component time factor; a nonsquare MMS with
+distinct component time factors has not been systematically refined here.
+Continuum acceleration at later times, general mesh families and the other physical regimes listed above remain
+unverified. No source, receiver, absorber, geology, GUI or performance feature
+was added. The branch is for final adversarial review, not merged or retagged.
+
+### Corrective H1 measurements
+
+Errors below are FE H1 seminorms. Each fit uses N=16,32,64,128; every pairwise
+rate is reported, including the coarse N=8→16 rate. The [complete corrective
+run](plane_strain_corrective_regression.txt) retains full-precision JSON records
+with all pointwise L2/H1 errors and all 321 H1 samples per mesh, not only these
+rounded tables. The [pre-fix reproduction](plane_strain_review_reproduction.txt)
+records the two failing functional regressions.
+
+
+**left**
+
+| t | E8 | E16 | E32 | E64 | E128 | Pairwise rates (8→16 through 64→128) | Fitted p |
+|---:|---:|---:|---:|---:|---:|---|---:|
+| 0.13 | 1.211134571 | 0.6131955983 | 0.3075309641 | 0.1538804883 | 0.07695455959 | 0.981940, 0.995616, 0.998921, 0.999732 | 0.998173 |
+| 0.20 | 1.143127964 | 0.5776753707 | 0.2895208205 | 0.1448418685 | 0.07243095558 | 0.984656, 0.996592, 0.999188, 0.999800 | 0.998593 |
+| 0.31 | 0.9554872662 | 0.48099043 | 0.2407573041 | 0.1204031953 | 0.06020433614 | 0.990228, 0.998429, 0.999706, 0.999934 | 0.999391 |
+| 0.37 | 0.8148032453 | 0.4095337439 | 0.2048850473 | 0.1024478838 | 0.05122423429 | 0.992469, 0.999168, 0.999925, 0.999992 | 0.999718 |
+
+**right**
+
+| t | E8 | E16 | E32 | E64 | E128 | Pairwise rates (8→16 through 64→128) | Fitted p |
+|---:|---:|---:|---:|---:|---:|---|---:|
+| 0.13 | 1.211134571 | 0.6131955983 | 0.3075309641 | 0.1538804883 | 0.07695455959 | 0.981940, 0.995616, 0.998921, 0.999732 | 0.998173 |
+| 0.20 | 1.143127964 | 0.5776753707 | 0.2895208205 | 0.1448418685 | 0.07243095558 | 0.984656, 0.996592, 0.999188, 0.999800 | 0.998593 |
+| 0.31 | 0.9554872662 | 0.48099043 | 0.2407573041 | 0.1204031953 | 0.06020433614 | 0.990228, 0.998429, 0.999706, 0.999934 | 0.999391 |
+| 0.37 | 0.8148032453 | 0.4095337439 | 0.2048850473 | 0.1024478838 | 0.05122423429 | 0.992469, 0.999168, 0.999925, 0.999992 | 0.999718 |
+
+**left_right**
+
+| t | E8 | E16 | E32 | E64 | E128 | Pairwise rates (8→16 through 64→128) | Fitted p |
+|---:|---:|---:|---:|---:|---:|---|---:|
+| 0.13 | 1.257700549 | 0.6164998883 | 0.3043786656 | 0.1535626883 | 0.08443974558 | 1.028616, 1.018233, 0.987040, 0.862834 | 0.959136 |
+| 0.20 | 1.170121222 | 0.6173061438 | 0.2864524928 | 0.1588841748 | 0.07209788467 | 0.922600, 1.107690, 0.850320, 1.139947 | 1.014419 |
+| 0.31 | 0.9324775733 | 0.5209259849 | 0.2453745612 | 0.1197023895 | 0.06232130842 | 0.839991, 1.086093, 1.035534, 0.941655 | 1.022538 |
+| 0.37 | 0.8220334651 | 0.4291460876 | 0.2134197615 | 0.1038753486 | 0.05118049491 | 0.937728, 1.007775, 1.038840, 1.021187 | 1.024225 |
+
+**Time-RMS H1 over [0,.4]**
+
+| Family | Errors N=8,16,32,64,128 | Pairwise rates | Fitted p |
+|---|---|---|---:|
+| left | 1.09932031, 0.5555604616, 0.278454329, 0.1393076761, 0.06966374936 | 0.984596, 0.996503, 0.999166, 0.999795 | 0.998556 |
+| right | 1.09932031, 0.5555604616, 0.278454329, 0.1393076761, 0.06966374936 | 0.984596, 0.996503, 0.999166, 0.999795 | 0.998556 |
+| left_right | 1.109747629, 0.5691133779, 0.2867641688, 0.143936305, 0.07206789069 | 0.963444, 0.988851, 0.994434, 0.998002 | 0.993830 |
+
+The integrated fitted orders support first-order H1 convergence across these
+refinements. At t=.20 on alternating meshes, .850320 and 1.139947 remain outside
+the former pointwise gate despite a fitted pointwise order of 1.014419. Pointwise
+fits over all four observation times range from .959136 to 1.024225.
+
+**Temporal-contamination and envelope checks**
+
+Percentages are half-timestep H1 field differences divided by the corresponding
+H1 error, not differences between error norms.
+
+| Family | t=.13 (%) | t=.20 (%) | t=.31 (%) | t=.37 (%) | Time-RMS (%) | Max time-quadrature change (%) | Max E_h/h envelope ratio |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| left | 4.7751037e-07 | 6.4496455e-07 | 1.0932302e-06 | 1.4622632e-06 | 7.4295694e-07 | 0.00020688518 | 1.003981 |
+| right | 4.808782e-07 | 6.455262e-07 | 1.0924857e-06 | 1.4648924e-06 | 7.4376985e-07 | 0.00020688518 | 1.003981 |
+| left_right | 0.0010969693 | 0.0058247502 | 0.014876463 | 0.023441412 | 0.0076015258 | 0.00089045624 | 1.109667 |
+
+The largest H1 temporal change is .0234414% pointwise and .00760153% in time-RMS,
+below .1%. Doubling time-quadrature spacing changes the H1 RMS by at most
+.000890456%. The H1 oscillation is therefore not removed by reducing dt, nor is
+the integrated order an artifact of a single observation time. These finite
+checks support the stated envelope; they do not certify every pointwise slope.
+
+### Corrective files, tests and reproduction
+
+Changes relative to the reviewed `7cb5e4e` (excluding the user's pre-existing
+`.gitignore` and `scripts/` work):
+
+| File | Change |
+|---|---|
+| `src/seisfem/fem2d.py` | Modified: collective initial-array validation and explicit zero load |
+| `tests/plane_strain/test_operators.py` | Modified: zero-load and independent collapsed-component/coordinate checks |
+| `tests/plane_strain/test_mpi.py` | Modified: 2/4-rank edge-case subprocess tests with process-group timeout cleanup |
+| `tests/plane_strain/mpi_edge_worker.py` | Added: asymmetric validation, no-free-DOF and empty-rank probes |
+| `tests/plane_strain/manufactured.py` | Modified: reusable integrated FE error forms |
+| `tests/plane_strain/test_manufactured_solution.py` | Modified: multiple observation times, time-RMS H1, fitted orders, envelope, L2/H1 temporal contamination and raw time series |
+| `tests/plane_strain/test_initial_acceleration.py` | Added: three mesh-family projection/acceleration studies and independent quadratic-patch mechanism |
+| `docs/development/plane_strain_core.md` | Modified: numerical evidence, acceleration qualification, MPI validation and setup/lifetime costs |
+| `docs/validation/plane_strain_core.md` | Modified: corrected claims and complete review response |
+| `docs/validation/plane_strain_corrective_regression.txt` | Added: final commands, results and full-precision numerical records |
+| `docs/validation/plane_strain_review_reproduction.txt` | Added: pre-fix failure evidence |
+
+Eight collected cases were added: two operator tests, two MPI subprocess tests,
+three compatible-initial-data studies and one quadratic-patch test. The three
+existing spatial cases were strengthened. Within each new MPI case, nine
+asymmetric argument cases cover all three initial arrays and three failure types.
+The existing serial-to-2/4-rank field/spectrum comparisons still exercise valid
+inputs and ghost accumulation; their acceleration evidence is partition consistency.
+
+Exact commands, from the repository root in the existing `fenicsx0.11` environment:
+
+```bash
+conda activate fenicsx0.11
+python -m pytest -ra -s
+ruff check src tests examples
+ruff format --check src tests examples
+pre-commit run --all-files
+git diff --check
+
+# Repeated MPI comparisons and edge cases at both 2 and 4 ranks.
+python -m pytest -q -s tests/plane_strain/test_mpi.py
+
+# Focused numerical diagnostics, if desired.
+python -m pytest -q -s tests/plane_strain/test_manufactured_solution.py -k spatial
+python -m pytest -q -s tests/plane_strain/test_initial_acceleration.py
+mpiexec -n 2 python -m tests.plane_strain.mpi_edge_worker
+mpiexec -n 4 python -m tests.plane_strain.mpi_edge_worker
+```
+
+The functional corrections are commit `ab7d14f`; numerical tests and developer
+qualifications are commit `c48ced8`. The final documentation commit records this
+report and its raw evidence. No production refactoring or performance optimization
+was performed. `main` and `v0.1.1^{commit}` remain
+`43f3dd70c1875a7dafe37910fc98e7c490e9b5dd`.
+
+Final corrective regression: **163 passed in 435.22 s (7:15)**, comprising all
+**98 original 1D tests and 65 plane-strain cases**. Ruff check passed; Ruff format
+reported 35 files already formatted; pre-commit `--all-files` passed; and
+`git diff --check` passed. The repeated dedicated MPI suite passed **4 cases in
+2.97 s**, covering serial/2/4 equivalence and both new 2/4-rank edge workers.
+These runs include the unchanged original 1D asymmetric/distributed cases.
+
+The controlled spectral instability test remains unchanged and passed in the
+full run: at .999 of the critical timestep the highest-mode maximum norm was
+.9999962; at 1.001 it reached 2.245654e11 after 300 updates. The new work changes
+neither the sufficient spectral bound nor valid-input dynamics. Full command
+output and numerical precision are preserved in the linked corrective run.
