@@ -82,8 +82,8 @@ def test_component_constraints_and_positive_definite_subproblem():
     ]
     with PlaneStrainOperators(PlaneStrainConfig.model_validate(data), MPI.COMM_SELF) as op:
         expected = np.zeros(op.n, bool)
-        expected[0::2] = op.coordinates[:, 0] == 0
-        expected[1::2] = op.coordinates[:, 1] == 0
+        expected[0::2] = abs(op.coordinates[:, 0]) < 1e-14
+        expected[1::2] = abs(op.coordinates[:, 1]) < 1e-14
         np.testing.assert_array_equal(op.fixed, expected)
         M, K = hand_matrices(op)
         np.testing.assert_allclose(dense(op.K), K, atol=3e-14)
