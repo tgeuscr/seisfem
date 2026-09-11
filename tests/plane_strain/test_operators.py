@@ -123,3 +123,21 @@ def test_configuration_and_material_separation():
     for key in ["source", "receivers", "absorbing", "layers", "degree"]:
         with pytest.raises(ValidationError):
             PlaneStrainConfig.model_validate({**data, key: 1})
+
+
+def test_translated_rectangle_geometry_mass_and_energy():
+    data = configuration().model_dump(mode="json", by_alias=True)
+    data["domain"] = dict(lower=(-2, 1), upper=(1, 2.5), cells=(3, 2), diagonal="left")
+    with PlaneStrainOperators(PlaneStrainConfig.model_validate(data), MPI.COMM_SELF) as op:
+        assert op.mesh.topology.index_map(2).size_global == 12
+        np.testing.assert_allclose(op.coordinates.min(axis=0), [-2, 1], atol=1e-14)
+        np.testing.assert_allclose(op.coordinates.max(axis=0), [1, 2.5], atol=1e-14)
+        np.testing.assert_allclose(
+            op.mass.reshape(-1, 2).sum(axis=0), np.full(2, 2.3 * 4.5), atol=3e-14
+        )
+        M, K = hand_matrices(op)
+        np.testing.assert_allclose(dense(op.M), M, rtol=3e-14, atol=1e-15)
+        np.testing.assert_allclose(dense(op.K), K, rtol=3e-14, atol=3e-14)
+        values = np.column_stack((0.3 * op.coordinates[:, 0], -0.2 * op.coordinates[:, 1])).ravel()
+        density = 0.5 * 1.7 * (0.3 - 0.2) ** 2 + 1.2 * (0.3**2 + 0.2**2)
+        assert 0.5 * values @ op.apply(values) == pytest.approx(4.5 * density, abs=2e-14)

@@ -134,3 +134,19 @@ def test_fully_constrained_and_two_free_components():
                 step = op.start(0.1)
                 nxt, _, _, _ = step.evaluate(np.ones(op.n))
                 np.testing.assert_array_equal(nxt, 0)
+
+
+def test_componentwise_constraints_in_spectral_analysis():
+    data = configuration(n=4).model_dump(mode="json", by_alias=True)
+    data["constraints"] = [
+        dict(side="left", components=["x"]),
+        dict(side="lower", components=["z"]),
+    ]
+    with PlaneStrainOperators(PlaneStrainConfig.model_validate(data), MPI.COMM_SELF) as op:
+        free = ~op.fixed
+        K = dense(op.K)[np.ix_(free, free)]
+        mass = op.mass[free]
+        exact = np.linalg.eigvalsh(K / np.sqrt(np.outer(mass, mass)))
+        assert exact[0] > 0
+        assert op.spectral_diagnostic().lambda_max == pytest.approx(exact[-1], rel=3e-11)
+        assert op.stable_dt <= 2 / np.sqrt(exact[-1])
