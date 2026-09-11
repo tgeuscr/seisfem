@@ -1,5 +1,8 @@
 """Homogeneous plane-strain vector P1 operators on affine rectangle triangles."""
 
+from contextlib import contextmanager
+from dataclasses import dataclass
+
 import dolfinx
 import numpy as np
 import ufl
@@ -9,6 +12,7 @@ from mpi4py import MPI
 from petsc4py import PETSc
 
 from .config2d import PlaneStrainConfig
+from .timestepping import CentralDifference
 
 
 def strain(u):
@@ -20,6 +24,20 @@ def stress(u, lam, mu):
     """In-plane block of 3D isotropic stress, with ordinary 3D Lamé parameters."""
     epsilon = strain(u)
     return lam * ufl.tr(epsilon) * ufl.Identity(2) + 2 * mu * epsilon
+
+
+@dataclass(frozen=True)
+class SpectralDiagnostic:
+    """Sparse eigenpair estimate plus a separate, sufficient algebraic upper bound."""
+
+    lambda_max: float
+    relative_residual: float
+    lambda_upper_bound: float
+
+    @property
+    def critical_dt(self):
+        """Estimated marginal threshold; arbitrary data require strictly smaller dt."""
+        return 2 / np.sqrt(self.lambda_max) if self.lambda_max > 0 else float("inf")
 
 
 class PlaneStrainOperators:
@@ -120,6 +138,99 @@ class PlaneStrainOperators:
         load = fem.assemble_vector(form)
         load.scatter_reverse(la.InsertMode.add)
         return load.array[: self.n].copy()
+
+    @contextmanager
+    def _scaled_free_operator(self):
+        """Own a temporary D_f^-1/2 K_ff D_f^-1/2, with constraints eliminated."""
+        first, _ = self.index_map.local_range
+        indices = (2 * first + np.flatnonzero(~self.fixed)).astype(PETSc.IntType)
+        selection = PETSc.IS().createGeneral(indices, comm=self.comm)
+        matrix = scaling = None
+        try:
+            matrix = self.K.createSubMatrix(selection, selection)
+            scaling = matrix.createVecLeft()
+            scaling.array[:] = 1 / np.sqrt(self.mass[~self.fixed])
+            matrix.diagonalScale(scaling, scaling)
+            yield matrix
+        finally:
+            if scaling is not None:
+                scaling.destroy()
+            if matrix is not None:
+                matrix.destroy()
+            selection.destroy()
+
+    def _eigenvalue_bound(self, matrix):
+        # Absolute row sums of a symmetric matrix bound every eigenvalue in
+        # magnitude. Vector-elastic off-diagonal signs play no role in this proof.
+        offsets, _, entries = matrix.getValuesCSR()
+        local_max = max(
+            (np.sum(abs(entries[a:b])) for a, b in zip(offsets[:-1], offsets[1:], strict=True)),
+            default=0.0,
+        )
+        return self.comm.allreduce(float(local_max), op=MPI.MAX)
+
+    @property
+    def stable_dt(self):
+        """Sufficient assembled spectral bound without a safety factor [s]."""
+        with self._scaled_free_operator() as matrix:
+            bound = self._eigenvalue_bound(matrix)
+        return 2 / np.sqrt(bound) if bound > 0 else float("inf")
+
+    def spectral_diagnostic(self):
+        """Estimate the largest free eigenvalue with SLEPc Krylov-Schur.
+
+        SLEPc is optional for assembly/time stepping and supplied by the existing
+        binary lock. The converged Ritz value is a diagnostic, not a certified
+        upper bound; start() uses the independent absolute-row-sum bound.
+        """
+        from slepc4py import SLEPc
+
+        with self._scaled_free_operator() as matrix:
+            bound = self._eigenvalue_bound(matrix)
+            size = matrix.getSize()[0]
+            if size <= 1:
+                return SpectralDiagnostic(bound, 0.0, bound)
+            solver = SLEPc.EPS().create(self.comm)
+            try:
+                solver.setOperators(matrix)
+                solver.setProblemType(SLEPc.EPS.ProblemType.HEP)
+                solver.setType(SLEPc.EPS.Type.KRYLOVSCHUR)
+                solver.setWhichEigenpairs(SLEPc.EPS.Which.LARGEST_REAL)
+                solver.setDimensions(1, min(30, size))
+                solver.setTolerances(1e-11, 2000)
+                solver.solve()
+                if solver.getConvergedReason() <= 0 or solver.getConverged() < 1:
+                    raise RuntimeError("Largest-eigenvalue iteration did not converge")
+                value = float(solver.getEigenvalue(0).real)
+                residual = solver.computeError(0, SLEPc.EPS.ErrorType.RELATIVE)
+                if value <= 0 or not np.isfinite(value) or residual > 1e-9:
+                    raise RuntimeError("Invalid largest eigenpair or excessive residual")
+                return SpectralDiagnostic(value, float(residual), bound)
+            finally:
+                solver.destroy()
+
+    def start(self, dt, u0=None, v0=None, force0=None, safety=0.9):
+        """Create the unchanged central-difference integrator with verified bounds.
+
+        Call collectively with the same dt/safety, and owned scalar initial arrays.
+        The caller supplies F(t_n), records states, and accepts updates with advance.
+        No 2D Simulation, point source, receiver or field-output frontend is implied.
+        """
+        settings = self.comm.allgather((dt, safety))
+        if any(setting != settings[0] for setting in settings):
+            raise ValueError("All ranks must use identical dt and safety")
+        if not np.isfinite(dt) or dt <= 0 or not 0 < safety < 1:
+            raise ValueError("Require finite dt>0 and 0<safety<1")
+        arrays = [
+            np.zeros(self.n) if value is None else np.asarray(value, dtype=float)
+            for value in (u0, v0, force0)
+        ]
+        valid = all(value.shape == (self.n,) and np.all(np.isfinite(value)) for value in arrays)
+        if not self.comm.allreduce(valid, op=MPI.LAND):
+            raise ValueError("Initial arrays must be finite and have owned scalar-DOF shape")
+        if dt > safety * self.stable_dt:
+            raise ValueError("dt exceeds the assembled plane-strain spectral bound with safety")
+        return CentralDifference(self.mass, np.zeros(self.n), self.fixed, dt, self.apply, *arrays)
 
     def close(self):
         """Destroy explicit PETSc resources collectively; repeat calls are harmless."""
