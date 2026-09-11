@@ -241,3 +241,27 @@ verification, mapped-coordinate test correction, spectral dynamics, manufactured
 and MPI verification, the final norm-consistency correction, and documentation.
 No merge to main or tag change has been performed. Only the user's pre-existing
 .gitignore edit and untracked scripts are left outside the milestone commits.
+
+## Independent-review corrective pass
+
+The review at `7cb5e4e` found no critical or demonstrated major defect for valid
+numerical inputs. Two functional defects were reproduced before correction:
+explicit zero-vector load assembly raised `ValueError: This integral is missing
+an integration domain`; the two-rank nonnumeric-initial-data regression timed out
+after 45 seconds. Adding only an explicit integration domain still failed because
+UFL had removed the test argument (a rank-zero form).
+
+`start()` now catches ordinary local array conversion, shape and finite-value
+errors before collectively gathering diagnostics. Every rank raises the same
+`ValueError`, identifying the originating rank, argument, exception type and
+message. No rank proceeds to spectral setup when any initial array is invalid.
+This covers deterministic initial-argument failures, not general MPI recovery.
+The load assembler returns a correctly sized owned zero vector when UFL simplifies
+the integrand to exact zero, and attaches an explicit domain to other load forms.
+
+Permanent tests cover asymmetric conversion/shape/nonfinite errors in each of
+`u0`, `v0`, and `force0` on 2/4 ranks; ranks owning no free DOFs; a fully constrained
+mesh with a rank owning no DOFs at four ranks; serial/distributed explicit zero
+loading; and independently collapsed component maps on a translated nonsquare
+rectangle. Existing serial-versus-MPI field comparisons remain in place.
+The focused operator, spectral and MPI selection passed **51 tests in 4.56 s**.

@@ -141,3 +141,39 @@ def test_translated_rectangle_geometry_mass_and_energy():
         values = np.column_stack((0.3 * op.coordinates[:, 0], -0.2 * op.coordinates[:, 1])).ravel()
         density = 0.5 * 1.7 * (0.3 - 0.2) ** 2 + 1.2 * (0.3**2 + 0.2**2)
         assert 0.5 * values @ op.apply(values) == pytest.approx(4.5 * density, abs=2e-14)
+
+
+def test_explicit_zero_load():
+    import ufl
+
+    with PlaneStrainOperators(configuration(), MPI.COMM_SELF) as op:
+        load = op.assemble_load(ufl.as_vector([0.0, 0.0]))
+        assert load.shape == (op.n,)
+        np.testing.assert_array_equal(load, 0)
+
+
+def test_constraints_against_collapsed_component_maps():
+    # Independent scalar subspace maps and physical coordinates on a translated,
+    # nonsquare rectangle; do not assume 2*node+component in the expected mask.
+    data = configuration().model_dump(mode="json", by_alias=True)
+    data["domain"] = dict(lower=(-2, 1), upper=(1, 2.5), cells=(3, 2), diagonal="right_left")
+    data["constraints"] = [
+        dict(side="right", components=["x"]),
+        dict(side="upper", components=["z"]),
+    ]
+    with PlaneStrainOperators(PlaneStrainConfig.model_validate(data), MPI.COMM_SELF) as op:
+        expected = np.zeros(op.n, dtype=bool)
+        for component, endpoint in [(0, 1), (1, 2.5)]:
+            scalar_space, maps = op.V.sub(component).collapse()
+            (parent_map,) = maps
+            coordinates = scalar_space.tabulate_dof_coordinates()
+            selected = np.isclose(coordinates[:, component], endpoint, rtol=0, atol=1e-14)
+            expected[np.asarray(parent_map)[selected]] = True
+            marker = fem.Function(op.V)
+            marker.sub(component).interpolate(lambda x: np.full((1, x.shape[1]), 3.7))
+            np.testing.assert_allclose(marker.x.array[parent_map], 3.7)
+            np.testing.assert_array_equal(np.flatnonzero(marker.x.array), np.sort(parent_map))
+        np.testing.assert_array_equal(op.fixed, expected)
+        step = op.start(0.001, u0=np.ones(op.n), v0=np.ones(op.n))
+        np.testing.assert_array_equal(step.current[expected], 0)
+        np.testing.assert_array_equal(step.current[~expected], 1)

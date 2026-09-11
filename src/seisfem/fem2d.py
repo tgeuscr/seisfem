@@ -132,8 +132,13 @@ class PlaneStrainOperators:
         array in time. This is a volume load, not a discrete point-source API.
         """
         v = ufl.TestFunction(self.V)
+        integrand = ufl.inner(v, body_force)
+        # UFL removes the test argument (and implicit domain) from an exact zero.
+        # Such a rank-zero form cannot be passed to assemble_vector.
+        if isinstance(integrand, ufl.constantvalue.Zero):
+            return np.zeros(self.n, dtype=PETSc.ScalarType)
         form = fem.form(
-            ufl.inner(v, body_force) * ufl.dx(metadata={"quadrature_degree": quadrature_degree})
+            integrand * ufl.dx(domain=self.mesh, metadata={"quadrature_degree": quadrature_degree})
         )
         load = fem.assemble_vector(form)
         load.scatter_reverse(la.InsertMode.add)
@@ -221,13 +226,28 @@ class PlaneStrainOperators:
             raise ValueError("All ranks must use identical dt and safety")
         if not np.isfinite(dt) or dt <= 0 or not 0 < safety < 1:
             raise ValueError("Require finite dt>0 and 0<safety<1")
-        arrays = [
-            np.zeros(self.n) if value is None else np.asarray(value, dtype=float)
-            for value in (u0, v0, force0)
+        arrays, local_errors = [], []
+        for name, value in zip(("u0", "v0", "force0"), (u0, v0, force0), strict=True):
+            try:
+                array = np.zeros(self.n) if value is None else np.asarray(value, dtype=float)
+                if array.shape != (self.n,):
+                    raise ValueError(
+                        f"expected owned scalar-DOF shape {(self.n,)}, got {array.shape}"
+                    )
+                if not np.all(np.isfinite(array)):
+                    raise ValueError("entries must be finite")
+                arrays.append(array)
+            except Exception as error:
+                # Ordinary argument errors must not let one rank skip the collective.
+                local_errors.append(f"{name}: {type(error).__name__}: {error}")
+        errors = self.comm.allgather(local_errors)
+        failures = [
+            f"rank {rank}: {message}"
+            for rank, messages in enumerate(errors)
+            for message in messages
         ]
-        valid = all(value.shape == (self.n,) and np.all(np.isfinite(value)) for value in arrays)
-        if not self.comm.allreduce(valid, op=MPI.LAND):
-            raise ValueError("Initial arrays must be finite and have owned scalar-DOF shape")
+        if failures:
+            raise ValueError("Invalid initial data; " + "; ".join(failures))
         if dt > safety * self.stable_dt:
             raise ValueError("dt exceeds the assembled plane-strain spectral bound with safety")
         return CentralDifference(self.mass, np.zeros(self.n), self.fixed, dt, self.apply, *arrays)
