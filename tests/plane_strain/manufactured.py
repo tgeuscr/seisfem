@@ -46,17 +46,26 @@ def initial_data(op):
     return initial, INITIAL_RATE * initial
 
 
-def errors(op, owned, final):
-    """Integrated FE L2 and H1 seminorm, using independent exact UFL fields."""
-    op.field.x.array[: op.n] = owned
-    op.field.x.scatter_forward()
-    difference = op.field - float(time_factor(final)) * fields(op.mesh)
-    dx = ufl.dx(metadata={"quadrature_degree": 12})
-    quantities = [
-        ufl.inner(difference, difference),
-        ufl.inner(ufl.grad(difference), ufl.grad(difference)),
-    ]
-    return tuple(
-        np.sqrt(op.comm.allreduce(fem.assemble_scalar(fem.form(q * dx)), op=MPI.SUM))
-        for q in quantities
-    )
+class ErrorNorms:
+    """Reusable degree-12 FE norm forms; a Constant avoids time-specific JIT forms."""
+
+    def __init__(self, op):
+        self.op = op
+        self.factor = fem.Constant(op.mesh, 0.0)
+        difference = op.field - self.factor * fields(op.mesh)
+        dx = ufl.dx(metadata={"quadrature_degree": 12})
+        self.forms = [
+            fem.form(q * dx)
+            for q in (
+                ufl.inner(difference, difference),
+                ufl.inner(ufl.grad(difference), ufl.grad(difference)),
+            )
+        ]
+
+    def __call__(self, owned, factor):
+        self.op.field.x.array[: self.op.n] = owned
+        self.op.field.x.scatter_forward()
+        self.factor.value = float(factor)
+        return np.sqrt(
+            [self.op.comm.allreduce(fem.assemble_scalar(form), op=MPI.SUM) for form in self.forms]
+        )

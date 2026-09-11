@@ -75,7 +75,11 @@ and an infinite timestep bound; no eigenproblem is attempted for an empty system
 matrices/index sets/vectors, eigensolvers and matvec workspace are explicitly
 destroyed. Function-owned vectors remain owned by DOLFINx. All ranks must call
 assembly, load assembly, actions, spectral methods, start and close consistently.
-General MPI fault tolerance is not added. Small 2/4-rank smoke tests are not
+Initial-array conversion, shape and finite-value errors in `start()` are collected
+before spectral setup: any invalid rank makes every rank raise the same diagnostic
+with argument, originating rank and original exception type/message. The caller
+must still enter the API collectively; callback failures, process loss and general
+MPI fault tolerance are not handled. Small 2/4-rank smoke tests are not
 multi-node or performance evidence.
 
 ## Spectral stability and stepping
@@ -102,6 +106,12 @@ threshold, not a robust safe timestep. `start` requires `0<safety<1` (default .9
 and `dt<=safety*stable_dt`, checks consistent rank settings and owned initial-array
 shapes, then returns the **unchanged** `CentralDifference` integrator. No damping
 or absorbing-boundary operator is introduced.
+
+Each access to `stable_dt` constructs, scales and destroys a free principal
+submatrix; `start()` accesses it again. This is a setup operation, not a cheap
+cached scalar lookup. Consistent M is also retained throughout the operator's
+lifetime. No caching or lifetime redesign is introduced; larger workflows must
+account for these costs and preserve collective resource ownership.
 
 The integrator uses U[-1]=U0-dt V0+dt² D^-1(F0-KU0)/2 and centered outputs.
 For F=0 its staggered energy is constant up to roundoff. This is the cross-time
@@ -133,7 +143,9 @@ with PlaneStrainOperators(cfg) as op:
 For a separable smooth force f(x,z,t)=g(x,z)T(t), assemble
 `load=op.assemble_load(g)` once, call `start(..., force0=load*T(0))`, and evaluate
 with `load*T(n*dt)`. General time-dependent forms would need repeated assembly;
-no streaming or cached time-dependent load subsystem is added. `apply` returns
+no streaming or cached time-dependent load subsystem is added. An explicitly zero
+UFL vector is accepted and returns an owned zero vector; UFL simplifies away the
+test argument in this special case, so ordinary vector assembly cannot be used. `apply` returns
 a borrowed workspace view, valid only until its next call.
 
 ## Manufactured solution and independent references
@@ -166,10 +178,32 @@ without calling the production stress helper. Volume loads use quadrature degree
 8; integrated FE L2/H1 errors use degree 12 and include between-node variation.
 No pointwise nodal error is mislabeled an FE L2 norm.
 
-Spatial refinement retains N=8 as a coarse diagnostic and measures three
-asymptotic rates from N=16,32,64,128 on three diagonal patterns. The finest
-solution is repeated at half dt to quantify temporal contamination. The coarse
-alternating mesh's H1 rate need not yet equal one; its result is retained.
+Spatial refinement retains N=8 as a coarse diagnostic and uses N=16,32,64,128
+for fitted orders, on left, right and alternating diagonals. Errors are measured
+at t=.13,.20,.31,.37 and over [0,.4]. The time-RMS H1 seminorm is
+`sqrt(integral_0^.4 |u_h-u|_H1² dt / .4)`; trapezoidal integration uses spacing
+.00125 and is checked against doubled spacing. The H1 gate applies to its
+log(error)-versus-log(h) fit (.9<p<1.1), accompanied by a bounded pointwise
+E_h/h envelope across refinements (max/min<1.5 at each observation time).
+These are finite-refinement regression criteria, not a proof of arbitrary-time
+accuracy or a claim that every consecutive pointwise slope lies near one.
+Raw errors, pairwise rates and pointwise fits are reported, including the review's
+t=.2 counterexample. The original L2 gates at t=.31 remain unchanged. Finest-grid
+half-timestep **field differences** are integrated in both L2 and H1, pointwise
+and time-RMS, and must be below .1% of the corresponding spatial errors.
+
+Initial acceleration needs a separate qualification. With nodal interpolation,
+`a_h(0)=D^-1(F0-K I_h U0)` need not converge strongly to continuum acceleration.
+On alternating triangle stars, even the interior action on U=(x²,0) gives .75
+or 1.5 times the continuum x component instead of one. This is a strong-form
+consistency/initial-projection issue; it does not invalidate the weak stiffness
+or displacement convergence. A test-only Ritz projection satisfies
+`K_ff R_h U0 = a(U0,phi_f)`, yielding
+`a_h(0)=-omega² D_f^-1 [integral rho phi_f U0]`. This compatible initial acceleration
+converges in FE L2 for the tested MMS. The projection is not a new production
+initialization API. Neither it nor serial/MPI acceleration agreement establishes
+continuum acceleration convergence at later times. MPI comparisons establish
+partition consistency only.
 
 Temporal convergence has two complementary references. On N=12 the exact forced
 semidiscrete solution is available from a dense eigendecomposition of B. If
