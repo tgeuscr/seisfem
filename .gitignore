@@ -8,3 +8,7 @@ outputs/
 .coverage
 build/
 dist/
+
+# Local exploratory/research work
+notebooks/
+
