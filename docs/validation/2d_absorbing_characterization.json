@@ -1,0 +1,120 @@
+{
+  "continuum": [
+    {
+      "angle": 0,
+      "P": 0.0,
+      "SV": -0.0,
+      "energy_flux_ratio": 0.0
+    },
+    {
+      "angle": 15,
+      "P": 0.005904013054409825,
+      "SV": 0.009883319236818988,
+      "energy_flux_ratio": 9.113456489996945e-05
+    },
+    {
+      "angle": 30,
+      "P": 0.009886459006874371,
+      "SV": -0.012556693742562023,
+      "energy_flux_ratio": 0.00019601827431193808
+    },
+    {
+      "angle": 45,
+      "P": -0.024359712286712572,
+      "SV": -0.07100139390721816,
+      "energy_flux_ratio": 0.00427277800331857
+    },
+    {
+      "angle": 60,
+      "P": -0.1464488321592652,
+      "SV": -0.1292019720175721,
+      "energy_flux_ratio": 0.03784811003228137
+    },
+    {
+      "angle": 75,
+      "P": -0.42353379329885404,
+      "SV": -0.12525445908663513,
+      "energy_flux_ratio": 0.20800565890460831
+    }
+  ],
+  "frequency": [
+    {
+      "mode": "P",
+      "h": 8,
+      "f0": 6,
+      "points_per_3f0_wavelength": 22.22222222222222,
+      "reflection": 0.0008001834284690414,
+      "incident_peak": 1.0002255413713408
+    },
+    {
+      "mode": "P",
+      "h": 8,
+      "f0": 8,
+      "points_per_3f0_wavelength": 16.666666666666668,
+      "reflection": 0.001421679421170148,
+      "incident_peak": 1.000368127223186
+    },
+    {
+      "mode": "P",
+      "h": 8,
+      "f0": 10,
+      "points_per_3f0_wavelength": 13.333333333333334,
+      "reflection": 0.002212595484820262,
+      "incident_peak": 1.0000055290787158
+    },
+    {
+      "mode": "S",
+      "h": 5,
+      "f0": 6,
+      "points_per_3f0_wavelength": 20.0,
+      "reflection": 0.0009946347440941462,
+      "incident_peak": 1.0001846141392532
+    },
+    {
+      "mode": "S",
+      "h": 5,
+      "f0": 8,
+      "points_per_3f0_wavelength": 15.0,
+      "reflection": 0.0017571715378818782,
+      "incident_peak": 0.9997260628828788
+    },
+    {
+      "mode": "S",
+      "h": 5,
+      "f0": 10,
+      "points_per_3f0_wavelength": 12.0,
+      "reflection": 0.002685504756312803,
+      "incident_peak": 0.9974611434092298
+    }
+  ],
+  "beams": [
+    {
+      "angle": 0,
+      "h": 20,
+      "free_scattered_peak": 0.580522821972468,
+      "absorbing_scattered_peak": 0.007307824042848604,
+      "amplitude_proxy": 0.012588349271125102
+    },
+    {
+      "angle": 45,
+      "h": 20,
+      "free_scattered_peak": 0.5906994861718042,
+      "absorbing_scattered_peak": 0.055210502694554374,
+      "amplitude_proxy": 0.0934663123754546
+    },
+    {
+      "angle": 60,
+      "h": 20,
+      "free_scattered_peak": 0.5365910248613774,
+      "absorbing_scattered_peak": 0.10802921607327085,
+      "amplitude_proxy": 0.20132505216832325
+    },
+    {
+      "angle": 60,
+      "h": 10,
+      "free_scattered_peak": 0.5951691265441925,
+      "absorbing_scattered_peak": 0.10028161578491679,
+      "amplitude_proxy": 0.16849263732343595
+    }
+  ]
+}

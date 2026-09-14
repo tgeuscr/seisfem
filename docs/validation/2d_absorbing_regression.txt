@@ -1,0 +1,67 @@
+Absorbing-boundary milestone regression evidence
+Baseline: d96b689 (peeled v0.3.0), before implementation
+OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 python -m pytest -ra
+
+============================= test session starts ==============================
+platform linux -- Python 3.14.6, pytest-9.1.1, pluggy-1.6.0
+rootdir: /home/m/projects/seisfem
+configfile: pyproject.toml
+testpaths: tests
+plugins: anyio-4.15.1
+collected 204 items
+
+tests/analytical/test_operators_energy.py ......                         [  2%]
+tests/analytical/test_pulses.py ........                                 [  6%]
+tests/audit/test_distributed_io.py ......                                [  9%]
+tests/audit/test_independent_numerics.py ............................... [ 25%]
+.............                                                            [ 31%]
+tests/audit/test_independent_waves.py ...............                    [ 38%]
+tests/experiments2d/test_mpi.py ..                                       [ 39%]
+tests/experiments2d/test_science.py ....                                 [ 41%]
+tests/experiments2d/test_sources_points.py .........................     [ 53%]
+tests/experiments2d/test_workflow.py ..........                          [ 58%]
+tests/integration/test_frontends_mpi.py .....                            [ 61%]
+tests/plane_strain/test_initial_acceleration.py ....                     [ 63%]
+tests/plane_strain/test_manufactured_solution.py ..........              [ 68%]
+tests/plane_strain/test_mpi.py ....                                      [ 70%]
+tests/plane_strain/test_operators.py .................................   [ 86%]
+tests/plane_strain/test_spectral_dynamics.py ..............              [ 93%]
+tests/unit/test_config_sources.py ..............                         [100%]
+
+======================= 204 passed in 566.32s (0:09:26) ========================
+
+Final numerical implementation: a482120 (documentation/example followed)
+OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 python -m pytest -ra
+
+============================= test session starts ==============================
+platform linux -- Python 3.14.6, pytest-9.1.1, pluggy-1.6.0
+rootdir: /home/m/projects/seisfem
+configfile: pyproject.toml
+testpaths: tests
+plugins: anyio-4.15.1
+collected 237 items
+
+tests/absorbing2d/test_characteristics.py ......                         [  2%]
+tests/absorbing2d/test_mpi.py .                                          [  2%]
+tests/absorbing2d/test_operators.py ...............                      [  9%]
+tests/absorbing2d/test_physics.py .....                                  [ 11%]
+tests/absorbing2d/test_time_energy.py ......                             [ 13%]
+tests/analytical/test_operators_energy.py ......                         [ 16%]
+tests/analytical/test_pulses.py ........                                 [ 19%]
+tests/audit/test_distributed_io.py ......                                [ 22%]
+tests/audit/test_independent_numerics.py ............................... [ 35%]
+.............                                                            [ 40%]
+tests/audit/test_independent_waves.py ...............                    [ 47%]
+tests/experiments2d/test_mpi.py ..                                       [ 48%]
+tests/experiments2d/test_science.py ....                                 [ 49%]
+tests/experiments2d/test_sources_points.py .........................     [ 60%]
+tests/experiments2d/test_workflow.py ..........                          [ 64%]
+tests/integration/test_frontends_mpi.py .....                            [ 66%]
+tests/plane_strain/test_initial_acceleration.py ....                     [ 68%]
+tests/plane_strain/test_manufactured_solution.py ..........              [ 72%]
+tests/plane_strain/test_mpi.py ....                                      [ 74%]
+tests/plane_strain/test_operators.py .................................   [ 88%]
+tests/plane_strain/test_spectral_dynamics.py ..............              [ 94%]
+tests/unit/test_config_sources.py ..............                         [100%]
+
+======================= 237 passed in 951.45s (0:15:51) ========================
