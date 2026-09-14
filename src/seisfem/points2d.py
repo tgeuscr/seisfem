@@ -49,7 +49,7 @@ class PointMap2D:
                 for cell in hits.links(i):
                     # Use stored mesh geometry, not mapped DOF coordinates: the
                     # latter can differ by roundoff with cell permutation/rank.
-                    vertices = msh.geometry.x[msh.geometry.dofmap[cell], :2]
+                    vertices = msh.geometry.x[msh.geometry.dofmaps[0][cell], :2]
                     key = tuple(sorted(tuple(vertex) for vertex in vertices))
                     options.append((key, comm.rank, int(cell)))
                 choices.append(min(options) if options else None)
