@@ -11,6 +11,7 @@ from dolfinx.fem import petsc
 from mpi4py import MPI
 from petsc4py import PETSc
 
+from .boundaries2d import assemble_boundary_damping
 from .config2d import PlaneStrainConfig
 from .timestepping import CentralDifference
 
@@ -47,11 +48,13 @@ class PlaneStrainOperators:
     entries for owned scalar DOFs, including constrained ones. `fixed` identifies
     zero-displacement components for time-step projection; no artificial boundary
     diagonals are inserted. Geometry coordinates are per two-component node.
+    C is the consistent boundary impedance matrix (None without absorbers);
+    damping is its nonnegative row-sum lumping on owned scalar DOFs.
     """
 
     def __init__(self, config: PlaneStrainConfig, comm=MPI.COMM_WORLD):
         self.comm, self.config = comm, config
-        self.M = self.K = self._work = None
+        self.M = self.K = self.C = self._work = None
         self.closed = False
         signatures = comm.allgather(config.model_dump_json(by_alias=True))
         if len(set(signatures)) != 1:
@@ -116,6 +119,7 @@ class PlaneStrainOperators:
             for component in constraint.components:
                 dofs = 2 * blocks + (0 if component == "x" else 1)
                 self.fixed[dofs[dofs < self.n]] = True
+        self.C, self.damping = assemble_boundary_damping(self.V, cfg)
         self._work = self.K.createVecLeft()
 
     def apply(self, owned):
@@ -250,12 +254,12 @@ class PlaneStrainOperators:
             raise ValueError("Invalid initial data; " + "; ".join(failures))
         if dt > safety * self.stable_dt:
             raise ValueError("dt exceeds the assembled plane-strain spectral bound with safety")
-        return CentralDifference(self.mass, np.zeros(self.n), self.fixed, dt, self.apply, *arrays)
+        return CentralDifference(self.mass, self.damping, self.fixed, dt, self.apply, *arrays)
 
     def close(self):
         """Destroy explicit PETSc resources collectively; repeat calls are harmless."""
         if not self.closed:
-            for resource in (self._work, self.K, self.M):
+            for resource in (self._work, self.C, self.K, self.M):
                 if resource is not None:
                     resource.destroy()
             self.closed = True

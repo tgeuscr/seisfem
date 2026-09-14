@@ -36,7 +36,10 @@ class Simulation2D:
         if self.operators is None:
             cfg = self.config
             kernel = PlaneStrainConfig(
-                domain=cfg.domain, material=cfg.material, constraints=cfg.constraints
+                domain=cfg.domain,
+                material=cfg.material,
+                constraints=cfg.constraints,
+                boundaries=cfg.boundaries,
             )
             self.operators = PlaneStrainOperators(kernel, self.comm)
             try:
