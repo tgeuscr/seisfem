@@ -1,12 +1,16 @@
 # seisfem
 
-A verified 1D P/S elastic-wave laboratory built with **DOLFINx 0.11**, intended as
-the foundation of a future vector seismic FEM solver. It solves separate
-longitudinal and transverse reductions of 3D elasticity using CG1 displacement,
-aligned DG0 materials, positive lumped mass and explicit central differences.
-The separate [2D plane-strain kernel](docs/development/plane_strain_core.md)
-supports operator and manufactured-solution verification. Configured seismic
-experiments through `Simulation` and the CLI remain 1D; no 3D is implemented.
+A verified finite-element seismic laboratory built with **DOLFINx 0.11**.
+It includes the audited 1D P/S reference solver and a homogeneous isotropic
+**2D plane-strain experiment API** with vector line forces and arbitrary-coordinate
+FE displacement/velocity receivers. Both use positive lumped mass and the same
+explicit central-difference integrator. No 3D is implemented.
+
+The [2D source/receiver validation](docs/validation/2d_sources_receivers.md) records
+force units, interpolation and MPI ownership, measured P/S arrivals, reciprocity,
+and mesh refinement. The [2D numerical core](docs/development/plane_strain_core.md)
+remains the operator foundation. `Simulation` and the CLI retain their existing
+1D behavior; 2D experiments use `Simulation2D` and `SimulationConfig2D`.
 
 ## Install
 
@@ -67,7 +71,28 @@ need no pickle; metadata names every shard. Distributed XDMF/HDF5 stores materia
 and strided displacement snapshots. Receiver histories remain in memory until
 completion; this is a documented scale limit.
 
-## Scientific contract
+## Run a homogeneous 2D experiment
+
+```bash
+python examples/2d/homogeneous.py --cells 240
+mpiexec -n 4 python examples/2d/homogeneous.py --cells 240
+# Finer case used for the strongest arrival/refinement evidence:
+python examples/2d/homogeneous.py --cells 640
+```
+
+The executable example uses only `SimulationConfig2D.model_validate(...)` and
+`Simulation2D(cfg).run()`, and prints reproducible envelope-peak arrival times.
+Results contain complete displacement and centered integer-time velocity arrays
+on every rank, shaped `(time, receiver, component)` with components `("x", "z")`.
+`result.to_xarray()` adds named coordinates and SI units. The source amplitude is
+**N/m**, a line force per unit out-of-plane length. Source directions are normalized.
+
+The [full API and validation example](docs/validation/2d_sources_receivers.md)
+explains pre-return measurement windows and remaining S-wave dispersion.
+Only homogeneous material and free/fixed boundaries are supported in 2D.
+Snapshots and acceleration receivers are not exposed by the 2D experiment API.
+
+## 1D scientific contract
 
 * Positive-up z in metres, SI throughout; no implicit depth conversion.
 * P uses lambda+2mu, S uses mu; neither is an acoustic pressure substitution.
