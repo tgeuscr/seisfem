@@ -1,4 +1,4 @@
-"""Homogeneous plane-strain vector P1 operators on affine rectangle triangles."""
+"""Isotropic plane-strain vector P1 operators on affine rectangle triangles."""
 
 from contextlib import contextmanager
 from dataclasses import dataclass
@@ -12,7 +12,9 @@ from mpi4py import MPI
 from petsc4py import PETSc
 
 from .boundaries2d import assemble_boundary_damping
+from .config import Layered
 from .config2d import PlaneStrainConfig
+from .materials2d import CellMaterials2D
 from .timestepping import CentralDifference
 
 
@@ -87,8 +89,15 @@ class PlaneStrainOperators:
         self.coordinates = self.V.tabulate_dof_coordinates()[:, :2].copy()
         self.field = fem.Function(self.V, name="displacement")
         u, v = ufl.TrialFunction(self.V), ufl.TestFunction(self.V)
-        rho = cfg.material.density
-        lam, mu = cfg.material.lame
+        self.material_fields = None
+        if isinstance(cfg.material, Layered):
+            self.material_fields = CellMaterials2D(self.mesh, cfg)
+            rho = self.material_fields.rho
+            lam, mu = self.material_fields.lam, self.material_fields.mu
+        else:
+            # Retain the validated homogeneous forms and numerical execution path.
+            rho = cfg.material.density
+            lam, mu = cfg.material.lame
         self.M = petsc.assemble_matrix(fem.form(rho * ufl.inner(u, v) * ufl.dx))
         self.M.assemble()
         self.K = petsc.assemble_matrix(fem.form(ufl.inner(strain(v), stress(u, lam, mu)) * ufl.dx))

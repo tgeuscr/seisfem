@@ -1,11 +1,11 @@
-"""Homogeneous plane-strain kernel and experiment configuration, separate from 1D."""
+"""Isotropic plane-strain kernel and experiment configuration, separate from 1D."""
 
 import math
 from typing import Annotated, Literal
 
 from pydantic import Field, model_validator
 
-from .config import Config, Isotropic, TimeConfig
+from .config import Config, Isotropic, Layered, TimeConfig
 
 Count = Annotated[int, Field(ge=1, strict=True)]
 
@@ -62,15 +62,38 @@ class BoundaryConditions2D(Config):
 
 
 class PlaneStrainConfig(Config):
-    """Vector P1 triangles with homogeneous 3D solid moduli and outer boundaries.
+    """Vector P1 triangles with isotropic 3D solid moduli and outer boundaries.
 
     Time, source and receiver configuration lives in SimulationConfig2D.
     """
 
     domain: Rectangle = Rectangle()
-    material: Isotropic
+    material: Isotropic | Layered
     constraints: tuple[ZeroDisplacement, ...] = ()
     boundaries: BoundaryConditions2D = BoundaryConditions2D()
+
+    @model_validator(mode="after")
+    def aligned_layers(self):
+        if not isinstance(self.material, Layered):
+            return self
+        layers = self.material.layers
+        lo, hi = self.domain.lower[1], self.domain.upper[1]
+        if layers[0].lower != lo or layers[-1].upper != hi:
+            raise ValueError("Layers must exactly cover the rectangle's z extent")
+        if any(a.upper != b.lower for a, b in zip(layers[:-1], layers[1:], strict=True)):
+            raise ValueError(
+                "Layers must be ordered by increasing z, contiguous and nonoverlapping"
+            )
+        count = self.domain.cells[1]
+        edges = [layers[0].lower, *(layer.upper for layer in layers)]
+        rows = [(z - lo) / (hi - lo) * count for z in edges]
+        if any(abs(row - round(row)) > 64 * math.ulp(float(count)) for row in rows):
+            raise ValueError("Every layer interface must coincide with a horizontal mesh row")
+        if any(round(a) >= round(b) for a, b in zip(rows[:-1], rows[1:], strict=True)):
+            raise ValueError("Every layer must span at least one mesh row")
+        if self.boundaries.absorbing_sides:
+            raise ValueError("Absorbing boundaries are not supported for layered 2D materials")
+        return self
 
     @model_validator(mode="after")
     def compatible_boundaries(self):
@@ -145,7 +168,7 @@ class Receiver2D(Config):
 
 
 class SimulationConfig2D(PlaneStrainConfig):
-    """Homogeneous plane-strain experiment, zero initial data and vector P1 FE."""
+    """Isotropic plane-strain experiment, zero initial data and vector P1 FE."""
 
     # Reuse time validation, but stability is checked on the assembled 2D operator.
     time: TimeConfig

@@ -1,4 +1,4 @@
-"""Public homogeneous plane-strain source-to-receiver workflow."""
+"""Public isotropic plane-strain source-to-receiver workflow."""
 
 import numpy as np
 from mpi4py import MPI
