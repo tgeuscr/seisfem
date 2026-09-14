@@ -1,4 +1,4 @@
-"""Narrow homogeneous plane-strain kernel configuration, separate from 1D runs."""
+"""Homogeneous plane-strain kernel and experiment configuration, separate from 1D."""
 
 import math
 from typing import Annotated, Literal

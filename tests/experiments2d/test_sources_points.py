@@ -104,3 +104,25 @@ def test_invalid_points(positions):
     with PlaneStrainOperators(configuration(n=2), MPI.COMM_SELF) as op:
         with pytest.raises(ValueError):
             PointMap2D(op.V, positions)
+
+
+def test_translated_nonsquare_mesh_affine_functional():
+    from seisfem.config2d import PlaneStrainConfig
+
+    cfg = PlaneStrainConfig.model_validate(
+        dict(
+            domain=dict(lower=(-210.3, 40.2), upper=(892.7, 952.9), cells=(7, 5)),
+            material=dict(density=2400, vp=3200, vs=1800),
+        )
+    )
+    positions = [(-210.3, 40.2), (892.7, 952.9), (-210.3, 414.17), (0.123, 235.71)]
+    with PlaneStrainOperators(cfg, MPI.COMM_SELF) as op:
+        points = PointMap2D(op.V, positions)
+        field = affine(op.coordinates).ravel()
+        np.testing.assert_allclose(
+            points.evaluate(field), affine(positions), atol=1e-12, rtol=2e-15
+        )
+        for i, position in enumerate(positions):
+            source = PointMap2D(op.V, [position])
+            load = source.unit_load((3, 4))
+            assert load @ field == pytest.approx(affine(positions)[i] @ [0.6, 0.8], abs=2e-12)

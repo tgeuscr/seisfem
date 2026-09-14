@@ -34,7 +34,7 @@ def wave_config(cells=160):
                 lower=(-2400, -2400), upper=(2400, 2400), cells=(cells, cells), diagonal="right"
             ),
             material=dict(density=2400, vp=3200, vs=1800),
-            time=dict(dt=0.001, duration=0.95),
+            time=dict(dt=0.0005, duration=0.95),
             source=dict(
                 position=(3.7, 2.9),
                 direction=(1, 0),
@@ -86,3 +86,30 @@ def arrival_report(result):
 
 def relative_error(a, b):
     return float(np.linalg.norm(a - b) / np.linalg.norm(b))
+
+
+def reciprocity_runs(comm, constrained=False):
+    """Four public runs: Gxx(B,A), Gxx(A,B), Gxz(B,A), Gzx(A,B)."""
+    from seisfem import Simulation2D
+
+    A, B = (0.313, 0.487), (0.679, 0.723)
+    cases = [(A, B, (1, 0), 0), (B, A, (1, 0), 0), (A, B, (0, 1), 0), (B, A, (1, 0), 1)]
+    traces = []
+    for position, receiver, direction, component in cases:
+        cfg = small_config(
+            source=dict(
+                position=position,
+                direction=direction,
+                wavelet=dict(f0=9, amplitude=2.1, time_shift=0.04),
+            ),
+            receivers=[dict(name="r", position=receiver)],
+            time=dict(dt=0.002, duration=0.5),
+            constraints=[dict(side="left", components=["x"]), dict(side="lower", components=["z"])]
+            if constrained
+            else [],
+        )
+        result = Simulation2D(cfg, comm).run()
+        traces.append(
+            np.stack((result.displacement[:, 0, component], result.velocity[:, 0, component]))
+        )
+    return np.array(traces)
