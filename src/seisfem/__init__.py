@@ -1,9 +1,10 @@
 """Finite-element seismic elastodynamics. Binary runtime imports are lazy."""
 
 from .config import SimulationConfig
+from .config2d import SimulationConfig2D
 
 __version__ = "0.1.0"
-__all__ = ["Simulation", "SimulationConfig", "__version__"]
+__all__ = ["Simulation", "SimulationConfig", "Simulation2D", "SimulationConfig2D", "__version__"]
 
 
 def __getattr__(name):
@@ -11,4 +12,8 @@ def __getattr__(name):
         from .simulation import Simulation
 
         return Simulation
+    if name == "Simulation2D":
+        from .simulation2d import Simulation2D
+
+        return Simulation2D
     raise AttributeError(name)
