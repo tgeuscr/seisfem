@@ -1,0 +1,135 @@
+Pre-fix reproduction against 7cb5e4e production code; new regression tests.
+Pytest output below has trailing whitespace removed.
+
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+___________________________ test_explicit_zero_load ____________________________
+
+    def test_explicit_zero_load():
+        import ufl
+
+        with PlaneStrainOperators(configuration(), MPI.COMM_SELF) as op:
+>           load = op.assemble_load(ufl.as_vector([0.0, 0.0]))
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/plane_strain/test_operators.py:150:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src/seisfem/fem2d.py:136: in assemble_load
+    ufl.inner(v, body_force) * ufl.dx(metadata={"quadrature_degree": quadrature_degree})
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = Measure('dx', subdomain_id='everywhere', metadata={'quadrature_degree': 8})
+integrand = Zero((), (), ())
+
+    def __rmul__(self, integrand):
+        """Multiply a scalar expression with measure to construct a form with a single integral.
+
+        This is to implement the notation
+            form = integrand * self
+
+        Integration properties are taken from this Measure object.
+        """
+        # Avoid circular imports
+        from ufl.form import Form
+        from ufl.integral import Integral
+
+        # Allow python literals: 1*dx and 1.0*dx
+        if isinstance(integrand, int | float):
+            integrand = as_ufl(integrand)
+
+        # Let other types implement multiplication with Measure if
+        # they want to (to support the dolfin-adjoint TimeMeasure)
+        if not isinstance(integrand, Expr):
+            return NotImplemented
+
+        # Allow only scalar integrands
+        if not is_true_ufl_scalar(integrand):
+            raise ValueError(
+                "Can only integrate scalar expressions. The integrand is a "
+                f"tensor expression with value shape {integrand.ufl_shape} and "
+                f"free indices with labels {integrand.ufl_free_indices}."
+            )
+
+        # If we have a tuple of domain ids build the integrals one by
+        # one and construct as a Form in one go.
+        subdomain_id = self.subdomain_id()
+        if isinstance(subdomain_id, tuple):
+            return Form(
+                list(
+                    chain(
+                        *(
+                            (integrand * self.reconstruct(subdomain_id=d)).integrals()
+                            for d in subdomain_id
+                        )
+                    )
+                )
+            )
+
+        # Check that we have an integer subdomain or a string
+        # ("everywhere" or "otherwise", any more?)
+        if not isinstance(
+            subdomain_id,
+            str | numbers.Integral,
+        ):
+            raise ValueError("Expecting integer or string domain id.")
+
+        # If we don't have an integration domain, try to find one in
+        # integrand
+        domain = self.ufl_domain()
+        if domain is None:
+            domains = extract_domains(integrand)
+            if len(domains) == 1:
+                (domain,) = domains
+            elif len(domains) == 0:
+>               raise ValueError("This integral is missing an integration domain.")
+E               ValueError: This integral is missing an integration domain.
+
+../../packages/anaconda3/envs/fenicsx0.11/lib/python3.14/site-packages/ufl/measure.py:486: ValueError
+______________ test_collective_validation_and_empty_ownership[2] _______________
+
+ranks = 2
+
+    @pytest.mark.mpi
+    @pytest.mark.parametrize("ranks", [2, 4])
+    def test_collective_validation_and_empty_ownership(ranks):
+>       completed = subprocess.run(
+            ["mpiexec", "-n", str(ranks), sys.executable, "-m", "tests.plane_strain.mpi_edge_worker"],
+            env={**os.environ, "OMP_NUM_THREADS": "1", "OPENBLAS_NUM_THREADS": "1"},
+            capture_output=True,
+            text=True,
+            timeout=45,
+        )
+
+tests/plane_strain/test_mpi.py:40:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+../../packages/anaconda3/envs/fenicsx0.11/lib/python3.14/subprocess.py:557: in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../packages/anaconda3/envs/fenicsx0.11/lib/python3.14/subprocess.py:1221: in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../packages/anaconda3/envs/fenicsx0.11/lib/python3.14/subprocess.py:2154: in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <Popen: returncode: -9 args: ['mpiexec', '-n', '2', '/home/m/packages/anacon...>
+endtime = 101074.319429314, orig_timeout = 45, stdout_seq = [], stderr_seq = []
+skip_check_and_raise = False
+
+    def _check_timeout(self, endtime, orig_timeout, stdout_seq, stderr_seq,
+                       skip_check_and_raise=False):
+        """Convenience for checking if a timeout has expired."""
+        if endtime is None:
+            return
+        if skip_check_and_raise or _time() > endtime:
+>           raise TimeoutExpired(
+                    self.args, orig_timeout,
+                    output=b''.join(stdout_seq) if stdout_seq else None,
+                    stderr=b''.join(stderr_seq) if stderr_seq else None)
+E           subprocess.TimeoutExpired: Command '['mpiexec', '-n', '2', '/home/m/packages/anaconda3/envs/fenicsx0.11/bin/python', '-m', 'tests.plane_strain.mpi_edge_worker']' timed out after 45 seconds
+
+../../packages/anaconda3/envs/fenicsx0.11/lib/python3.14/subprocess.py:1268: TimeoutExpired
+=========================== short test summary info ============================
+FAILED tests/plane_strain/test_operators.py::test_explicit_zero_load - ValueE...
+FAILED tests/plane_strain/test_mpi.py::test_collective_validation_and_empty_ownership[2]
+2 failed in 45.45s

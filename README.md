@@ -4,7 +4,9 @@ A verified 1D P/S elastic-wave laboratory built with **DOLFINx 0.11**, intended 
 the foundation of a future vector seismic FEM solver. It solves separate
 longitudinal and transverse reductions of 3D elasticity using CG1 displacement,
 aligned DG0 materials, positive lumped mass and explicit central differences.
-This release does not implement 2D/3D propagation.
+The separate [2D plane-strain kernel](docs/development/plane_strain_core.md)
+supports operator and manufactured-solution verification. Configured seismic
+experiments through `Simulation` and the CLI remain 1D; no 3D is implemented.
 
 ## Install
 
