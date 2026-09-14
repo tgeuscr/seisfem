@@ -39,16 +39,47 @@ class ZeroDisplacement(Config):
         return self
 
 
-class PlaneStrainConfig(Config):
-    """Vector P1 triangles, 3D isotropic solid moduli, natural or fixed-zero sides.
+class BoundaryConditions2D(Config):
+    """Natural traction or full normal/tangential impedance on rectangle sides.
 
-    There is deliberately no source, receiver, absorber, output or geology schema.
-    Time integration is a Python kernel operation, not a new Simulation frontend.
+    Essential components remain in `constraints`. Absorption and essential
+    constraints on the same side are rejected; intersections of different sides
+    are allowed. With positive-up z, the free surface is normally `upper`.
+    """
+
+    left: Literal["free", "absorbing"] = "free"
+    right: Literal["free", "absorbing"] = "free"
+    lower: Literal["free", "absorbing"] = "free"
+    upper: Literal["free", "absorbing"] = "free"
+
+    @property
+    def absorbing_sides(self):
+        return tuple(
+            side
+            for side in ("left", "right", "lower", "upper")
+            if getattr(self, side) == "absorbing"
+        )
+
+
+class PlaneStrainConfig(Config):
+    """Vector P1 triangles with homogeneous 3D solid moduli and outer boundaries.
+
+    Time, source and receiver configuration lives in SimulationConfig2D.
     """
 
     domain: Rectangle = Rectangle()
     material: Isotropic
     constraints: tuple[ZeroDisplacement, ...] = ()
+    boundaries: BoundaryConditions2D = BoundaryConditions2D()
+
+    @model_validator(mode="after")
+    def compatible_boundaries(self):
+        for constraint in self.constraints:
+            if constraint.side in self.boundaries.absorbing_sides:
+                raise ValueError(
+                    f"Side {constraint.side!r} cannot be both absorbing and constrained"
+                )
+        return self
 
 
 def unit_direction(direction):

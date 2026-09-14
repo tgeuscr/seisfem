@@ -89,7 +89,13 @@ on every rank, shaped `(time, receiver, component)` with components `("x", "z")`
 
 The [full API and validation example](docs/validation/2d_sources_receivers.md)
 explains pre-return measurement windows and remaining S-wave dispersion.
-Only homogeneous material and free/fixed boundaries are supported in 2D.
+Homogeneous 2D runs support free/fixed boundaries and per-side first-order local
+elastic impedance absorption. For a physical free surface with absorbing sides
+and bottom, set `boundaries={"left": "absorbing", "right": "absorbing",
+"lower": "absorbing", "upper": "free"}`. Run `python examples/2d/absorbing.py`
+for a public-API comparison. The [absorbing-boundary validation](docs/validation/2d_absorbing_boundaries.md)
+documents normal P/S reflection reduction, preserved free-surface signals,
+discrete energy balance, MPI agreement, and limits at oblique incidence.
 Snapshots and acceleration receivers are not exposed by the 2D experiment API.
 
 ## 1D scientific contract
