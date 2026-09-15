@@ -1,0 +1,96 @@
+seisfem v0.5.0 release closure checks
+Implementation baseline: ef0460a on feature/2d-heterogeneous-materials
+
+Existing focused evidence (not rerun separately during closure):
+$ OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 python -m pytest -q tests/heterogeneous2d
+25 passed in 84.89s (0:01:24)
+
+Packaging:
+$ python -m pip install --no-deps -e .
+Successfully built and installed seisfem-0.5.0; dependencies were not upgraded.
+Fresh Python verified seisfem.__version__ == importlib.metadata.version('seisfem') == '0.5.0'.
+
+Full regression, run exactly once during closure:
+$ OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 python -m pytest -ra
+============================= test session starts ==============================
+platform linux -- Python 3.14.6, pytest-9.1.1, pluggy-1.6.0
+rootdir: /home/m/projects/seisfem
+configfile: pyproject.toml
+testpaths: tests
+plugins: anyio-4.15.1
+collected 262 items
+
+tests/absorbing2d/test_characteristics.py ......                         [  2%]
+tests/absorbing2d/test_mpi.py .                                          [  2%]
+tests/absorbing2d/test_operators.py ...............                      [  8%]
+tests/absorbing2d/test_physics.py .....                                  [ 10%]
+tests/absorbing2d/test_time_energy.py ......                             [ 12%]
+tests/analytical/test_operators_energy.py ......                         [ 14%]
+tests/analytical/test_pulses.py ........                                 [ 17%]
+tests/audit/test_distributed_io.py ......                                [ 20%]
+tests/audit/test_independent_numerics.py ............................... [ 32%]
+.............                                                            [ 37%]
+tests/audit/test_independent_waves.py ...............                    [ 42%]
+tests/experiments2d/test_mpi.py ..                                       [ 43%]
+tests/experiments2d/test_science.py ....                                 [ 45%]
+tests/experiments2d/test_sources_points.py .........................     [ 54%]
+tests/experiments2d/test_workflow.py ..........                          [ 58%]
+tests/heterogeneous2d/test_interface.py .                                [ 58%]
+tests/heterogeneous2d/test_materials.py .......................          [ 67%]
+tests/heterogeneous2d/test_mpi.py .                                      [ 67%]
+tests/integration/test_frontends_mpi.py .....                            [ 69%]
+tests/plane_strain/test_initial_acceleration.py ....                     [ 71%]
+tests/plane_strain/test_manufactured_solution.py ..........              [ 75%]
+tests/plane_strain/test_mpi.py ....                                      [ 76%]
+tests/plane_strain/test_operators.py .................................   [ 89%]
+tests/plane_strain/test_spectral_dynamics.py ..............              [ 94%]
+tests/unit/test_config_sources.py ..............                         [100%]
+
+======================= 262 passed in 747.25s (0:12:27) ========================
+
+262 passed; 0 skipped; 0 xfailed; 0 xpassed. Elapsed: 747.25 s.
+
+Quality checks:
+The initial format check found only wrapping in one documentation Python block.
+Ran ruff format docs/validation/2d_heterogeneous_materials.md, inspected the diff,
+and reran formatting and the remaining gates. No numerical code changed;
+the expensive full regression was not repeated.
+
+$ ruff check .
+All checks passed!
+Exit code: 0
+
+$ ruff format --check .
+unformatted: File would be reformatted
+  --> docs/validation/2d_heterogeneous_materials.md:18:37
+   |
+17 |     "layers": [
+   -         {"lower": -2000, "upper": 0,
+   -          "material": {"density": 2000, "vp": 2000, "vs": 1000}},
+   -         {"lower": 0, "upper": 2000,
+   -          "material": {"density": 2400, "vp": 3000, "vs": 1500}},
+18 +         {"lower": -2000, "upper": 0, "material": {"density": 2000, "vp": 2000, "vs": 1000}},
+19 +         {"lower": 0, "upper": 2000, "material": {"density": 2400, "vp": 3000, "vs": 1500}},
+20 |     ],
+   |
+
+1 file would be reformatted, 91 files already formatted
+Exit code: 1
+
+$ ruff format --check .
+92 files already formatted
+Exit code: 0
+
+$ pre-commit run --all-files
+ruff check...............................................................Passed
+ruff format..............................................................Passed
+Exit code: 0
+
+$ git diff --check
+Exit code: 0
+
+$ git diff --cached --check
+Exit code: 0
+
+$ git diff v0.4.0 --check
+Exit code: 0

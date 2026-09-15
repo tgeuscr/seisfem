@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "seisfem"
-version = "0.1.0"
+dynamic = ["version"]
 description = "Verified finite-element reductions of seismic elastodynamics"
 requires-python = ">=3.11"
 dependencies = ["numpy>=2", "pydantic>=2.10,<3", "PyYAML>=6"]
@@ -18,6 +18,9 @@ dev = ["pytest>=8", "ruff>=0.12", "pre-commit>=4"]
 
 [project.scripts]
 seisfem = "seisfem.cli:app"
+
+[tool.hatch.version]
+path = "src/seisfem/__init__.py"
 
 [tool.ruff]
 line-length = 100
