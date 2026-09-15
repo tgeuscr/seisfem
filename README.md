@@ -1,10 +1,11 @@
 # seisfem
 
 A verified finite-element seismic laboratory built with **DOLFINx 0.11**.
-It includes the audited 1D P/S reference solver and a homogeneous isotropic
+It includes the audited 1D P/S reference solver and an isotropic
 **2D plane-strain experiment API** with vector line forces and arbitrary-coordinate
 FE displacement/velocity receivers. Both use positive lumped mass and the same
-explicit central-difference integrator. No 3D is implemented.
+explicit central-difference integrator. The 2D API supports homogeneous solids
+and mesh-aligned horizontal material layers. No 3D is implemented.
 
 The [2D source/receiver validation](docs/validation/2d_sources_receivers.md) records
 force units, interpolation and MPI ownership, measured P/S arrivals, reciprocity,
@@ -97,6 +98,14 @@ for a public-API comparison. The [absorbing-boundary validation](docs/validation
 documents normal P/S reflection reduction, preserved free-surface signals,
 discrete energy balance, MPI agreement, and limits at oblique incidence.
 Snapshots and acceleration receivers are not exposed by the 2D experiment API.
+
+For horizontal heterogeneous layers, run `python examples/2d/layered.py`.
+Each layer supplies `lower`, `upper`, and an isotropic `material`; layers must
+cover the positive-up z extent and meet on horizontal mesh rows. The
+[heterogeneous-material validation](docs/validation/2d_heterogeneous_materials.md)
+records normal-incidence P reflection/transmission against the 1D reference,
+refinement, and MPI consistency. Layered 2D configurations currently support
+free/fixed boundaries and reject absorbing boundaries.
 
 ## 1D scientific contract
 

@@ -7,13 +7,14 @@ import shutil
 import subprocess
 import sys
 import xml.etree.ElementTree as ET
+from importlib.metadata import version
 
 import numpy as np
 import pytest
 from mpi4py import MPI
 from typer.testing import CliRunner
 
-from seisfem import Simulation, SimulationConfig
+from seisfem import Simulation, SimulationConfig, __version__
 from seisfem.cli import app
 from seisfem.output import runtime_metadata
 from tests.audit.test_independent_numerics import config
@@ -36,7 +37,7 @@ def readback(directory):
     metadata = json.loads((directory / "metadata.json").read_text())
     assert metadata["status"] == "complete"
     assert metadata["config"] == cfg.model_dump(mode="json", by_alias=True)
-    assert metadata["package_version"] == "0.1.0"
+    assert metadata["package_version"] == __version__ == version("seisfem")
     assert metadata["petsc"] == [3, 25, 5]
     assert metadata["scalar_dtype"] == "float64"
     assert metadata["mesh"] == dict(cells=12, dofs=13, cell_type="interval", geometry_degree=1)
