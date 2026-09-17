@@ -7,7 +7,7 @@ from dolfinx.fem import petsc
 from mpi4py import MPI
 
 
-def assemble_boundary_damping(V, config):
+def assemble_boundary_damping(V, config, material_fields=None):
     """Collectively return consistent C and owned row-sum diagonal C_L.
 
     sigma*n = -B*v, B=rho*(Vs*I + (Vp-Vs)*n⊗n), on selected exterior facets.
@@ -15,6 +15,10 @@ def assemble_boundary_damping(V, config):
     On these axis-aligned sides B is diagonal and positive. Scalar P1 trace
     functions are nonnegative and sum to one, so row sums are nonnegative.
     No such row-sum positivity claim is made for general rotated/curved meshes.
+
+    Layered operators supply their synchronized DG0 rho/lambda/mu fields.
+    On exterior ds facets these have the unique adjacent-cell trace, giving
+    Zs=sqrt(rho*mu), Zp=sqrt(rho*(lambda+2*mu)). No internal facet term is added.
 
     The caller owns the returned PETSc matrix; the no-absorber path returns
     None and exact zeros without any facet search or extra matrix assembly.
@@ -46,9 +50,16 @@ def assemble_boundary_damping(V, config):
     msh.topology.create_connectivity(1, 2)
     ds = ufl.Measure("ds", domain=msh, subdomain_data=tags)(1)
     normal = ufl.FacetNormal(msh)
-    rho = config.material.density
-    vp, vs = config.material.speed("P"), config.material.speed("S")
-    impedance = rho * (vs * ufl.Identity(2) + (vp - vs) * ufl.outer(normal, normal))
+    if material_fields is None:
+        # Preserve the validated homogeneous expression and assembly path.
+        rho = config.material.density
+        vp, vs = config.material.speed("P"), config.material.speed("S")
+        impedance = rho * (vs * ufl.Identity(2) + (vp - vs) * ufl.outer(normal, normal))
+    else:
+        rho, lam, mu = material_fields.rho, material_fields.lam, material_fields.mu
+        zs = ufl.sqrt(rho * mu)
+        zp = ufl.sqrt(rho * (lam + 2 * mu))
+        impedance = zs * ufl.Identity(2) + (zp - zs) * ufl.outer(normal, normal)
     u, w = ufl.TrialFunction(V), ufl.TestFunction(V)
     matrix = None
     try:

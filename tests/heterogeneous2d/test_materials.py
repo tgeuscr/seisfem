@@ -135,7 +135,13 @@ def invalid_models():
     data["material"]["layers"][0]["upper"] = 0.1
     data["material"]["layers"][1]["lower"] = 0.1
     cases.append(data)
-    cases.append(good | dict(boundaries=dict(right="absorbing")))
+    # Layered absorption is now supported; conflicting essential data still fail.
+    cases.append(
+        good
+        | dict(
+            boundaries=dict(right="absorbing"), constraints=[dict(side="right", components=["x"])]
+        )
+    )
     cases.append(good | dict(material=dict(type="layered", layers=[])))
     return cases
 
