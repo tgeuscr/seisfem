@@ -1,0 +1,96 @@
+seisfem oblique-interface validation checks
+Baseline: v0.5.0 / 76e657088370890cfef024554846da82033e2ae7
+Numerical implementation commit: 8f9e0dc
+Production changes: none. Existing tracked files: unchanged.
+
+Initial repository audit:
+  git fetch --tags origin: exit 0
+  main = origin/main = v0.5.0^{commit} = baseline above.
+  Requested feature branch already existed at this same commit.
+  Pre-existing untracked runs/ and scripts/ were preserved.
+  Clean review checkout: /home/m/projects/seisfem-oblique-validation
+  No push, merge into main, or new tag was performed.
+
+Focused development checks:
+  Independent reference: 9 passed.
+  Packet and initial diagnostic tests: 6 passed after correcting an off-band
+  synthetic test signal to the diagnostic's documented frequency band.
+  Final standalone diagnostic audit: 6 passed in 12.48s.
+  Initial complete oblique development run: 25 passed, 2 failed in 509.33s.
+  Both failures were in the new harness's receiver collection on four ranks:
+  PointMap2D.evaluate returns locally owned samples. Fixed the harness to gather
+  by global receiver IDs. No production correction was needed.
+  Repeated both affected four-rank simulations and compared every quantity to
+  serial and two-rank outputs: passed. The full run below independently passed
+  both MPI tests and all 31 final oblique tests.
+
+Separate existing heterogeneous regression:
+$ OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 python -m pytest -q tests/heterogeneous2d
+25 passed in 163.28s (0:02:43)
+
+Full regression, run once:
+$ OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 SEISFEM_OBLIQUE_REPORT_DIR=/tmp/oblique-full python -m pytest -ra
+============================= test session starts ==============================
+platform linux -- Python 3.14.6, pytest-9.1.1, pluggy-1.6.0
+rootdir: /home/m/projects/seisfem
+configfile: pyproject.toml
+testpaths: tests
+plugins: anyio-4.15.1
+collected 293 items
+
+tests/absorbing2d/test_characteristics.py ......                         [  2%]
+tests/absorbing2d/test_mpi.py .                                          [  2%]
+tests/absorbing2d/test_operators.py ...............                      [  7%]
+tests/absorbing2d/test_physics.py .....                                  [  9%]
+tests/absorbing2d/test_time_energy.py ......                             [ 11%]
+tests/analytical/test_operators_energy.py ......                         [ 13%]
+tests/analytical/test_pulses.py ........                                 [ 16%]
+tests/audit/test_distributed_io.py ......                                [ 18%]
+tests/audit/test_independent_numerics.py ............................... [ 28%]
+.............                                                            [ 33%]
+tests/audit/test_independent_waves.py ...............                    [ 38%]
+tests/experiments2d/test_mpi.py ..                                       [ 38%]
+tests/experiments2d/test_science.py ....                                 [ 40%]
+tests/experiments2d/test_sources_points.py .........................     [ 48%]
+tests/experiments2d/test_workflow.py ..........                          [ 52%]
+tests/heterogeneous2d/test_interface.py .                                [ 52%]
+tests/heterogeneous2d/test_materials.py .......................          [ 60%]
+tests/heterogeneous2d/test_mpi.py .                                      [ 60%]
+tests/integration/test_frontends_mpi.py .....                            [ 62%]
+tests/oblique2d/test_boundaries.py ..                                    [ 63%]
+tests/oblique2d/test_diagnostics.py ......                               [ 65%]
+tests/oblique2d/test_mpi.py ..                                           [ 65%]
+tests/oblique2d/test_packets.py ..                                       [ 66%]
+tests/oblique2d/test_reference.py .........                              [ 69%]
+tests/oblique2d/test_refinement.py ..........                            [ 73%]
+tests/plane_strain/test_initial_acceleration.py ....                     [ 74%]
+tests/plane_strain/test_manufactured_solution.py ..........              [ 77%]
+tests/plane_strain/test_mpi.py ....                                      [ 79%]
+tests/plane_strain/test_operators.py .................................   [ 90%]
+tests/plane_strain/test_spectral_dynamics.py ..............              [ 95%]
+tests/unit/test_config_sources.py ..............                         [100%]
+
+======================= 293 passed in 1395.73s (0:23:15) =======================
+
+Evidence collection:
+$ python -m tests.oblique2d.report /tmp/oblique-full docs/validation/2d_oblique_measurements.json
+All measurements, including boundary sensitivity and MPI outputs, exactly match
+independently repeated development simulations. Tests never read this artifact.
+
+Quality checks (clean checkout; exploratory files excluded by checkout isolation):
+$ ruff check .
+All checks passed!
+$ ruff format --check .
+All files already formatted.
+$ pre-commit run --all-files
+ruff check...............................................................Passed
+ruff format..............................................................Passed
+$ git diff --check
+Exit code: 0
+$ git diff v0.5.0 --check
+Exit code: 0
+
+The initial whole-directory lint check in the original checkout found only
+pre-existing untracked exploratory scripts. Those were neither edited nor
+committed. The isolated checkout permits the repository-wide gates above
+without changing user files or Git ignore rules.
