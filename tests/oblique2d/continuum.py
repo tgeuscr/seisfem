@@ -98,4 +98,15 @@ def bandwidth(mode, theta, frequency, sigma_s, sigma_q, center):
         for name in NAMES:
             flux[name] += float(weights[iz, ix] * ref[name]["flux"])
             amplitude[name] += float(weights[iz, ix] * ref[name]["amplitude"])
-    return dict(angle=mean, spread=spread, flux=flux, amplitude=amplitude, excluded_energy=excluded)
+    frequencies = ci * radius / (2 * np.pi)
+    frequency_mean = float(np.sum(weights * frequencies))
+    frequency_spread = float(np.sqrt(np.sum(weights * (frequencies - frequency_mean) ** 2)))
+    return dict(
+        angle=mean,
+        spread=spread,
+        flux=flux,
+        amplitude=amplitude,
+        excluded_energy=excluded,
+        frequency_mean=frequency_mean,
+        frequency_spread=frequency_spread,
+    )

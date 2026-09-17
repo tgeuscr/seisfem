@@ -95,7 +95,9 @@ def run(mode, h, comm=MPI.COMM_WORLD, extent=EXTENT):
         for j in range(steps + 1):
             nxt, velocity, _, _ = step.evaluate(zero)
             if j % stride == 0:
-                trace.append(points.evaluate(step.current).tolist())
+                sampled = np.zeros((len(points.positions), 2))
+                sampled[points.ids] = points.evaluate(step.current)
+                trace.append(comm.allreduce(sampled).tolist())
             if j < steps:
                 step.advance(nxt)
         gathered = comm.gather(
