@@ -91,8 +91,6 @@ class PlaneStrainConfig(Config):
             raise ValueError("Every layer interface must coincide with a horizontal mesh row")
         if any(round(a) >= round(b) for a, b in zip(rows[:-1], rows[1:], strict=True)):
             raise ValueError("Every layer must span at least one mesh row")
-        if self.boundaries.absorbing_sides:
-            raise ValueError("Absorbing boundaries are not supported for layered 2D materials")
         return self
 
     @model_validator(mode="after")

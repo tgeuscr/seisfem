@@ -104,8 +104,13 @@ Each layer supplies `lower`, `upper`, and an isotropic `material`; layers must
 cover the positive-up z extent and meet on horizontal mesh rows. The
 [heterogeneous-material validation](docs/validation/2d_heterogeneous_materials.md)
 records normal-incidence P reflection/transmission against the 1D reference,
-refinement, and MPI consistency. Layered 2D configurations currently support
-free/fixed boundaries and reject absorbing boundaries.
+refinement, and MPI consistency. Layered 2D configurations support free/fixed
+boundaries and facet-local first-order impedance absorption. The
+[heterogeneous-absorber validation](docs/validation/2d_heterogeneous_absorbers.md)
+covers local material assignment, P/SV packets, oblique reflection, dissipation,
+and MPI. Run `python examples/2d/layered_absorbing.py` for a small surface/well
+example with a free top and absorbing sides/bottom. This is not a PML or an
+exact oblique nonreflecting boundary.
 
 ## 1D scientific contract
 

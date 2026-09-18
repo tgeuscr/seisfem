@@ -1,0 +1,160 @@
+Heterogeneous 2D absorbing-boundary validation
+Baseline main: f467b1d6de3178391c61e9d92a58fe36ef04d64b
+Branch: feature/2d-heterogeneous-absorbing-boundaries
+Numerical implementation and tests through c671fdc; final commit adds documentation.
+Thread controls for all numerical commands: OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1
+
+Homogeneous before/after baseline capture:
+The same existing homogeneous fixture and capture script were executed before and
+after the production extension in the same environment. The report documents the
+complete physical configuration. Captured array comparison:
+M: bitwise equal; max absolute error 0.0e+00
+K: bitwise equal; max absolute error 0.0e+00
+C: bitwise equal; max absolute error 0.0e+00
+mass: bitwise equal; max absolute error 0.0e+00
+damping: bitwise equal; max absolute error 0.0e+00
+dt: bitwise equal; max absolute error 0.0e+00
+u: bitwise equal; max absolute error 0.0e+00
+v: bitwise equal; max absolute error 0.0e+00
+
+Focused command:
+SEISFEM_HETERO_ABSORBER_REPORT_DIR=/tmp/ha-focused-final python -m pytest -q -s tests/heterogeneous_absorbing2d
+energy {'step_balance': np.float64(1.806679061925815e-16), 'cumulative': np.float64(2.312549199265043e-16), 'remaining': np.float64(5.2302318000695426e-05), 'dt': np.float64(0.058377417149812844)}
+....................homogeneous limit 1 M 0.0
+homogeneous limit 1 K 0.0
+homogeneous limit 1 C 1.8101462358018858e-16
+homogeneous limit 1 mass 0.0
+homogeneous limit 1 damping 1.206764157201257e-16
+homogeneous limit 1 dt 0.0
+homogeneous limit 1 u 0.0
+homogeneous limit 1 v 0.0
+.homogeneous limit 3 M 0.0
+homogeneous limit 3 K 0.0
+homogeneous limit 3 C 1.8101462358018858e-16
+homogeneous limit 3 mass 0.0
+homogeneous limit 3 damping 1.206764157201257e-16
+homogeneous limit 3 dt 0.0
+homogeneous limit 3 u 0.0
+homogeneous limit 3 v 0.0
+............
+33 passed in 222.01s (0:03:42)
+
+
+Existing absorber/material/oblique command:
+python -m pytest -ra tests/absorbing2d tests/heterogeneous2d tests/oblique2d
+============================= test session starts ==============================
+platform linux -- Python 3.14.6, pytest-9.1.1, pluggy-1.6.0
+rootdir: /home/m/projects/seisfem
+configfile: pyproject.toml
+plugins: anyio-4.15.1
+collected 89 items
+
+tests/absorbing2d/test_characteristics.py ......                         [  6%]
+tests/absorbing2d/test_mpi.py .                                          [  7%]
+tests/absorbing2d/test_operators.py ...............                      [ 24%]
+tests/absorbing2d/test_physics.py .....                                  [ 30%]
+tests/absorbing2d/test_time_energy.py ......                             [ 37%]
+tests/heterogeneous2d/test_interface.py .                                [ 38%]
+tests/heterogeneous2d/test_materials.py .......................          [ 64%]
+tests/heterogeneous2d/test_mpi.py .                                      [ 65%]
+tests/oblique2d/test_boundaries.py ..                                    [ 67%]
+tests/oblique2d/test_diagnostics.py ......                               [ 74%]
+tests/oblique2d/test_mpi.py ..                                           [ 76%]
+tests/oblique2d/test_packets.py ..                                       [ 78%]
+tests/oblique2d/test_reference.py .........                              [ 88%]
+tests/oblique2d/test_refinement.py ..........                            [100%]
+
+======================== 89 passed in 762.09s (0:12:42) ========================
+
+
+Full regression command:
+SEISFEM_HETERO_ABSORBER_REPORT_DIR=/tmp/ha-full python -m pytest -ra
+============================= test session starts ==============================
+platform linux -- Python 3.14.6, pytest-9.1.1, pluggy-1.6.0
+rootdir: /home/m/projects/seisfem
+configfile: pyproject.toml
+testpaths: tests
+plugins: anyio-4.15.1
+collected 326 items
+
+tests/absorbing2d/test_characteristics.py ......                         [  1%]
+tests/absorbing2d/test_mpi.py .                                          [  2%]
+tests/absorbing2d/test_operators.py ...............                      [  6%]
+tests/absorbing2d/test_physics.py .....                                  [  8%]
+tests/absorbing2d/test_time_energy.py ......                             [ 10%]
+tests/analytical/test_operators_energy.py ......                         [ 11%]
+tests/analytical/test_pulses.py ........                                 [ 14%]
+tests/audit/test_distributed_io.py ......                                [ 16%]
+tests/audit/test_independent_numerics.py ............................... [ 25%]
+.............                                                            [ 29%]
+tests/audit/test_independent_waves.py ...............                    [ 34%]
+tests/experiments2d/test_mpi.py ..                                       [ 34%]
+tests/experiments2d/test_science.py ....                                 [ 36%]
+tests/experiments2d/test_sources_points.py .........................     [ 43%]
+tests/experiments2d/test_workflow.py ..........                          [ 46%]
+tests/heterogeneous2d/test_interface.py .                                [ 47%]
+tests/heterogeneous2d/test_materials.py .......................          [ 54%]
+tests/heterogeneous2d/test_mpi.py .                                      [ 54%]
+tests/heterogeneous_absorbing2d/test_energy.py .                         [ 54%]
+tests/heterogeneous_absorbing2d/test_example.py .                        [ 55%]
+tests/heterogeneous_absorbing2d/test_mpi.py .                            [ 55%]
+tests/heterogeneous_absorbing2d/test_operators.py ....................   [ 61%]
+tests/heterogeneous_absorbing2d/test_packets.py ..........               [ 64%]
+tests/integration/test_frontends_mpi.py .....                            [ 66%]
+tests/oblique2d/test_boundaries.py ..                                    [ 66%]
+tests/oblique2d/test_diagnostics.py ......                               [ 68%]
+tests/oblique2d/test_mpi.py ..                                           [ 69%]
+tests/oblique2d/test_packets.py ..                                       [ 69%]
+tests/oblique2d/test_reference.py .........                              [ 72%]
+tests/oblique2d/test_refinement.py ..........                            [ 75%]
+tests/plane_strain/test_initial_acceleration.py ....                     [ 76%]
+tests/plane_strain/test_manufactured_solution.py ..........              [ 80%]
+tests/plane_strain/test_mpi.py ....                                      [ 81%]
+tests/plane_strain/test_operators.py .................................   [ 91%]
+tests/plane_strain/test_spectral_dynamics.py ..............              [ 95%]
+tests/unit/test_config_sources.py ..............                         [100%]
+
+======================= 326 passed in 1296.25s (0:21:36) =======================
+
+
+Measurements collected with:
+python -m tests.heterogeneous_absorbing2d.report /tmp/ha-full docs/validation/2d_heterogeneous_absorber_measurements.json
+Full-run measurements exactly reproduce the focused-run values.
+
+Public example smoke command:
+python examples/2d/layered_absorbing.py
+Production layered model: top free, sides/bottom local impedance absorption.
+Positive-up z; vector components (x,z). Not a PML or exact oblique absorber.
+surface-left peak displacement [m] [0.00083927 0.00241238] peak velocity [m/s] [0.03089956 0.09108888]
+surface-right peak displacement [m] [0.00079701 0.00149999] peak velocity [m/s] [0.0227736  0.04319254]
+well-shallow peak displacement [m] [0.0005607  0.00113645] peak velocity [m/s] [0.02416849 0.04755115]
+well-middle peak displacement [m] [0.00016235 0.00022704] peak velocity [m/s] [0.00630137 0.00885809]
+well-deep peak displacement [m] [4.01894823e-05 1.54089863e-04] peak velocity [m/s] [0.00114685 0.00584905]
+
+MPI coverage:
+The new MPI test launches the independent worker with mpiexec -n 1, 2, and 4.
+The complete suite also executes all previous MPI tests.
+See measurements JSON for unrounded MPI diagnostics.
+
+Review scope:
+No preexisting physical regression threshold was weakened or test deleted.
+The obsolete categorical layered-absorber rejection case now tests the still-invalid
+absorbing/essential conflict on the same side; positive support is tested separately.
+Untracked user runs/ and scripts/ are preserved and not included in the feature.
+
+Style and whitespace checks (tracked source/test/example/doc scopes):
+$ ruff check src tests examples docs
+All checks passed!
+Exit: 0
+
+$ ruff format --check src tests examples docs
+119 files already formatted
+Exit: 0
+
+$ pre-commit run --all-files
+ruff check...............................................................Passed
+ruff format..............................................................Passed
+Exit: 0
+
+$ git diff --check
+Exit: 0

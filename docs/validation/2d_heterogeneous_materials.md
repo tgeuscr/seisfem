@@ -59,11 +59,13 @@ force amplitude remains **N/m**; displacement/centered-velocity arrays retain
 `(time, receiver, 2)`, components `(x,z)`, and complete results on every MPI rank.
 That force excites both P and SV and is not the pure-P validation initial field.
 
-**Absorber rule:** all layered 2D configurations reject absorbing boundaries,
-including one-layer and equal-property layered descriptions. Free and fixed /
-componentwise fixed boundaries remain available. Use the unchanged homogeneous
-syntax for validated homogeneous absorbers. No exterior is silently assigned an
-incorrect homogeneous impedance.
+**Historical v0.5.0 absorber rule:** this material milestone rejected absorbing
+boundaries in layered configurations, including one-layer/equal-property models.
+The subsequent [heterogeneous-absorber milestone](2d_heterogeneous_absorbers.md)
+adds validated facet-local impedance using the adjacent cell's DG0 material.
+Current layered configurations support the existing absorbing-boundary syntax;
+free/fixed semantics remain unchanged. The measurements in this v0.5.0 report
+retain their original free/fixed-boundary scope.
 
 ## Operator, homogeneous-limit, and stability evidence
 

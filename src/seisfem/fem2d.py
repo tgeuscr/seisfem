@@ -128,7 +128,7 @@ class PlaneStrainOperators:
             for component in constraint.components:
                 dofs = 2 * blocks + (0 if component == "x" else 1)
                 self.fixed[dofs[dofs < self.n]] = True
-        self.C, self.damping = assemble_boundary_damping(self.V, cfg)
+        self.C, self.damping = assemble_boundary_damping(self.V, cfg, self.material_fields)
         self._work = self.K.createVecLeft()
 
     def apply(self, owned):
