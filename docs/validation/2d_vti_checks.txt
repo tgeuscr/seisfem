@@ -1,0 +1,173 @@
+Vertical-axis VTI plane-strain validation
+Baseline main/v0.6.0: bbf07f5dbc2f639741b20c0f1620fce96ddc7677
+Branch: feature/2d-vti-elasticity
+Physics/test commits: 7ca1699, 6e609d8, 463b14c.
+Regression and example commands use OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1.
+
+Before/after capture of the original homogeneous absorber fixture:
+Same physical configuration and capture script executed before and after the
+production extension; fixture details are in the report.
+M: bitwise equal, max absolute difference 0.0e+00
+K: bitwise equal, max absolute difference 0.0e+00
+C: bitwise equal, max absolute difference 0.0e+00
+mass: bitwise equal, max absolute difference 0.0e+00
+damping: bitwise equal, max absolute difference 0.0e+00
+dt: bitwise equal, max absolute difference 0.0e+00
+u: bitwise equal, max absolute difference 0.0e+00
+v: bitwise equal, max absolute difference 0.0e+00
+
+$ SEISFEM_VTI_REPORT_DIR=/tmp/vti-focused-final python -m pytest -ra tests/vti2d
+============================= test session starts ==============================
+platform linux -- Python 3.14.6, pytest-9.1.1, pluggy-1.6.0
+rootdir: /home/m/projects/seisfem
+configfile: pyproject.toml
+plugins: anyio-4.15.1
+collected 59 items
+
+tests/vti2d/test_config_reference.py .............................       [ 49%]
+tests/vti2d/test_mpi_example.py ..                                       [ 52%]
+tests/vti2d/test_operators.py ..............                             [ 76%]
+tests/vti2d/test_propagation.py ..............                           [100%]
+
+============================= 59 passed in 27.38s ==============================
+
+
+$ python -m pytest -ra tests/plane_strain tests/heterogeneous2d tests/absorbing2d tests/heterogeneous_absorbing2d tests/oblique2d
+============================= test session starts ==============================
+platform linux -- Python 3.14.6, pytest-9.1.1, pluggy-1.6.0
+rootdir: /home/m/projects/seisfem
+configfile: pyproject.toml
+plugins: anyio-4.15.1
+collected 187 items
+
+tests/plane_strain/test_initial_acceleration.py ....                     [  2%]
+tests/plane_strain/test_manufactured_solution.py ..........              [  7%]
+tests/plane_strain/test_mpi.py ....                                      [  9%]
+tests/plane_strain/test_operators.py .................................   [ 27%]
+tests/plane_strain/test_spectral_dynamics.py ..............              [ 34%]
+tests/heterogeneous2d/test_interface.py .                                [ 35%]
+tests/heterogeneous2d/test_materials.py .......................          [ 47%]
+tests/heterogeneous2d/test_mpi.py .                                      [ 48%]
+tests/absorbing2d/test_characteristics.py ......                         [ 51%]
+tests/absorbing2d/test_mpi.py .                                          [ 51%]
+tests/absorbing2d/test_operators.py ...............                      [ 59%]
+tests/absorbing2d/test_physics.py .....                                  [ 62%]
+tests/absorbing2d/test_time_energy.py ......                             [ 65%]
+tests/heterogeneous_absorbing2d/test_energy.py .                         [ 66%]
+tests/heterogeneous_absorbing2d/test_example.py .                        [ 66%]
+tests/heterogeneous_absorbing2d/test_mpi.py .                            [ 67%]
+tests/heterogeneous_absorbing2d/test_operators.py ....................   [ 78%]
+tests/heterogeneous_absorbing2d/test_packets.py ..........               [ 83%]
+tests/oblique2d/test_boundaries.py ..                                    [ 84%]
+tests/oblique2d/test_diagnostics.py ......                               [ 87%]
+tests/oblique2d/test_mpi.py ..                                           [ 88%]
+tests/oblique2d/test_packets.py ..                                       [ 89%]
+tests/oblique2d/test_reference.py .........                              [ 94%]
+tests/oblique2d/test_refinement.py ..........                            [100%]
+
+======================= 187 passed in 1531.64s (0:25:31) =======================
+
+
+$ SEISFEM_VTI_REPORT_DIR=/tmp/vti-full python -m pytest -ra
+============================= test session starts ==============================
+platform linux -- Python 3.14.6, pytest-9.1.1, pluggy-1.6.0
+rootdir: /home/m/projects/seisfem
+configfile: pyproject.toml
+testpaths: tests
+plugins: anyio-4.15.1
+collected 385 items
+
+tests/absorbing2d/test_characteristics.py ......                         [  1%]
+tests/absorbing2d/test_mpi.py .                                          [  1%]
+tests/absorbing2d/test_operators.py ...............                      [  5%]
+tests/absorbing2d/test_physics.py .....                                  [  7%]
+tests/absorbing2d/test_time_energy.py ......                             [  8%]
+tests/analytical/test_operators_energy.py ......                         [ 10%]
+tests/analytical/test_pulses.py ........                                 [ 12%]
+tests/audit/test_distributed_io.py ......                                [ 13%]
+tests/audit/test_independent_numerics.py ............................... [ 21%]
+.............                                                            [ 25%]
+tests/audit/test_independent_waves.py ...............                    [ 29%]
+tests/experiments2d/test_mpi.py ..                                       [ 29%]
+tests/experiments2d/test_science.py ....                                 [ 30%]
+tests/experiments2d/test_sources_points.py .........................     [ 37%]
+tests/experiments2d/test_workflow.py ..........                          [ 39%]
+tests/heterogeneous2d/test_interface.py .                                [ 40%]
+tests/heterogeneous2d/test_materials.py .......................          [ 45%]
+tests/heterogeneous2d/test_mpi.py .                                      [ 46%]
+tests/heterogeneous_absorbing2d/test_energy.py .                         [ 46%]
+tests/heterogeneous_absorbing2d/test_example.py .                        [ 46%]
+tests/heterogeneous_absorbing2d/test_mpi.py .                            [ 47%]
+tests/heterogeneous_absorbing2d/test_operators.py ....................   [ 52%]
+tests/heterogeneous_absorbing2d/test_packets.py ..........               [ 54%]
+tests/integration/test_frontends_mpi.py .....                            [ 56%]
+tests/oblique2d/test_boundaries.py ..                                    [ 56%]
+tests/oblique2d/test_diagnostics.py ......                               [ 58%]
+tests/oblique2d/test_mpi.py ..                                           [ 58%]
+tests/oblique2d/test_packets.py ..                                       [ 59%]
+tests/oblique2d/test_reference.py .........                              [ 61%]
+tests/oblique2d/test_refinement.py ..........                            [ 64%]
+tests/plane_strain/test_initial_acceleration.py ....                     [ 65%]
+tests/plane_strain/test_manufactured_solution.py ..........              [ 67%]
+tests/plane_strain/test_mpi.py ....                                      [ 68%]
+tests/plane_strain/test_operators.py .................................   [ 77%]
+tests/plane_strain/test_spectral_dynamics.py ..............              [ 81%]
+tests/unit/test_config_sources.py ..............                         [ 84%]
+tests/vti2d/test_config_reference.py .............................       [ 92%]
+tests/vti2d/test_mpi_example.py ..                                       [ 92%]
+tests/vti2d/test_operators.py ..............                             [ 96%]
+tests/vti2d/test_propagation.py ..............                           [100%]
+
+======================= 385 passed in 1827.39s (0:30:27) =======================
+
+
+$ python examples/2d/vti.py
+Isotropic control with identical vertical speeds
+horizontal peak displacement [m] 0.00014789490589362796 peak time [s] 0.274
+vertical peak displacement [m] 0.00014789490589362772 peak time [s] 0.274
+oblique peak displacement [m] 0.00013850954316533856 peak time [s] 0.277
+VTI
+horizontal peak displacement [m] 0.00019480460479977236 peak time [s] 0.228
+vertical peak displacement [m] 0.00017092694481070123 peak time [s] 0.275
+oblique peak displacement [m] 0.00011153165565301203 peak time [s] 0.267
+Peaks are mixed-mode waveform diagnostics, not phase-velocity estimates.
+Positive-up z; free boundaries. VTI absorbing boundaries are unsupported.
+
+
+$ mpiexec -n 4 python examples/2d/vti.py
+Isotropic control with identical vertical speeds
+horizontal peak displacement [m] 0.0001478949058936285 peak time [s] 0.274
+vertical peak displacement [m] 0.00014789490589362807 peak time [s] 0.274
+oblique peak displacement [m] 0.0001385095431653382 peak time [s] 0.277
+VTI
+horizontal peak displacement [m] 0.00019480460479977244 peak time [s] 0.228
+vertical peak displacement [m] 0.0001709269448107018 peak time [s] 0.275
+oblique peak displacement [m] 0.00011153165565301222 peak time [s] 0.267
+Peaks are mixed-mode waveform diagnostics, not phase-velocity estimates.
+Positive-up z; free boundaries. VTI absorbing boundaries are unsupported.
+
+
+Measurement collection:
+python -m tests.vti2d.report /tmp/vti-full docs/validation/2d_vti_measurements.json
+Full measurements exactly reproduce the focused-run values.
+
+No existing tests or physical acceptance thresholds were changed.
+No exploratory runs/ or scripts/ files were changed or added to git.
+Anisotropic interface amplitudes and anisotropic absorbers are intentionally deferred.
+
+Style/format/pre-commit/whitespace checks:
+$ ruff check src tests examples docs
+All checks passed!
+Exit: 0
+
+$ ruff format --check src tests examples docs
+132 files already formatted
+Exit: 0
+
+$ pre-commit run --all-files
+ruff check...............................................................Passed
+ruff format..............................................................Passed
+Exit: 0
+
+$ git diff --cached --check
+Exit: 0

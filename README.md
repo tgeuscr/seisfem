@@ -90,7 +90,7 @@ on every rank, shaped `(time, receiver, component)` with components `("x", "z")`
 
 The [full API and validation example](docs/validation/2d_sources_receivers.md)
 explains pre-return measurement windows and remaining S-wave dispersion.
-Homogeneous 2D runs support free/fixed boundaries and per-side first-order local
+Homogeneous isotropic 2D runs support free/fixed boundaries and per-side first-order local
 elastic impedance absorption. For a physical free surface with absorbing sides
 and bottom, set `boundaries={"left": "absorbing", "right": "absorbing",
 "lower": "absorbing", "upper": "free"}`. Run `python examples/2d/absorbing.py`
@@ -104,13 +104,24 @@ Each layer supplies `lower`, `upper`, and an isotropic `material`; layers must
 cover the positive-up z extent and meet on horizontal mesh rows. The
 [heterogeneous-material validation](docs/validation/2d_heterogeneous_materials.md)
 records normal-incidence P reflection/transmission against the 1D reference,
-refinement, and MPI consistency. Layered 2D configurations support free/fixed
+refinement, and MPI consistency. Isotropic layered 2D configurations support free/fixed
 boundaries and facet-local first-order impedance absorption. The
 [heterogeneous-absorber validation](docs/validation/2d_heterogeneous_absorbers.md)
 covers local material assignment, P/SV packets, oblique reflection, dissipation,
 and MPI. Run `python examples/2d/layered_absorbing.py` for a small surface/well
 example with a free top and absorbing sides/bottom. This is not a PML or an
 exact oblique nonreflecting boundary.
+
+For **vertical-axis VTI plane strain**, use material input
+`{"type": "vti", "density": rho, "c11": C11, "c33": C33, "c13": C13, "c55": C55}`
+with density in kg/m³ and stiffnesses in Pa. Horizontal layers may mix isotropic
+and VTI materials using the same layer syntax. VTI supports free/fixed boundaries;
+**any configuration containing VTI rejects absorbing boundaries**. Run
+`python examples/2d/vti.py` to compare receiver responses with an isotropic control.
+The [VTI validation report](docs/validation/2d_vti_elasticity.md) records independent
+Christoffel phase/polarization checks, packet refinement, and MPI results.
+This is the in-plane qP/qSV system: no TTI, SH/C66/gamma sensitivity, or validated
+anisotropic interface-scattering amplitudes are claimed.
 
 ## 1D scientific contract
 
