@@ -40,7 +40,10 @@ def main():
     result = Simulation2D(cfg).run()
     if MPI.COMM_WORLD.rank == 0:
         print("Layer interface: z=0 m, aligned with mesh row 100; z is positive-up.")
-        print("Outer boundaries are traction-free; layered absorbers are not supported.")
+        print(
+            "Outer boundaries are traction-free in this example; "
+            "see layered_absorbing.py for absorption."
+        )
         print(
             "Displacement/centered velocity shapes:",
             result.displacement.shape,

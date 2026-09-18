@@ -1,0 +1,545 @@
+{
+  "baseline": "f467b1d6de3178391c61e9d92a58fe36ef04d64b",
+  "boundary": "local first-order isotropic impedance; not a PML",
+  "packets": {
+    "lower": {
+      "density": 2400,
+      "vp": 3200,
+      "vs": 1800
+    },
+    "upper": {
+      "density": 2800,
+      "vp": 4000,
+      "vs": 2200
+    },
+    "frequency": 8.0,
+    "h": 20,
+    "dt": 0.002,
+    "transverse_width": 400.0,
+    "incident_path": 1200,
+    "reflected_receiver_path": 400,
+    "reflection_proxy": "peak norm(absorbing-extended) / peak norm(free-extended)",
+    "window": "abs(t-1600/c_incident) <= 0.8/f0"
+  },
+  "measurements": {
+    "energy": {
+      "step_balance": 1.806679061925815e-16,
+      "cumulative": 2.312549199265043e-16,
+      "remaining": 5.2302318000695426e-05,
+      "dt": 0.058377417149812844
+    },
+    "example": {
+      "displacement_peaks": [
+        [
+          0.0008392711243798346,
+          0.0024123838293480474
+        ],
+        [
+          0.0007970106251281765,
+          0.0014999860371942052
+        ],
+        [
+          0.0005607029914412762,
+          0.0011364479876519863
+        ],
+        [
+          0.0001623487339151841,
+          0.0002270428396727608
+        ],
+        [
+          4.018948225976604e-05,
+          0.00015408986332244467
+        ]
+      ],
+      "velocity_peaks": [
+        [
+          0.030899559758124556,
+          0.09108887797847902
+        ],
+        [
+          0.022773595160205606,
+          0.043192541458764395
+        ],
+        [
+          0.02416849059926228,
+          0.04755114561910557
+        ],
+        [
+          0.006301370263025707,
+          0.008858089694442281
+        ],
+        [
+          0.0011468505984632109,
+          0.005849045519342077
+        ]
+      ],
+      "surface_difference": 0.812809094597337
+    },
+    "homogeneous-1": {
+      "M": {
+        "relative_error": 0.0,
+        "bitwise_equal": true
+      },
+      "K": {
+        "relative_error": 0.0,
+        "bitwise_equal": true
+      },
+      "C": {
+        "relative_error": 1.8101462358018858e-16,
+        "bitwise_equal": false
+      },
+      "mass": {
+        "relative_error": 0.0,
+        "bitwise_equal": true
+      },
+      "damping": {
+        "relative_error": 1.206764157201257e-16,
+        "bitwise_equal": false
+      },
+      "dt": {
+        "relative_error": 0.0,
+        "bitwise_equal": true
+      },
+      "u": {
+        "relative_error": 0.0,
+        "bitwise_equal": true
+      },
+      "v": {
+        "relative_error": 0.0,
+        "bitwise_equal": true
+      }
+    },
+    "homogeneous-3": {
+      "M": {
+        "relative_error": 0.0,
+        "bitwise_equal": true
+      },
+      "K": {
+        "relative_error": 0.0,
+        "bitwise_equal": true
+      },
+      "C": {
+        "relative_error": 1.8101462358018858e-16,
+        "bitwise_equal": false
+      },
+      "mass": {
+        "relative_error": 0.0,
+        "bitwise_equal": true
+      },
+      "damping": {
+        "relative_error": 1.206764157201257e-16,
+        "bitwise_equal": false
+      },
+      "dt": {
+        "relative_error": 0.0,
+        "bitwise_equal": true
+      },
+      "u": {
+        "relative_error": 0.0,
+        "bitwise_equal": true
+      },
+      "v": {
+        "relative_error": 0.0,
+        "bitwise_equal": true
+      }
+    },
+    "mpi": {
+      "2": {
+        "coordinates": {
+          "absolute": 8.881784197001252e-16,
+          "relative_to_peak": 2.96059473233375e-16
+        },
+        "damping": {
+          "absolute": 0.0,
+          "relative_to_peak": 0.0
+        },
+        "mass": {
+          "absolute": 5.551115123125783e-17,
+          "relative_to_peak": 5.4157220713422275e-17
+        },
+        "dt": {
+          "absolute": 0.0,
+          "relative_to_peak": 0.0
+        },
+        "M": {
+          "absolute": 1.1102230246251565e-16,
+          "relative_to_peak": 2.166288828536891e-16
+        },
+        "K": {
+          "absolute": 2.842170943040401e-14,
+          "relative_to_peak": 1.2645246718931143e-16
+        },
+        "C": {
+          "absolute": 0.0,
+          "relative_to_peak": 0.0
+        },
+        "action": {
+          "absolute": 3.3306690738754696e-16,
+          "relative_to_peak": 3.4994567125089984e-17
+        },
+        "cells": {
+          "absolute": 0.0,
+          "relative_to_peak": 0.0
+        },
+        "u": {
+          "absolute": 4.85722573273506e-17,
+          "relative_to_peak": 2.0134547718501897e-14
+        },
+        "v": {
+          "absolute": 2.3626933742804113e-15,
+          "relative_to_peak": 2.5938329977438403e-14
+        },
+        "receivers": {
+          "absolute": 0.0,
+          "relative_to_peak": 0.0
+        }
+      },
+      "4": {
+        "coordinates": {
+          "absolute": 4.440892098500626e-16,
+          "relative_to_peak": 1.480297366166875e-16
+        },
+        "damping": {
+          "absolute": 0.0,
+          "relative_to_peak": 0.0
+        },
+        "mass": {
+          "absolute": 5.551115123125783e-17,
+          "relative_to_peak": 5.4157220713422275e-17
+        },
+        "dt": {
+          "absolute": 0.0,
+          "relative_to_peak": 0.0
+        },
+        "M": {
+          "absolute": 1.1102230246251565e-16,
+          "relative_to_peak": 2.166288828536891e-16
+        },
+        "K": {
+          "absolute": 2.842170943040401e-14,
+          "relative_to_peak": 1.2645246718931143e-16
+        },
+        "C": {
+          "absolute": 0.0,
+          "relative_to_peak": 0.0
+        },
+        "action": {
+          "absolute": 1.7763568394002505e-15,
+          "relative_to_peak": 1.8663769133381325e-16
+        },
+        "cells": {
+          "absolute": 0.0,
+          "relative_to_peak": 0.0
+        },
+        "u": {
+          "absolute": 3.924811864397526e-17,
+          "relative_to_peak": 1.626943364753948e-14
+        },
+        "v": {
+          "absolute": 2.3626933742804113e-15,
+          "relative_to_peak": 2.5938329977438403e-14
+        },
+        "receivers": {
+          "absolute": 0.0,
+          "relative_to_peak": 0.0
+        }
+      }
+    },
+    "facet-left-left": {
+      "matrix_error": 8.881784197001252e-16,
+      "damping_error": 1.3322676295501878e-15,
+      "minimum_damping": 0.0
+    },
+    "facet-left-right": {
+      "matrix_error": 8.881784197001252e-16,
+      "damping_error": 1.7763568394002505e-15,
+      "minimum_damping": 0.0
+    },
+    "facet-left-left_right": {
+      "matrix_error": 8.881784197001252e-16,
+      "damping_error": 1.7763568394002505e-15,
+      "minimum_damping": 0.0
+    },
+    "facet-left-right_left": {
+      "matrix_error": 8.881784197001252e-16,
+      "damping_error": 1.7763568394002505e-15,
+      "minimum_damping": 0.0
+    },
+    "facet-right-left": {
+      "matrix_error": 8.881784197001252e-16,
+      "damping_error": 1.1102230246251565e-15,
+      "minimum_damping": 0.0
+    },
+    "facet-right-right": {
+      "matrix_error": 1.5543122344752192e-15,
+      "damping_error": 2.4424906541753444e-15,
+      "minimum_damping": 0.0
+    },
+    "facet-right-left_right": {
+      "matrix_error": 1.5543122344752192e-15,
+      "damping_error": 2.4424906541753444e-15,
+      "minimum_damping": 0.0
+    },
+    "facet-right-right_left": {
+      "matrix_error": 1.1102230246251565e-15,
+      "damping_error": 1.5543122344752192e-15,
+      "minimum_damping": 0.0
+    },
+    "facet-lower-left": {
+      "matrix_error": 4.440892098500626e-16,
+      "damping_error": 8.881784197001252e-16,
+      "minimum_damping": 0.0
+    },
+    "facet-lower-right": {
+      "matrix_error": 6.661338147750939e-16,
+      "damping_error": 1.1102230246251565e-15,
+      "minimum_damping": 0.0
+    },
+    "facet-lower-left_right": {
+      "matrix_error": 4.440892098500626e-16,
+      "damping_error": 8.881784197001252e-16,
+      "minimum_damping": 0.0
+    },
+    "facet-lower-right_left": {
+      "matrix_error": 4.440892098500626e-16,
+      "damping_error": 8.881784197001252e-16,
+      "minimum_damping": 0.0
+    },
+    "facet-upper-left": {
+      "matrix_error": 6.661338147750939e-16,
+      "damping_error": 1.1102230246251565e-15,
+      "minimum_damping": 0.0
+    },
+    "facet-upper-right": {
+      "matrix_error": 3.3306690738754696e-16,
+      "damping_error": 6.661338147750939e-16,
+      "minimum_damping": 0.0
+    },
+    "facet-upper-left_right": {
+      "matrix_error": 6.661338147750939e-16,
+      "damping_error": 1.1102230246251565e-15,
+      "minimum_damping": 0.0
+    },
+    "facet-upper-right_left": {
+      "matrix_error": 6.661338147750939e-16,
+      "damping_error": 1.1102230246251565e-15,
+      "minimum_damping": 0.0
+    },
+    "packet-P-0-right-0": {
+      "mode": "P",
+      "layer": 0,
+      "side": "right",
+      "angle": 0,
+      "h": 20,
+      "results": {
+        "layered": {
+          "free_peak": 0.7181213309223992,
+          "absorbing_peak": 0.008091406174431874,
+          "reflection_proxy": 0.01126746390340303
+        },
+        "homogeneous": {
+          "free_peak": 0.7181213309223992,
+          "absorbing_peak": 0.008091406174431874,
+          "reflection_proxy": 0.01126746390340303
+        }
+      },
+      "representation_difference": {
+        "u": 0.0,
+        "v": 0.0
+      },
+      "proxy_difference": 0.0
+    },
+    "packet-P-1-right-0": {
+      "mode": "P",
+      "layer": 1,
+      "side": "right",
+      "angle": 0,
+      "h": 20,
+      "results": {
+        "layered": {
+          "free_peak": 0.6875760915400061,
+          "absorbing_peak": 0.006041531465123654,
+          "reflection_proxy": 0.008786709630336429
+        },
+        "homogeneous": {
+          "free_peak": 0.6875760915400061,
+          "absorbing_peak": 0.006041531465123654,
+          "reflection_proxy": 0.008786709630336429
+        }
+      },
+      "representation_difference": {
+        "u": 1.2676951726382459e-19,
+        "v": 5.612006673356459e-19
+      },
+      "proxy_difference": 0.0
+    },
+    "packet-S-0-right-0": {
+      "mode": "S",
+      "layer": 0,
+      "side": "right",
+      "angle": 0,
+      "h": 20,
+      "results": {
+        "layered": {
+          "free_peak": 0.6841372809670455,
+          "absorbing_peak": 0.027611292249001624,
+          "reflection_proxy": 0.04035928609236491
+        },
+        "homogeneous": {
+          "free_peak": 0.6841372809670454,
+          "absorbing_peak": 0.02761129224900167,
+          "reflection_proxy": 0.04035928609236498
+        }
+      },
+      "representation_difference": {
+        "u": 1.324442073827475e-13,
+        "v": 1.188859188073446e-13
+      },
+      "proxy_difference": 6.938893903907228e-17
+    },
+    "packet-S-1-right-0": {
+      "mode": "S",
+      "layer": 1,
+      "side": "right",
+      "angle": 0,
+      "h": 20,
+      "results": {
+        "layered": {
+          "free_peak": 0.6636682974849485,
+          "absorbing_peak": 0.024297949114469048,
+          "reflection_proxy": 0.03661158624956032
+        },
+        "homogeneous": {
+          "free_peak": 0.6636682974849497,
+          "absorbing_peak": 0.02429794911446967,
+          "reflection_proxy": 0.036611586249561186
+        }
+      },
+      "representation_difference": {
+        "u": 1.6556742219336877e-12,
+        "v": 1.8719356907606354e-12
+      },
+      "proxy_difference": 8.673617379884035e-16
+    },
+    "packet-P-0-lower-0": {
+      "mode": "P",
+      "layer": 0,
+      "side": "lower",
+      "angle": 0,
+      "h": 20,
+      "results": {
+        "layered": {
+          "free_peak": 0.7181213310463969,
+          "absorbing_peak": 0.008091406161508486,
+          "reflection_proxy": 0.011267463883461374
+        },
+        "homogeneous": {
+          "free_peak": 0.7181213310463969,
+          "absorbing_peak": 0.008091406161508486,
+          "reflection_proxy": 0.011267463883461374
+        }
+      },
+      "representation_difference": {
+        "u": 0.0,
+        "v": 0.0
+      },
+      "proxy_difference": 0.0
+    },
+    "packet-S-0-lower-0": {
+      "mode": "S",
+      "layer": 0,
+      "side": "lower",
+      "angle": 0,
+      "h": 20,
+      "results": {
+        "layered": {
+          "free_peak": 0.6840355677133653,
+          "absorbing_peak": 0.027594350629892007,
+          "reflection_proxy": 0.04034052018981417
+        },
+        "homogeneous": {
+          "free_peak": 0.6840355677133653,
+          "absorbing_peak": 0.027594350629892007,
+          "reflection_proxy": 0.04034052018981417
+        }
+      },
+      "representation_difference": {
+        "u": 0.0,
+        "v": 0.0
+      },
+      "proxy_difference": 0.0
+    },
+    "packet-P-1-right-15": {
+      "mode": "P",
+      "layer": 1,
+      "side": "right",
+      "angle": 15,
+      "h": 20,
+      "results": {
+        "layered": {
+          "free_peak": 0.6274035209957443,
+          "absorbing_peak": 0.00739250613500575,
+          "reflection_proxy": 0.011782697877234091
+        },
+        "homogeneous": {
+          "free_peak": 0.6274035209957443,
+          "absorbing_peak": 0.00739250613500575,
+          "reflection_proxy": 0.011782697877234091
+        }
+      },
+      "representation_difference": {
+        "u": 5.4839063211478305e-18,
+        "v": 1.1741911404574922e-17
+      },
+      "proxy_difference": 0.0
+    },
+    "packet-P-1-right-30": {
+      "mode": "P",
+      "layer": 1,
+      "side": "right",
+      "angle": 30,
+      "h": 20,
+      "results": {
+        "layered": {
+          "free_peak": 0.6570639623393336,
+          "absorbing_peak": 0.026379194133055353,
+          "reflection_proxy": 0.040147071891049935
+        },
+        "homogeneous": {
+          "free_peak": 0.6570639623393336,
+          "absorbing_peak": 0.026379194133055353,
+          "reflection_proxy": 0.040147071891049935
+        }
+      },
+      "representation_difference": {
+        "u": 0.0,
+        "v": 0.0
+      },
+      "proxy_difference": 0.0
+    },
+    "packet-P-1-right-45": {
+      "mode": "P",
+      "layer": 1,
+      "side": "right",
+      "angle": 45,
+      "h": 20,
+      "results": {
+        "layered": {
+          "free_peak": 0.7502087796757743,
+          "absorbing_peak": 0.06537803995811882,
+          "reflection_proxy": 0.08714646073107002
+        },
+        "homogeneous": {
+          "free_peak": 0.7502087796757743,
+          "absorbing_peak": 0.06537803995811882,
+          "reflection_proxy": 0.08714646073107002
+        }
+      },
+      "representation_difference": {
+        "u": 0.0,
+        "v": 0.0
+      },
+      "proxy_difference": 0.0
+    }
+  }
+}
