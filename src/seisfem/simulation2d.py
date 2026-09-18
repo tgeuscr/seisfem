@@ -1,4 +1,4 @@
-"""Public isotropic plane-strain source-to-receiver workflow."""
+"""Public plane-strain source-to-receiver workflow for isotropic/VTI elasticity."""
 
 import numpy as np
 from mpi4py import MPI
