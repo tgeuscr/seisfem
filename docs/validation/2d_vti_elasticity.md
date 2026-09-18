@@ -11,6 +11,11 @@ horizontal layered material assembly, stability, and MPI consistency. It does
 **VTI configurations reject all absorbing boundaries.** The existing isotropic
 impedance condition has not been generalized to anisotropy.
 
+This report retains the original v0.7.0 scope and measurements. The subsequent
+[isotropic/VTI interface validation](2d_vti_interface.md) separately validates
+below-critical propagating scattering for isotropic P incidence at a single
+horizontal welded interface; it does not generalize the absorbing boundaries.
+
 ## Constitutive law and API
 
 With epsilon = sym(grad u) and epsilon_yy=0,

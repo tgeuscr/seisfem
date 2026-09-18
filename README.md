@@ -120,8 +120,11 @@ and VTI materials using the same layer syntax. VTI supports free/fixed boundarie
 `python examples/2d/vti.py` to compare receiver responses with an isotropic control.
 The [VTI validation report](docs/validation/2d_vti_elasticity.md) records independent
 Christoffel phase/polarization checks, packet refinement, and MPI results.
-This is the in-plane qP/qSV system: no TTI, SH/C66/gamma sensitivity, or validated
-anisotropic interface-scattering amplitudes are claimed.
+The subsequent [VTI interface validation](docs/validation/2d_vti_interface.md)
+checks signed/complex coefficients, mechanical flux, and phase directions for
+below-critical P incidence from isotropy into VTI at one horizontal welded
+interface. This remains the in-plane qP/qSV system: no TTI, SH/C66/gamma
+sensitivity, critical/evanescent validation, or anisotropic absorbers are claimed.
 
 ## 1D scientific contract
 
