@@ -1,12 +1,17 @@
-"""Mesh-aligned horizontal materials, using the validated isotropic material models."""
+"""Mesh-aligned horizontal isotropic or VTI material fields."""
 
 import numpy as np
 from dolfinx import fem
 from mpi4py import MPI
 
+from .vti import stiffnesses
+
 
 class CellMaterials2D:
-    """DG0 rho/lambda/mu with one layer ID per local cell, including ghosts.
+    """DG0 rho and moduli with one layer ID per local cell, including ghosts.
+
+    Isotropic models retain rho/lambda/mu. Models containing VTI use
+    rho/C11/C33/C13/C55, canonicalizing their isotropic layers only on that path.
 
     The caller supplies the generated affine rectangle and a validated layered
     PlaneStrainConfig. Configuration checks grid alignment; a separate vertex
@@ -18,9 +23,16 @@ class CellMaterials2D:
     def __init__(self, msh, config):
         layers = config.material.layers
         dg = fem.functionspace(msh, ("DG", 0))
-        self.rho, self.lam, self.mu = (
-            fem.Function(dg, name=name) for name in ("density", "lambda", "mu")
-        )
+        if config.has_vti:
+            self.rho, self.c11, self.c33, self.c13, self.c55 = (
+                fem.Function(dg, name=name) for name in ("density", "c11", "c33", "c13", "c55")
+            )
+            fields = (self.rho, self.c11, self.c33, self.c13, self.c55)
+        else:
+            self.rho, self.lam, self.mu = (
+                fem.Function(dg, name=name) for name in ("density", "lambda", "mu")
+            )
+            fields = (self.rho, self.lam, self.mu)
         self.cell_dofs = dg.dofmap.list[:, 0]
         z = msh.geometry.x[msh.geometry.dofmaps[0], 1]
         centers = z.mean(axis=1)
@@ -32,7 +44,12 @@ class CellMaterials2D:
         valid = np.all((z.min(axis=1) >= lower - tolerance) & (z.max(axis=1) <= upper + tolerance))
         if not msh.comm.allreduce(bool(valid), op=MPI.LAND):
             raise ValueError("Material interface cuts a cell; require mesh-aligned layers")
-        values = np.array([(layer.material.density, *layer.material.lame) for layer in layers])
-        for i, field in enumerate((self.rho, self.lam, self.mu)):
+        if config.has_vti:
+            values = np.array(
+                [(layer.material.density, *stiffnesses(layer.material)) for layer in layers]
+            )
+        else:
+            values = np.array([(layer.material.density, *layer.material.lame) for layer in layers])
+        for i, field in enumerate(fields):
             field.x.array[self.cell_dofs] = values[self.cell_layers, i]
             field.x.scatter_forward()

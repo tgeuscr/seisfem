@@ -1,4 +1,4 @@
-"""Isotropic plane-strain vector P1 operators on affine rectangle triangles."""
+"""Isotropic/VTI plane-strain vector P1 operators on affine rectangle triangles."""
 
 from contextlib import contextmanager
 from dataclasses import dataclass
@@ -27,6 +27,17 @@ def stress(u, lam, mu):
     """In-plane block of 3D isotropic stress, with ordinary 3D Lamé parameters."""
     epsilon = strain(u)
     return lam * ufl.tr(epsilon) * ufl.Identity(2) + 2 * mu * epsilon
+
+
+def stress_vti(u, c11, c33, c13, c55):
+    """Symmetric vertical-axis in-plane constitutive law (engineering shear)."""
+    e = strain(u)
+    return ufl.as_matrix(
+        (
+            (c11 * e[0, 0] + c13 * e[1, 1], 2 * c55 * e[0, 1]),
+            (2 * c55 * e[0, 1], c13 * e[0, 0] + c33 * e[1, 1]),
+        )
+    )
 
 
 @dataclass(frozen=True)
@@ -93,14 +104,23 @@ class PlaneStrainOperators:
         if isinstance(cfg.material, Layered):
             self.material_fields = CellMaterials2D(self.mesh, cfg)
             rho = self.material_fields.rho
-            lam, mu = self.material_fields.lam, self.material_fields.mu
+            if cfg.has_vti:
+                f = self.material_fields
+                sigma = stress_vti(u, f.c11, f.c33, f.c13, f.c55)
+            else:
+                lam, mu = self.material_fields.lam, self.material_fields.mu
+                sigma = stress(u, lam, mu)
         else:
             # Retain the validated homogeneous forms and numerical execution path.
             rho = cfg.material.density
-            lam, mu = cfg.material.lame
+            if cfg.has_vti:
+                sigma = stress_vti(u, *cfg.material.stiffnesses)
+            else:
+                lam, mu = cfg.material.lame
+                sigma = stress(u, lam, mu)
         self.M = petsc.assemble_matrix(fem.form(rho * ufl.inner(u, v) * ufl.dx))
         self.M.assemble()
-        self.K = petsc.assemble_matrix(fem.form(ufl.inner(strain(v), stress(u, lam, mu)) * ufl.dx))
+        self.K = petsc.assemble_matrix(fem.form(ufl.inner(strain(v), sigma) * ufl.dx))
         self.K.assemble()
         lumped = fem.assemble_vector(
             fem.form(rho * ufl.inner(ufl.as_vector((1.0, 1.0)), v) * ufl.dx)

@@ -1,4 +1,4 @@
-"""Isotropic plane-strain kernel and experiment configuration, separate from 1D."""
+"""Isotropic/VTI plane-strain kernel and experiment configuration, separate from 1D."""
 
 import math
 from typing import Annotated, Literal
@@ -6,6 +6,7 @@ from typing import Annotated, Literal
 from pydantic import Field, model_validator
 
 from .config import Config, Isotropic, Layered, TimeConfig
+from .vti import VTI, LayeredVTI
 
 Count = Annotated[int, Field(ge=1, strict=True)]
 
@@ -62,15 +63,19 @@ class BoundaryConditions2D(Config):
 
 
 class PlaneStrainConfig(Config):
-    """Vector P1 triangles with isotropic 3D solid moduli and outer boundaries.
+    """Vector P1 triangles with isotropic or vertical-axis VTI material.
 
     Time, source and receiver configuration lives in SimulationConfig2D.
     """
 
     domain: Rectangle = Rectangle()
-    material: Isotropic | Layered
+    material: Isotropic | Layered | VTI | LayeredVTI
     constraints: tuple[ZeroDisplacement, ...] = ()
     boundaries: BoundaryConditions2D = BoundaryConditions2D()
+
+    @property
+    def has_vti(self):
+        return isinstance(self.material, VTI | LayeredVTI)
 
     @model_validator(mode="after")
     def aligned_layers(self):
@@ -95,6 +100,10 @@ class PlaneStrainConfig(Config):
 
     @model_validator(mode="after")
     def compatible_boundaries(self):
+        if self.has_vti and self.boundaries.absorbing_sides:
+            raise ValueError(
+                "VTI absorbing boundaries are not validated; use free/fixed boundaries"
+            )
         for constraint in self.constraints:
             if constraint.side in self.boundaries.absorbing_sides:
                 raise ValueError(
@@ -166,7 +175,7 @@ class Receiver2D(Config):
 
 
 class SimulationConfig2D(PlaneStrainConfig):
-    """Isotropic plane-strain experiment, zero initial data and vector P1 FE."""
+    """Plane-strain experiment, zero initial data and vector P1 FE."""
 
     # Reuse time validation, but stability is checked on the assembled 2D operator.
     time: TimeConfig
