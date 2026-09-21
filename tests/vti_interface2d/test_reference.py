@@ -67,6 +67,9 @@ def test_independent_isotropic_zoeppritz_limit(mode, angles):
             np.testing.assert_allclose(new[name]["d"], old[name]["polarization"], atol=3e-15)
             speed = (isotropic.LOWER if name[0] == "R" else isotropic.UPPER).speed(name[1])
             assert abs(new[name]["q"] - old[name]["direction"][1] / speed) < 3e-18
+            np.testing.assert_allclose(
+                new[name]["g"] / speed, old[name]["direction"], rtol=0, atol=3e-15
+            )
 
 
 def test_normal_impedance_reduction_and_critical_rejection():

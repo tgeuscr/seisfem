@@ -12,7 +12,60 @@ import numpy as np
 from tests.oblique2d import reference as iso
 
 from .packets import ANGLES
-from .reference import LOWER, NAMES, UPPER, Material, candidates, residual, solve
+from .reference import LOWER, NAMES, UPPER, Material, candidates, residual, solve, wave
+
+
+def derivative_errors():
+    """Record finite-difference audits independently of FEM and Fourier recovery."""
+    group_error = jacobian_error = 0.0
+    for angle in ANGLES:
+        p = np.sin(np.deg2rad(angle)) / 3000
+        for material in [LOWER, UPPER]:
+            roots = candidates(p, material)
+            for j, q in enumerate(roots["q"]):
+
+                def frequency(k, material=material, kind=roots["kind"][j]):
+                    x, z = k
+                    matrix = np.array(
+                        [
+                            [
+                                material.c11 * x**2 + material.c55 * z**2,
+                                (material.c13 + material.c55) * x * z,
+                            ],
+                            [
+                                (material.c13 + material.c55) * x * z,
+                                material.c55 * x**2 + material.c33 * z**2,
+                            ],
+                        ]
+                    )
+                    return np.sqrt(np.linalg.eigvalsh(matrix)[kind] / material.rho)
+
+                k = np.array([p, q])
+                numerical = np.array(
+                    [(frequency(k + 1e-9 * e) - frequency(k - 1e-9 * e)) / 2e-9 for e in np.eye(2)]
+                )
+                group_error = max(
+                    group_error,
+                    float(
+                        np.linalg.norm(numerical - roots["g"][j]) / np.linalg.norm(roots["g"][j])
+                    ),
+                )
+        incident, branches = solve(p)
+        omega = 2 * np.pi * 5
+        kx, kz = omega * p, omega * incident["q"]
+        for name, branch in branches.items():
+            material = LOWER if name[0] == "R" else UPPER
+            side = -1 if name[0] == "R" else 1
+            mapped = []
+            for z in [kz - 1e-8, kz + 1e-8]:
+                omega_shifted = 3000 * np.hypot(kx, z)
+                mapped.append(
+                    omega_shifted * wave(kx / omega_shifted, material, name[1], side)["q"]
+                )
+            numerical = abs((mapped[1] - mapped[0]) / 2e-8)
+            exact = abs(incident["g"][1] / branch["g"][1])
+            jacobian_error = max(jacobian_error, float(abs(numerical / exact - 1)))
+    return dict(group_relative_norm=group_error, jacobian_relative=jacobian_error)
 
 
 def analytical():
@@ -43,7 +96,9 @@ def analytical():
                 for name, w in branches.items()
             },
         )
-    errors = dict(amplitude=0.0, flux=0.0, q=0.0, direction=0.0, polarization=0.0)
+    errors = dict(
+        amplitude=0.0, flux=0.0, q=0.0, direction=0.0, polarization=0.0, group_direction=0.0
+    )
     upper = Material.isotropic(iso.UPPER.rho, iso.UPPER.vp, iso.UPPER.vs)
     for mode, angles in [("P", [0, 15, 25, 35]), ("S", [0, 5, 15, 20])]:
         for angle in angles:
@@ -58,6 +113,7 @@ def analytical():
                     q=abs(a[name]["q"] - b[name]["direction"][1] / c),
                     direction=np.max(abs(a[name]["n"] - b[name]["direction"])),
                     polarization=np.max(abs(a[name]["d"] - b[name]["polarization"])),
+                    group_direction=np.max(abs(a[name]["g"] / c - b[name]["direction"])),
                 ).items():
                     errors[key] = max(errors[key], float(error))
     return reports, errors
@@ -113,6 +169,7 @@ def collect(directory):
         ),
         analytical=ref,
         isotropic_reference_errors=limit,
+        derivative_errors=derivative_errors(),
         mpi_errors=mpi,
         measurements=data,
     )
