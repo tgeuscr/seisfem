@@ -40,6 +40,7 @@ class Simulation2D:
                 material=cfg.material,
                 constraints=cfg.constraints,
                 boundaries=cfg.boundaries,
+                discretization=cfg.discretization,
             )
             self.operators = PlaneStrainOperators(kernel, self.comm)
             try:
