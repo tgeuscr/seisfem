@@ -1,0 +1,211 @@
+VTI interface scattering recovery audit — 2026-09-21
+
+Branch: validation/2d-vti-interface-scattering
+Baseline main: 43aca95f199542429792f936284dd466055fa4eb (v0.7.0)
+Commits present at recovery:
+  25f27cd test(2d): add independent VTI interface slowness and flux reference
+  a22df8b Snapshot during stopped Astra run
+Completion code commit:
+  d8a05c3 test(2d): complete VTI interface derivative and isotropic audits
+
+Recovery inspection:
+  git branch --show-current
+  git status --short
+  git log --oneline --decorate -12
+  git diff --stat main..HEAD
+  git diff
+  git diff --cached
+The expected branch was already checked out. Tracked worktree and index were
+clean; the snapshot had preserved the validation infrastructure and report
+skeleton. No previous /tmp/vi* execution artifacts survived. Measurements JSON
+and check log did not yet exist. No production source file differs from main.
+No previous commits were rewritten. No merge, tag, or push was performed.
+
+Untracked user files/directories at recovery, preserved without changes:
+?? plot_backus_frequency_sweep.py
+?? plot_backus_sweep_document.py
+?? plot_backus_wavefields.py
+?? plot_showcase.py
+?? plot_showcase_waterfall.py
+?? plot_surface_moveout.py
+?? run_backus_frequency_sweep.py
+?? run_backus_wavefield_snapshots.py
+?? runs/
+?? scripts/
+?? seisfem_document_showcase/
+
+Environment:
+  Python 3.14.6, NumPy 2.5.3, DOLFINx 0.11.0
+  PETSc 3.25.5 (real scalars), MPICH 5.0.1
+  OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 for numerical suites
+
+The focused run collected the snapshot tests before the explicit isotropic
+group-direction assertion was added. That strengthened reference test was
+separately rerun (11 passed), and the full regression includes the final code.
+The physical FEM runner, packet, reference solver, estimators, and existing
+acceptance thresholds were not altered during recovery.
+
+Fresh measurements are collected from /tmp/vi-report. Tests never read the
+committed JSON as an oracle. MPI tests compare full sampled histories; the
+committed JSON retains their peak scales and error summaries.
+
+Focused suite
+Command: OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 SEISFEM_VTI_INTERFACE_REPORT_DIR=/tmp/vi-report python -m pytest -ra tests/vti_interface2d
+============================= test session starts ==============================
+platform linux -- Python 3.14.6, pytest-9.1.1, pluggy-1.6.0
+rootdir: /home/m/projects/seisfem
+configfile: pyproject.toml
+plugins: anyio-4.15.1
+collected 37 items
+
+tests/vti_interface2d/test_boundaries.py ..                              [  5%]
+tests/vti_interface2d/test_isotropic_limit.py ..                         [ 10%]
+tests/vti_interface2d/test_mpi.py .                                      [ 13%]
+tests/vti_interface2d/test_packets.py ............                       [ 45%]
+tests/vti_interface2d/test_reference.py ...........                      [ 75%]
+tests/vti_interface2d/test_refinement.py .........                       [100%]
+
+======================= 37 passed in 1016.20s (0:16:56) ========================
+
+Strengthened reference check
+Command: OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 python -m pytest -ra tests/vti_interface2d/test_reference.py
+============================= test session starts ==============================
+platform linux -- Python 3.14.6, pytest-9.1.1, pluggy-1.6.0
+rootdir: /home/m/projects/seisfem
+configfile: pyproject.toml
+plugins: anyio-4.15.1
+collected 11 items
+
+tests/vti_interface2d/test_reference.py ...........                      [100%]
+
+============================== 11 passed in 0.10s ==============================
+
+Measurements
+Command: python -m tests.vti_interface2d.report /tmp/vi-report docs/validation/2d_vti_interface_measurements.json
+Exit status: 0; 23 recorded experiment/control outputs.
+
+Relevant existing suites
+Command: OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 python -m pytest -ra tests/vti2d tests/oblique2d tests/heterogeneous2d tests/plane_strain tests/absorbing2d tests/heterogeneous_absorbing2d
+============================= test session starts ==============================
+platform linux -- Python 3.14.6, pytest-9.1.1, pluggy-1.6.0
+rootdir: /home/m/projects/seisfem
+configfile: pyproject.toml
+plugins: anyio-4.15.1
+collected 246 items
+
+tests/vti2d/test_config_reference.py .............................       [ 11%]
+tests/vti2d/test_mpi_example.py ..                                       [ 12%]
+tests/vti2d/test_operators.py ..............                             [ 18%]
+tests/vti2d/test_propagation.py ..............                           [ 23%]
+tests/oblique2d/test_boundaries.py ..                                    [ 24%]
+tests/oblique2d/test_diagnostics.py ......                               [ 27%]
+tests/oblique2d/test_mpi.py ..                                           [ 28%]
+tests/oblique2d/test_packets.py ..                                       [ 28%]
+tests/oblique2d/test_reference.py .........                              [ 32%]
+tests/oblique2d/test_refinement.py ..........                            [ 36%]
+tests/heterogeneous2d/test_interface.py .                                [ 36%]
+tests/heterogeneous2d/test_materials.py .......................          [ 46%]
+tests/heterogeneous2d/test_mpi.py .                                      [ 46%]
+tests/plane_strain/test_initial_acceleration.py ....                     [ 48%]
+tests/plane_strain/test_manufactured_solution.py ..........              [ 52%]
+tests/plane_strain/test_mpi.py ....                                      [ 54%]
+tests/plane_strain/test_operators.py .................................   [ 67%]
+tests/plane_strain/test_spectral_dynamics.py ..............              [ 73%]
+tests/absorbing2d/test_characteristics.py ......                         [ 75%]
+tests/absorbing2d/test_mpi.py .                                          [ 76%]
+tests/absorbing2d/test_operators.py ...............                      [ 82%]
+tests/absorbing2d/test_physics.py .....                                  [ 84%]
+tests/absorbing2d/test_time_energy.py ......                             [ 86%]
+tests/heterogeneous_absorbing2d/test_energy.py .                         [ 86%]
+tests/heterogeneous_absorbing2d/test_example.py .                        [ 87%]
+tests/heterogeneous_absorbing2d/test_mpi.py .                            [ 87%]
+tests/heterogeneous_absorbing2d/test_operators.py ....................   [ 95%]
+tests/heterogeneous_absorbing2d/test_packets.py ..........               [100%]
+
+======================= 246 passed in 1064.03s (0:17:44) =======================
+
+Full repository regression
+Command: OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 SEISFEM_VTI_INTERFACE_REPORT_DIR=/tmp/vi-full-report python -m pytest -ra
+============================= test session starts ==============================
+platform linux -- Python 3.14.6, pytest-9.1.1, pluggy-1.6.0
+rootdir: /home/m/projects/seisfem
+configfile: pyproject.toml
+testpaths: tests
+plugins: anyio-4.15.1
+collected 422 items
+
+tests/absorbing2d/test_characteristics.py ......                         [  1%]
+tests/absorbing2d/test_mpi.py .                                          [  1%]
+tests/absorbing2d/test_operators.py ...............                      [  5%]
+tests/absorbing2d/test_physics.py .....                                  [  6%]
+tests/absorbing2d/test_time_energy.py ......                             [  7%]
+tests/analytical/test_operators_energy.py ......                         [  9%]
+tests/analytical/test_pulses.py ........                                 [ 11%]
+tests/audit/test_distributed_io.py ......                                [ 12%]
+tests/audit/test_independent_numerics.py ............................... [ 19%]
+.............                                                            [ 22%]
+tests/audit/test_independent_waves.py ...............                    [ 26%]
+tests/experiments2d/test_mpi.py ..                                       [ 27%]
+tests/experiments2d/test_science.py ....                                 [ 27%]
+tests/experiments2d/test_sources_points.py .........................     [ 33%]
+tests/experiments2d/test_workflow.py ..........                          [ 36%]
+tests/heterogeneous2d/test_interface.py .                                [ 36%]
+tests/heterogeneous2d/test_materials.py .......................          [ 41%]
+tests/heterogeneous2d/test_mpi.py .                                      [ 42%]
+tests/heterogeneous_absorbing2d/test_energy.py .                         [ 42%]
+tests/heterogeneous_absorbing2d/test_example.py .                        [ 42%]
+tests/heterogeneous_absorbing2d/test_mpi.py .                            [ 42%]
+tests/heterogeneous_absorbing2d/test_operators.py ....................   [ 47%]
+tests/heterogeneous_absorbing2d/test_packets.py ..........               [ 50%]
+tests/integration/test_frontends_mpi.py .....                            [ 51%]
+tests/oblique2d/test_boundaries.py ..                                    [ 51%]
+tests/oblique2d/test_diagnostics.py ......                               [ 53%]
+tests/oblique2d/test_mpi.py ..                                           [ 53%]
+tests/oblique2d/test_packets.py ..                                       [ 54%]
+tests/oblique2d/test_reference.py .........                              [ 56%]
+tests/oblique2d/test_refinement.py ..........                            [ 58%]
+tests/plane_strain/test_initial_acceleration.py ....                     [ 59%]
+tests/plane_strain/test_manufactured_solution.py ..........              [ 61%]
+tests/plane_strain/test_mpi.py ....                                      [ 62%]
+tests/plane_strain/test_operators.py .................................   [ 70%]
+tests/plane_strain/test_spectral_dynamics.py ..............              [ 73%]
+tests/unit/test_config_sources.py ..............                         [ 77%]
+tests/vti2d/test_config_reference.py .............................       [ 84%]
+tests/vti2d/test_mpi_example.py ..                                       [ 84%]
+tests/vti2d/test_operators.py ..............                             [ 87%]
+tests/vti2d/test_propagation.py ..............                           [ 91%]
+tests/vti_interface2d/test_boundaries.py ..                              [ 91%]
+tests/vti_interface2d/test_isotropic_limit.py ..                         [ 92%]
+tests/vti_interface2d/test_mpi.py .                                      [ 92%]
+tests/vti_interface2d/test_packets.py ............                       [ 95%]
+tests/vti_interface2d/test_reference.py ...........                      [ 97%]
+tests/vti_interface2d/test_refinement.py .........                       [100%]
+
+======================= 422 passed in 1940.95s (0:32:20) =======================
+
+Post-run evidence audit, 2026-09-22:
+Collected the 23 full-run outputs with tests.vti_interface2d.report.collect and
+recursively compared them to the committed focused-run measurements.
+All 1,254 numeric fields passed rtol=3e-10, atol=3e-12.
+Largest absolute difference: 0.0 (exact equality for all numeric fields).
+
+Final quality checks, 2026-09-22:
+Command: ruff check src tests examples docs
+All checks passed!
+Command: ruff format --check src tests examples docs
+147 files already formatted
+Command: pre-commit run --all-files
+ruff check...............................................................Passed
+ruff format..............................................................Passed
+Command: git diff --check
+Passed; no output.
+Command: git diff --name-only main -- src tests ':!tests/vti_interface2d'
+No output: production source and pre-existing tests are unchanged.
+
+Recovery completion:
+The second interruption left the report table edits and two new audit artifacts
+uncommitted. The full regression had completed; its log and all measurement
+artifacts survived. No expensive numerical suite was unnecessarily restarted.
+The numerical report has no remaining placeholders. Only intentional report
+files are included in the final documentation commit. Pre-existing untracked
+user files remain outside the commit. No merge, tag, or push was performed.
