@@ -1,0 +1,71 @@
+GLL SEM validation audit — 2026-09-22
+Final review and documentation completed 2026-09-23.
+Branch: feature/2d-gll-sem
+Production base: main/v0.7.1 b4df73b58463415971093af84c01addd0cdb3f6d
+Validated implementation commits:
+  8547783 feat(2d): add quadrilateral GLL spectral element operators
+  ead0543 test(2d): validate SEM packets and benchmark triangular P1
+  6752806 test(2d): verify GLL SEM MPI consistency
+  6e72ca5 test(2d): audit bitwise P1 compatibility against production base
+
+Environment:
+  Python 3.14.6; NumPy 2.5.3
+  DOLFINx 0.11.0; Basix 0.11.0; FFCx 0.11.0
+  PETSc 3.25.5 real-double; MPICH 5.0.1
+  Intel Core i7-10700K, 8 physical cores / 16 hardware threads
+  OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 for numerical runs
+  Warm FFCx cache; single timing observations on a shared workstation
+
+Focused validation:
+  OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 \
+    SEISFEM_SEM_REPORT_DIR=/tmp/sem-final python -m pytest -ra tests/sem2d
+  63 passed in 732.68s (0:12:12)
+  Includes serial / mpiexec -n 2 / mpiexec -n 4 comparison.
+  Development correction: quadratic axial SV at n=144 had field error 0.0153236
+  against the new 0.015 angular acceptance gate. Refined the angular p=2 grid
+  to n=192; retained the gate and all original equal-DOF benchmark grids.
+  Existing tests and numerical tolerances were not weakened.
+
+Relevant existing suites:
+  OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 python -m pytest -ra \
+    tests/plane_strain tests/absorbing2d tests/heterogeneous2d \
+    tests/heterogeneous_absorbing2d tests/oblique2d tests/vti2d \
+    tests/vti_interface2d
+  283 passed in 1775.59s (0:29:35)
+
+Complete repository regression (one full run):
+  OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 python -m pytest -ra
+  485 passed in 2854.42s (0:47:34)
+  Includes all existing 1D, 2D, absorber, heterogeneous, oblique, VTI and VTI
+  interface tests, as well as all 63 SEM tests. No failures or skips.
+
+Final quality gates:
+  ruff check src tests examples docs — passed
+  ruff format --check src tests examples docs — passed
+  pre-commit run --all-files — ruff check and ruff format passed
+  git diff --check and git diff --cached --check — passed
+  Final source/test diff inspected; no unrelated tracked changes.
+
+Additional compatibility audit:
+  Archived main/src into a temporary directory, without modifying the checkout.
+  Ran tests/sem2d/compatibility.py with baseline/src and feature/src on PYTHONPATH.
+  M, K, diagonal mass, stable dt, stiffness action, source vector, receiver
+  displacement and receiver velocity were all bitwise identical (max error 0).
+  Metadata/config serialization excluded because it now includes the selector.
+
+Example:
+  OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 python examples/2d/gll_sem.py
+  Passed; shape (301,1,2); max receiver displacement 0.0005480374954771486 m.
+
+Report generation:
+  python -m tests.sem2d.report /tmp/sem-final \
+    docs/validation/2d_gll_sem_measurements.json
+  Generates compact JSON, numerical Markdown tables, and comparison PNG.
+  Raw trace arrays are omitted from the compact JSON; MPI max differences remain.
+
+Repository discipline:
+  Five production files changed; no time-integrator or triangular numerical
+  assembly changes. No existing test file changed.
+  No merge, release tag, or push performed.
+  Pre-existing user plotting scripts, runs/, scripts/, and
+  seisfem_document_showcase/ left untouched and untracked.

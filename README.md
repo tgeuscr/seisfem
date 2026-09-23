@@ -126,6 +126,16 @@ below-critical P incidence from isotropy into VTI at one horizontal welded
 interface. This remains the in-plane qP/qSV system: no TTI, SH/C66/gamma
 sensitivity, critical/evanescent validation, or anisotropic absorbers are claimed.
 
+For the optional **homogeneous isotropic GLL spectral-element backend**, add
+`discretization={"type": "quad_gll", "degree": 4}` to a 2D configuration.
+Orders 1–6 use structured affine quadrilaterals and matching GLL quadrature;
+this backend currently supports free boundaries only. Omit the selector (or
+use `{"type": "tri_p1"}`) to retain the existing triangular P1 backend and its
+material/boundary capabilities. Source amplitudes and receiver semantics are
+shared. Run `python examples/2d/gll_sem.py`. The
+[quantitative SEM report](docs/validation/2d_gll_sem.md) compares phase accuracy,
+waveforms, stable timesteps, computational work, and MPI behavior.
+
 ## 1D scientific contract
 
 * Positive-up z in metres, SI throughout; no implicit depth conversion.
