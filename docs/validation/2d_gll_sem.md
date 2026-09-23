@@ -7,6 +7,12 @@ P1 backend remains the default, with its existing numerical assembly and
 time integrator preserved. The base is main/v0.7.1, commit
 `b4df73b58463415971093af84c01addd0cdb3f6d`, which includes VTI interface validation.
 
+**Implementation update:** the SEM mesh now uses an explicit tensor-product Q1
+coordinate element, and its mass/stiffness forms use FFCx sum factorization.
+The correction and equivalence measurements are documented below. The original
+research tables, plots and timing JSON remain the historical results from
+`5023ae3`; they are not new performance measurements of factorized evaluation.
+
 The evidence supports substantially better wave accuracy per DOF in this
 smooth homogeneous regime. It does **not** establish universal speed superiority
 or a universal optimal order. Higher order increases stencil density and usually
@@ -296,21 +302,127 @@ boundaries, PML, curved/non-affine or unstructured quadrilaterals, 3D, GPU,
 frequency-domain, or matrix-free execution. Existing triangular capabilities
 remain available. No discontinuous-material spectral-convergence claim is made.
 
-The assembled PETSc stiffness is the validated reference action. Basix
-tensor-product DOF ordering/factorization is retained, but FFCx 0.11's
-`sum_factorization=True` path failed in `codegeneration/access.py:table_access`
-on an unfactorized coordinate table (`tensor_factors is None`). Default FFCx
-assembly succeeds through p=6 without a compiler/memory failure. This backend
-does not advertise sum-factorized performance. Larger high-order assembled
-matrices will limit scaling. A credible next step is an independently tested
+The global PETSc stiffness matrix remains assembled and supplies every K*u
+action. FFCx now uses sum-factorized element/form evaluation, as detailed below;
+**this is not production matrix-free execution**. Larger high-order assembled
+matrices still limit scaling. A credible next step is an independently tested
 tensor-product reference-element action with affine geometry and MPI assembly,
-retaining the assembled action for equivalence checks; coordinate-table support
-in FFCx should also be revisited.
+retaining the assembled action for equivalence checks. No new large-scale
+performance claim follows from this form-evaluation correction.
 
 The observed accuracy gains justify review toward a future release within
 the stated scope. Broader production promotion should include longer-distance
 and larger-scale benchmarks, repeated isolated timings, and memory profiling.
 Nothing here establishes p=6 as universally optimal or SEM as universally faster.
+
+## Tensor-product coordinate correction
+
+The original FFCx 0.11 failure was in coordinate-table access at
+`codegeneration/access.py:table_access`, where `tensor_factors` was absent.
+The standard `create_rectangle` quadrilateral coordinate element did not expose
+tensor-product factorization metadata. The failure was not in the GLL
+displacement element or the plane-strain elastic form.
+
+The SEM-specific mesh factory now constructs:
+
+```python
+coordinate = basix.create_tp_element(
+    basix.ElementFamily.P,
+    basix.CellType.quadrilateral,
+    1,
+    basix.LagrangeVariant.gll_warped,
+)
+msh = mesh.create_mesh(comm, cells, coordinate, coordinates, partitioner=partitioner)
+```
+
+Rank zero supplies structured input vertices/cells; DOLFINx partitions them
+with shared-facet ghosts. Coordinates use the original `lower + i*h`
+arithmetic. Cell connectivity follows `coordinate.points`, namely
+(0,0), (0,1), (1,0), (1,1) in this Basix tensor-product ordering.
+The physical corner coordinates and cell sets are bitwise identical to
+`create_rectangle`, including shifted nonsquare and 72×72 examples.
+High-order tabulated DOF coordinates can differ at roundoff (4.55e-13 m on
+the 4800 m packet domain); the underlying affine geometry is unchanged.
+
+The production coordinate element reports
+`has_tensor_product_factorisation == True`. Both SEM forms now compile with
+`form_compiler_options={"sum_factorization": True}`. The displacement basis,
+GLL rule and degree 2p−1, weak form, diagonal-mass extraction, timestepper,
+source/receiver semantics, and public scope are unchanged. Triangular mesh
+construction and compiler settings are untouched.
+
+Complete-matrix relative Frobenius differences on the same TP-coordinate mesh:
+
+| p | scalar mass | scalar stiffness | vector mass | plane-strain stiffness |
+| --- | --- | --- | --- | --- |
+| 2 | 5.2732e-16 | 2.4078e-16 | 5.2732e-16 | 2.2918e-16 |
+| 4 | 5.8168e-16 | 6.0997e-16 | 5.8168e-16 | 6.2127e-16 |
+| 6 | 5.9603e-16 | 1.3033e-15 | 5.9603e-16 | 1.3805e-15 |
+
+Every comparison satisfies the unchanged 1e-12 equivalence gate. Tests also
+compare against the old standard-coordinate, non-factorized mesh, after
+physical-coordinate ordering. Maximum relative M/K differences there are
+5.961e-16 / 1.357e-15. The independent NumPy element tests remain authoritative
+and unchanged, covering all supported orders 1–6.
+
+| p | mass offdiag abs / relative | mass integral relative change | rigid residual | K symmetry | dtcrit relative change |
+| --- | --- | --- | --- | --- | --- |
+| 2 | 6.4311e-17 / 1.1102e-16 | 4.4409e-16 | 3.3285e-16 | 4.1607e-17 | 3.3307e-16 |
+| 4 | 3.4013e-17 / 2.0643e-16 | 5.5511e-16 | 6.8859e-16 | 1.3772e-16 | 0 |
+| 6 | 2.0174e-17 / 2.6040e-16 | 0 | 9.9993e-16 | 9.9993e-17 | 3.1086e-15 |
+
+Mass remains diagonal to the original numerical criterion; factorized evaluation
+leaves tiny roundoff entries instead of the original exact zeros. These are
+neither row-summed nor used to alter the mathematical mass. Selected stiffness
+actions differ by at most 8.45e-14 relative; the conservative timestep bound
+changes by at most 3.56e-15 relative. Rigid/symmetry normalization matches the
+original operator tests.
+
+Archived-`5023ae3` comparisons use p=4, 18,818 DOFs, 25° P and SV packets at
+dt/dtcrit≈0.02, plus the public point-force experiment:
+
+| Diagnostic difference | P | SV |
+| --- | --- | --- |
+| dtcrit relative | 4.4193e-16 | 4.4193e-16 |
+| speed-error diagnostic absolute | 1.6503e-15 | 4.1515e-16 |
+| field-error diagnostic absolute | 3.2194e-15 | 4.2423e-15 |
+| polarization-error diagnostic absolute | 1.6390e-14 | 1.5823e-15 |
+| energy-drift diagnostic absolute | 1.7722e-14 | 1.0288e-15 |
+| receiver displacement relative | 1.2453e-13 | 1.2098e-13 |
+| receiver velocity relative | 3.4334e-13 | 2.8263e-13 |
+| final displacement relative | 3.3508e-13 | 2.4072e-13 |
+| final velocity relative | 7.2747e-13 | 6.3352e-13 |
+
+Energy-drift differences are reported absolutely because both drifts are already
+roundoff-sized. The public forced histories differ by 3.62e-15 (u) and 1.27e-14
+(v) relative. The separate P1 archive audit against main and `5023ae3` remains
+bitwise identical for all eight operator/source/history snapshots.
+
+The factorized p=4 packet and public-source MPI checks use 1/2/4 ranks and
+physical-coordinate ordering. Relative differences from serial are:
+
+| Diagnostic | 2 ranks | 4 ranks |
+| --- | --- | --- |
+| diagonal mass | 0 | 0 |
+| stiffness action | 1.2401e-15 | 2.4510e-15 |
+| dtcrit | 6.6290e-16 | 2.2097e-16 |
+| packet receiver displacement | 8.6756e-14 | 8.3141e-14 |
+| packet receiver velocity | 2.7078e-13 | 2.6806e-13 |
+| final displacement | 1.9296e-13 | 2.4941e-13 |
+| final velocity | 6.3520e-13 | 6.2912e-13 |
+
+The [factorization audit JSON](2d_gll_sem_factorization.json) records these
+measurements and the follow-up MPI comparison. No scientific acceptance
+threshold was regenerated or loosened. The original benchmark timings below
+are retained for provenance; no factorization speedup is inferred from them.
+
+Final follow-up validation: the focused factorization tests passed (3 tests),
+the complete SEM suite passed (66 tests, 489.55 s), and all seven relevant
+existing 2D suites passed (283 tests, 1863.55 s). The complete repository
+regression passed with **488 tests in 2486.89 s**, including the three new
+factorization cases. These counts supersede the historical run counts below
+for this implementation correction. Ruff check, Ruff format, all-file
+pre-commit hooks, and staged/unstaged whitespace checks passed.
 
 ## Measured results
 

@@ -26,16 +26,42 @@ def gll_element(degree):
     return basix.ufl.blocked_element(basix.ufl.wrap_element(scalar), shape=(2,))
 
 
+def _rectangle(comm, domain):
+    """Structured affine mesh with tensor-product Q1 coordinate tabulation.
+
+    Rank zero supplies global input nodes/cells; create_mesh partitions them.
+    Coordinate DOFs follow the Basix element's ordering, not cyclic corners.
+    """
+    coordinate = basix.create_tp_element(
+        basix.ElementFamily.P,
+        basix.CellType.quadrilateral,
+        1,
+        basix.LagrangeVariant.gll_warped,
+    )
+    if comm.rank == 0:
+        nx, nz = domain.cells
+        # Match create_rectangle's coordinate arithmetic, including the endpoints.
+        x = domain.lower[0] + np.arange(nx + 1) * ((domain.upper[0] - domain.lower[0]) / nx)
+        z = domain.lower[1] + np.arange(nz + 1) * ((domain.upper[1] - domain.lower[1]) / nz)
+        xx, zz = np.meshgrid(x, z)
+        coordinates = np.column_stack((xx.ravel(), zz.ravel()))
+        ix, iz = np.meshgrid(np.arange(nx), np.arange(nz))
+        lower_left = (iz * (nx + 1) + ix).ravel()
+        corners = coordinate.points.astype(np.int64)
+        offsets = corners[:, 0] + (nx + 1) * corners[:, 1]
+        cells = lower_left[:, None] + offsets
+    else:
+        coordinates = np.empty((0, 2), dtype=np.float64)
+        cells = np.empty((0, 4), dtype=np.int64)
+    partitioner = mesh.create_cell_partitioner(mesh.GhostMode.shared_facet, 2)
+    return mesh.create_mesh(comm, cells, coordinate, coordinates, partitioner=partitioner)
+
+
 def assemble_gll(op):
     """Populate the existing operator contract, without mass row-sum lumping."""
     cfg, comm = op.config, op.comm
     degree = cfg.discretization.degree
-    op.mesh = mesh.create_rectangle(
-        comm,
-        [cfg.domain.lower, cfg.domain.upper],
-        cfg.domain.cells,
-        cell_type=mesh.CellType.quadrilateral,
-    )
+    op.mesh = _rectangle(comm, cfg.domain)
     op.V = fem.functionspace(op.mesh, gll_element(degree))
     op.index_map = op.V.dofmap.index_map
     if op.V.dofmap.bs != 2 or op.V.dofmap.index_map_bs != 2:
@@ -52,9 +78,17 @@ def assemble_gll(op):
     )
     rho = cfg.material.density
     lam, mu = cfg.material.lame
-    op.M = petsc.assemble_matrix(fem.form(rho * ufl.inner(u, v) * dx))
+    options = {"sum_factorization": True}
+    op.M = petsc.assemble_matrix(
+        fem.form(rho * ufl.inner(u, v) * dx, form_compiler_options=options)
+    )
     op.M.assemble()
-    op.K = petsc.assemble_matrix(fem.form(ufl.inner(strain(v), stress(u, lam, mu)) * dx))
+    op.K = petsc.assemble_matrix(
+        fem.form(
+            ufl.inner(strain(v), stress(u, lam, mu)) * dx,
+            form_compiler_options=options,
+        )
+    )
     op.K.assemble()
     diagonal = op.M.getDiagonal()
     try:
@@ -76,7 +110,8 @@ def assemble_gll(op):
         mass_offdiagonal_absolute=off,
         mass_offdiagonal_relative=off / scale,
         tensor_product_ordering=True,
-        sum_factorization=False,
+        coordinate_tensor_product=True,
+        sum_factorization=True,
     )
     op.fixed = np.zeros(op.n, dtype=bool)
     op.damping = np.zeros(op.n)

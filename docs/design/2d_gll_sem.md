@@ -34,12 +34,15 @@ sum_factorization option. Validate collocation, tensor ordering, and compiler
 support experimentally before choosing compiler options. Assembled PETSc K
 remains the production reference; matrix-free optimization is deferred.
 
-Probe result: GLL mass off-diagonals are exactly zero for p=1,2,4,6.
-FFCx 0.11 sum_factorization=True raises AssertionError in
-codegeneration/access.py:table_access because coordinate table tensor_factors
-is None. The standard structured geometry element does not supply that table
-factorization in this path. Default assembly succeeds through p=6; retain it
-and the Basix tensor-product field ordering, without claiming optimized action.
+Original probe: GLL mass off-diagonals were exactly zero for p=1,2,4,6.
+FFCx 0.11 sum_factorization=True initially raised AssertionError in
+codegeneration/access.py:table_access because the standard coordinate element
+did not expose tensor factors. The follow-up resolves this by supplying an
+explicit degree-1 Basix tensor-product coordinate element to create_mesh.
+Structured corner coordinates and physical cell sets match create_rectangle
+bitwise. SEM mass and stiffness now compile with sum_factorization=True and
+agree with non-factorized assembly to roundoff. The global PETSc matrix action
+is still assembled, not matrix-free; the triangular path is unchanged.
 
 Independent NumPy tensor quadrature and polynomial differentiation validate
 element matrices. Actual generalized eigenpairs determine experimental dtcrit;
