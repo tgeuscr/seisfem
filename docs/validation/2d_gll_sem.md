@@ -1,6 +1,6 @@
 # 2D quadrilateral GLL spectral elements
 
-This backend implements **homogeneous isotropic plane strain on structured,
+This report validates **homogeneous isotropic plane strain on structured,
 affine rectangular quadrilaterals with free boundaries**. Continuous GLL orders
 1–6 are supported; propagation and cost studies cover p=2,4,6. The triangular
 P1 backend remains the default, with its existing numerical assembly and
@@ -18,6 +18,10 @@ smooth homogeneous regime. It does **not** establish universal speed superiority
 or a universal optimal order. Higher order increases stencil density and usually
 reduces the explicit timestep. Fixed-accuracy comparisons below include these
 costs and show which targets were actually attained.
+
+The subsequent [heterogeneous SEM milestone](2d_gll_sem_heterogeneous.md) adds
+element-aligned horizontal isotropic layers while retaining this homogeneous
+path and its validation.
 
 ## Equations, elements, quadrature
 
@@ -96,8 +100,10 @@ result = Simulation2D(cfg).run()
 
 `cells` counts elements, not nodal intervals. Omitted `discretization`, or
 `{"type":"tri_p1"}`, selects the unchanged triangular path. `quad_gll` defaults
-to degree 4 and accepts strict integers 1–6. Other degrees, layered/VTI
-materials, absorbing boundaries, and displacement constraints are rejected.
+to degree 4 and accepts strict integers 1–6. Element-aligned horizontal isotropic
+layers are now supported; see the [heterogeneous validation](2d_gll_sem_heterogeneous.md).
+Other degrees, cut elements, VTI materials, absorbing boundaries, and displacement
+constraints are rejected.
 The executable [example](../../examples/2d/gll_sem.py) prints a (301,1,2)
 receiver history and a peak displacement about 5.4804e-4 m.
 

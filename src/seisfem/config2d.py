@@ -76,7 +76,7 @@ class QuadGLL(Config):
 
 
 class PlaneStrainConfig(Config):
-    """Plane strain with triangular P1 or homogeneous quadrilateral GLL spatial basis.
+    """Plane strain with triangular P1 or isotropic quadrilateral GLL spatial basis.
 
     Time, source and receiver configuration lives in SimulationConfig2D.
     """
@@ -90,8 +90,8 @@ class PlaneStrainConfig(Config):
     @model_validator(mode="after")
     def sem_scope(self):
         if isinstance(self.discretization, QuadGLL):
-            if not isinstance(self.material, Isotropic):
-                raise ValueError("quad_gll requires homogeneous isotropic material")
+            if self.has_vti or not isinstance(self.material, Isotropic | Layered):
+                raise ValueError("quad_gll requires isotropic material; VTI SEM is unsupported")
             if self.constraints or self.boundaries.absorbing_sides:
                 raise ValueError("quad_gll currently supports free boundaries only")
         return self
@@ -116,6 +116,11 @@ class PlaneStrainConfig(Config):
         edges = [layers[0].lower, *(layer.upper for layer in layers)]
         rows = [(z - lo) / (hi - lo) * count for z in edges]
         if any(abs(row - round(row)) > 64 * math.ulp(float(count)) for row in rows):
+            if isinstance(self.discretization, QuadGLL):
+                raise ValueError(
+                    "GLL SEM requires heterogeneous interfaces to coincide with element "
+                    "boundaries; adjust the mesh or layer depths (horizontal mesh rows)"
+                )
             raise ValueError("Every layer interface must coincide with a horizontal mesh row")
         if any(round(a) >= round(b) for a, b in zip(rows[:-1], rows[1:], strict=True)):
             raise ValueError("Every layer must span at least one mesh row")

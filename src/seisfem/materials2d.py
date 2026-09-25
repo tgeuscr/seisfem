@@ -18,11 +18,13 @@ class CellMaterials2D:
     containment check below prevents silently assigning a cut cell by its center.
     Interface facets have two material traces, one from each adjacent cell.
     Displacement DOFs shared at the interface are not assigned a single material.
+    An optional scalar DG0 space lets SEM preserve tensor-product coefficient
+    tabulation; the default triangular space and assignment are unchanged.
     """
 
-    def __init__(self, msh, config):
+    def __init__(self, msh, config, *, space=None):
         layers = config.material.layers
-        dg = fem.functionspace(msh, ("DG", 0))
+        dg = fem.functionspace(msh, ("DG", 0)) if space is None else space
         if config.has_vti:
             self.rho, self.c11, self.c33, self.c13, self.c55 = (
                 fem.Function(dg, name=name) for name in ("density", "c11", "c33", "c13", "c55")

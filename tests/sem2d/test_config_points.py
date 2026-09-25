@@ -24,7 +24,10 @@ from .helpers import config
         dict(
             material=dict(
                 type="layered",
-                layers=[dict(lower=0, upper=1.5, material=dict(density=2, vp=3, vs=1.5))],
+                layers=[
+                    dict(lower=0, upper=0.4, material=dict(density=2, vp=3, vs=1.5)),
+                    dict(lower=0.4, upper=1.5, material=dict(density=3, vp=4, vs=2)),
+                ],
             )
         ),
     ],

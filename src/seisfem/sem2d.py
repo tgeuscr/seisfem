@@ -12,7 +12,9 @@ from dolfinx import fem, mesh
 from dolfinx.fem import petsc
 from mpi4py import MPI
 
+from .config import Layered
 from .fem2d import strain, stress
+from .materials2d import CellMaterials2D
 
 
 def gll_element(degree):
@@ -76,8 +78,23 @@ def assemble_gll(op):
         domain=op.mesh,
         metadata={"quadrature_rule": "GLL", "quadrature_degree": 2 * degree - 1},
     )
-    rho = cfg.material.density
-    lam, mu = cfg.material.lame
+    if isinstance(cfg.material, Layered):
+        # Tensor-product DG0 keeps coefficient tables factorable too. Material
+        # assignment/containment and ghost updates use the shared layered path.
+        cell_element = basix.create_tp_element(
+            basix.ElementFamily.P,
+            basix.CellType.quadrilateral,
+            0,
+            basix.LagrangeVariant.gll_warped,
+            discontinuous=True,
+        )
+        space = fem.functionspace(op.mesh, basix.ufl.wrap_element(cell_element))
+        op.material_fields = CellMaterials2D(op.mesh, cfg, space=space)
+        rho = op.material_fields.rho
+        lam, mu = op.material_fields.lam, op.material_fields.mu
+    else:
+        rho = cfg.material.density
+        lam, mu = cfg.material.lame
     options = {"sum_factorization": True}
     op.M = petsc.assemble_matrix(
         fem.form(rho * ufl.inner(u, v) * dx, form_compiler_options=options)

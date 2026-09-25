@@ -53,3 +53,15 @@ from FEM, to measure phase, polarization, field error, and motion before free
 boundary returns. Compare equal approximate DOFs, accuracy targets, timestep
 sweeps, DOF-step work, and actual assembly/stepping times without assuming an
 SEM advantage. Preserve all existing acceptance thresholds.
+
+## Element-aligned isotropic heterogeneity
+
+Reuse the public horizontal `layered` material model and `CellMaterials2D`'s
+cell-ID mapping, vertex containment check and coefficient ghost updates. SEM
+supplies a tensor-product discontinuous degree-zero coefficient space to that
+shared mapper; the triangular caller retains its original DG0 construction.
+Only SEM's density and Lamé coefficients become cell functions. Its homogeneous
+scalar-coefficient path, GLL quadrature, collocated mass extraction, assembled
+stiffness and explicit dynamics remain shared/unchanged. No interface terms or
+nodal material averaging are introduced. Reject cut elements, VTI and nonfree
+boundaries; retain tensor-factorized form compilation.

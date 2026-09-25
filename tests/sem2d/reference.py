@@ -50,3 +50,28 @@ def matrices(p, xy, rho=2.0, lam=9.0, mu=4.5, gaussian=False):
             M += rho * weight * np.kron(np.outer(shape, shape), np.eye(2))
             K += weight * B.T @ C @ B
     return M, K
+
+
+def layered_matrices(p, xy, cells, layers):
+    """Scatter independent rectangle integrals; classify by physical vertices.
+
+    layers contains (lower, upper, rho, vp, vs), without FEM material fields.
+    Cell connectivity is an input, not a source of material IDs or coefficients.
+    """
+    M = np.zeros((2 * len(xy), 2 * len(xy)))
+    K = np.zeros_like(M)
+    for nodes in cells:
+        points = xy[nodes]
+        matches = [
+            row
+            for row in layers
+            if points[:, 1].min() >= row[0] - 1e-13 and points[:, 1].max() <= row[1] + 1e-13
+        ]
+        assert len(matches) == 1
+        _, _, rho, vp, vs = matches[0]
+        mu, lam = rho * vs**2, rho * (vp**2 - 2 * vs**2)
+        a, b = matrices(p, points, rho, lam, mu)
+        ids = (2 * nodes[:, None] + np.arange(2)).ravel()
+        M[np.ix_(ids, ids)] += a
+        K[np.ix_(ids, ids)] += b
+    return M, K
