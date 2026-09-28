@@ -92,8 +92,11 @@ class PlaneStrainConfig(Config):
         if isinstance(self.discretization, QuadGLL):
             if self.has_vti or not isinstance(self.material, Isotropic | Layered):
                 raise ValueError("quad_gll requires isotropic material; VTI SEM is unsupported")
-            if self.constraints or self.boundaries.absorbing_sides:
-                raise ValueError("quad_gll currently supports free boundaries only")
+            if self.constraints:
+                raise ValueError(
+                    "quad_gll supports free/absorbing boundaries; displacement constraints "
+                    "are unsupported"
+                )
         return self
 
     @property

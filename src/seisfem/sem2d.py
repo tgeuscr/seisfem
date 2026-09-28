@@ -12,6 +12,7 @@ from dolfinx import fem, mesh
 from dolfinx.fem import petsc
 from mpi4py import MPI
 
+from .boundaries2d import assemble_boundary_damping
 from .config import Layered
 from .fem2d import strain, stress
 from .materials2d import CellMaterials2D
@@ -131,5 +132,7 @@ def assemble_gll(op):
         sum_factorization=True,
     )
     op.fixed = np.zeros(op.n, dtype=bool)
-    op.damping = np.zeros(op.n)
+    op.C, op.damping = assemble_boundary_damping(
+        op.V, cfg, op.material_fields, collocated_degree=degree
+    )
     op._work = op.K.createVecLeft()

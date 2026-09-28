@@ -1,0 +1,65 @@
+GLL SEM local absorbing-boundary validation — started 2026-09-25
+Baseline: feature/2d-gll-sem @ edaec57c75fb2303c8c28860dcded46b6d0d0fa1
+
+Implementation:
+  Existing triangular impedance weak form reused in boundaries2d.py.
+  SEM edge GLL quadrature degree 2p-1; direct C diagonal; no row-sum lumping.
+  Volume M/K sum_factorization=True unchanged.
+  FFCx 0.11.0 facet default sum_factorization=False (inspected installed options).
+  SEM exterior facets mapped to physical geometry: default vertex locator missed
+  an edge on TP coordinate meshes; complete-matrix test exposed the omission.
+  Triangular locator, quadrature, damping recurrence and spectral bound unchanged.
+
+Focused gates:
+  OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 SEISFEM_SEM_REPORT_DIR=/tmp/sem-abc
+  pytest -ra tests/sem2d/test_absorbing_operators.py
+  37 passed (independent operators, corners, config, stability, energy).
+  pytest -ra tests/sem2d/test_absorbing_operators.py tests/sem2d/test_absorbing_mpi.py
+    tests/sem2d/test_factorization.py tests/sem2d/test_config_points.py
+    tests/sem2d/test_heterogeneous_operators.py
+  65 passed in 3.11s.
+  pytest -ra tests/sem2d/test_absorbing_packets.py
+  9 passed in 193.85s (normal P/SV, oblique P/SV, local layered controls,
+  triangular controls, point-force free-top workflow).
+
+Compatibility:
+  git archive edaec57 src extracted under /tmp/sem-abc-baseline.
+  tests/sem2d/absorbing_compatibility.py run against archived/current source:
+    homogeneous and layered SEM — all eleven npz arrays bitwise identical.
+  tests/sem2d/compatibility.py — eight triangular arrays bitwise identical.
+  tests/heterogeneous2d/mpi_worker.py — ten layered triangular arrays bitwise identical.
+  Raw snapshots remain outside the repository; JSON records zero differences.
+
+Example:
+  OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 python examples/2d/gll_sem_absorbing.py
+  Passed; u/v shape (1801,2,2).
+  Receiver component peaks [[0.00019826,0.00048529],[0.00020583,0.00066807]] m.
+
+Measurements:
+  python -m tests.sem2d.absorbing_report /tmp/sem-abc \
+    docs/validation/2d_gll_sem_absorbing_measurements.json
+  Trace figures copied from the isolated test report directory.
+  Previous homogeneous/heterogeneous research artifacts remain unchanged.
+
+Completed regression gates (OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1):
+  python -m pytest -ra tests/sem2d
+  129 passed in 876.51s (0:14:36).
+  python -m pytest -ra tests/plane_strain tests/absorbing2d
+    tests/heterogeneous2d tests/heterogeneous_absorbing2d tests/oblique2d
+    tests/vti2d tests/vti_interface2d
+  283 passed in 2035.07s (0:33:55).
+  python -m pytest -ra
+  551 passed in 2640.13s (0:44:00).
+  No failures or skips. Counts overlap; the full suite includes focused tests.
+  MPI subprocess tests include serial, 2 ranks and 4 ranks.
+
+Final audit completed 2026-09-28:
+  Measurement JSON regenerated from the completed validation records.
+  ruff check src tests examples docs — passed.
+  ruff format --check src tests examples docs — 185 files already formatted.
+  pre-commit run --all-files — ruff check and ruff format passed.
+  git diff --check — passed.
+  git diff --cached --check — passed.
+  Production diff reviewed: shared boundary helper, SEM wiring, config support,
+  and an operator docstring; no integrator or triangular numerical change.
+  Pre-existing untracked user files/directories left untouched and uncommitted.

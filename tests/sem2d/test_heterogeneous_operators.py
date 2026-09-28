@@ -141,7 +141,7 @@ def test_alignment_guard_and_scope():
     # Roundoff in an aligned depth is accepted; a physical cut is not.
     config(material=layers(-1, 1e-15, 1))
     for updates in [
-        dict(boundaries=dict(left="absorbing")),
+        dict(boundaries=dict(left="pml")),
         dict(constraints=[dict(side="upper", components=["x"])]),
         dict(material=dict(type="vti", density=2, c11=18, c33=18, c13=9, c55=4.5)),
     ]:

@@ -102,8 +102,8 @@ result = Simulation2D(cfg).run()
 `{"type":"tri_p1"}`, selects the unchanged triangular path. `quad_gll` defaults
 to degree 4 and accepts strict integers 1–6. Element-aligned horizontal isotropic
 layers are now supported; see the [heterogeneous validation](2d_gll_sem_heterogeneous.md).
-Other degrees, cut elements, VTI materials, absorbing boundaries, and displacement
-constraints are rejected.
+Local elastic [absorbing boundaries](2d_gll_sem_absorbing.md) are now supported.
+Other degrees, cut elements, VTI materials, and displacement constraints are rejected.
 The executable [example](../../examples/2d/gll_sem.py) prints a (301,1,2)
 receiver history and a peak displacement about 5.4804e-4 m.
 

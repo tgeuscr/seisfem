@@ -8,6 +8,9 @@ differences and MPI. The baseline is `d87afcdc961f03e0cfd146b66309ecaba37b3fd6`.
 The independent operator and normal-incidence evidence below validates this
 scope; no oblique SEM scattering claim is made here.
 
+The subsequent [absorber milestone](2d_gll_sem_absorbing.md) adds local elastic
+absorbing boundaries without changing the free-boundary evidence below.
+
 ## Configuration and assignment
 
 The existing layered material API is reused without a new material schema:
@@ -286,7 +289,7 @@ No existing numerical acceptance threshold was weakened. The
 compatibility provenance. The homogeneous research artifacts remain unchanged.
 
 Unsupported: within-element jumps, non-horizontal material geometry, VTI or
-other anisotropy, absorbing/fixed/componentwise SEM boundaries, curved or
+other anisotropy, fixed/componentwise SEM boundaries, curved or
 non-affine quadrilaterals, PML, attenuation, poroelasticity, matrix-free
 execution and 3D. Oblique scattering is not added by this milestone. The
 finite-element weak form is general within the supported isotropic layers,

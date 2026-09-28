@@ -18,7 +18,7 @@ from .helpers import config
         dict(discretization=dict(type="quad_gll", degree=0)),
         dict(discretization=dict(type="quad_gll", degree=7)),
         dict(discretization=dict(type="quad_gll", degree=2.5)),
-        dict(boundaries=dict(left="absorbing")),
+        dict(boundaries=dict(left="pml")),
         dict(constraints=[dict(side="left")]),
         dict(material=dict(type="vti", density=2, c11=18, c33=18, c13=9, c55=4.5)),
         dict(

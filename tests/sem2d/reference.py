@@ -75,3 +75,37 @@ def layered_matrices(p, xy, cells, layers):
         M[np.ix_(ids, ids)] += a
         K[np.ix_(ids, ids)] += b
     return M, K
+
+
+def boundary_matrix(p, xy, cells, bounds, sides, layers):
+    """Independent GLL edge integration with physical cell-local impedances.
+
+    bounds=(lower,upper); layers=(zlow,zhigh,rho,vp,vs). Corner endpoints
+    belong to two distinct segments and receive both quadrature contributions.
+    """
+    nodes, weights = gll(p)
+    C = np.zeros((2 * len(xy), 2 * len(xy)))
+    for cell in cells:
+        points = xy[cell]
+        lo, hi = points.min(axis=0), points.max(axis=0)
+        matches = [row for row in layers if lo[1] >= row[0] - 1e-13 and hi[1] <= row[1] + 1e-13]
+        assert len(matches) == 1
+        _, _, rho, vp, vs = matches[0]
+        for side in sides:
+            axis = 0 if side in ("left", "right") else 1
+            end = 0 if side in ("left", "lower") else 1
+            boundary = bounds[end][axis]
+            if abs((lo if end == 0 else hi)[axis] - boundary) > 1e-12:
+                continue
+            edge = np.flatnonzero(abs(points[:, axis] - boundary) < 1e-12)
+            tangent = 1 - axis
+            length = hi[tangent] - lo[tangent]
+            edge_coords = (points[edge, tangent] - lo[tangent]) / length
+            # Evaluate trace basis at GLL nodes, not production tabulation.
+            L, _ = basis(nodes, nodes)
+            indices = np.argmin(abs(edge_coords[:, None] - nodes), axis=1)
+            scalar = length * (L[:, indices].T * weights) @ L[:, indices]
+            B = np.diag([rho * vp, rho * vs] if axis == 0 else [rho * vs, rho * vp])
+            ids = (2 * cell[edge, None] + np.arange(2)).ravel()
+            C[np.ix_(ids, ids)] += np.kron(scalar, B)
+    return C

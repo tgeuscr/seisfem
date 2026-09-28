@@ -11,7 +11,8 @@ barycentric interpolation.
 Add a small discriminated configuration selector, defaulting to tri_p1.
 quad_gll specifies degree 1 through 6 and initially accepts only homogeneous
 isotropic material, rectangular structured meshes, and free boundaries.
-Reject constraints, absorbers, and other materials explicitly. Existing
+The initial scope rejected constraints, absorbers, and other materials;
+the extensions below add isotropic layers and local absorbers. Existing
 configurations retain the existing triangular assembly and point-weight path.
 
 PlaneStrainOperators dispatches only its assembly method to a separate sem2d
@@ -63,5 +64,13 @@ shared mapper; the triangular caller retains its original DG0 construction.
 Only SEM's density and Lamé coefficients become cell functions. Its homogeneous
 scalar-coefficient path, GLL quadrature, collocated mass extraction, assembled
 stiffness and explicit dynamics remain shared/unchanged. No interface terms or
-nodal material averaging are introduced. Reject cut elements, VTI and nonfree
-boundaries; retain tensor-factorized form compilation.
+nodal material averaging are introduced. Reject cut elements, VTI and displacement
+constraints; retain tensor-factorized form compilation. Free and absorbing
+boundaries are supported through the boundary extension below.
+
+## Local absorbing boundaries
+
+The [absorber design](2d_gll_sem_absorbing.md) extends the shared boundary helper
+with GLL edge quadrature and direct diagonal extraction. Volume sum factorization
+and assembled stepping remain unchanged. Free/absorbing side combinations are
+now supported for homogeneous and element-aligned isotropic layers.

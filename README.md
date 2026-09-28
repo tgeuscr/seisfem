@@ -129,7 +129,7 @@ sensitivity, critical/evanescent validation, or anisotropic absorbers are claime
 For the optional **isotropic GLL spectral-element backend**, add
 `discretization={"type": "quad_gll", "degree": 4}` to a 2D configuration.
 Orders 1–6 use structured affine quadrilaterals and matching GLL quadrature;
-this backend currently supports free boundaries only. Omit the selector (or
+this backend supports free and local elastic absorbing boundaries. Omit the selector (or
 use `{"type": "tri_p1"}`) to retain the existing triangular P1 backend and its
 material/boundary capabilities. Source amplitudes and receiver semantics are
 shared. Run `python examples/2d/gll_sem.py`. The
@@ -138,6 +138,8 @@ waveforms, stable timesteps, computational work, and MPI behavior.
 Horizontal isotropic layers are supported when every interface lies on an
 element edge; see the [heterogeneous SEM audit](docs/validation/2d_gll_sem_heterogeneous.md).
 Material properties are constant per element, with no nodal averaging.
+For a free top and absorbing sides/bottom, run `python examples/2d/gll_sem_absorbing.py`;
+see the [SEM absorber validation](docs/validation/2d_gll_sem_absorbing.md).
 
 ## 1D scientific contract
 

@@ -63,7 +63,8 @@ class PlaneStrainOperators:
     zero-displacement components for time-step projection; no artificial boundary
     diagonals are inserted. Geometry coordinates are per two-component node.
     C is the consistent boundary impedance matrix (None without absorbers);
-    damping is its nonnegative row-sum lumping on owned scalar DOFs.
+    damping is its nonnegative row-sum lumping for triangles, or its
+    collocated GLL diagonal for SEM, on owned scalar DOFs.
     """
 
     def __init__(self, config: PlaneStrainConfig, comm=MPI.COMM_WORLD):
