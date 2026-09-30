@@ -62,8 +62,21 @@ class BoundaryConditions2D(Config):
         )
 
 
+class TriP1(Config):
+    """Trusted row-sum-lumped triangular P1 discretization."""
+
+    type: Literal["tri_p1"] = "tri_p1"
+
+
+class QuadGLL(Config):
+    """Continuous tensor-product GLL collocation on affine rectangles."""
+
+    type: Literal["quad_gll"] = "quad_gll"
+    degree: Annotated[int, Field(ge=1, le=6, strict=True)] = 4
+
+
 class PlaneStrainConfig(Config):
-    """Vector P1 triangles with isotropic or vertical-axis VTI material.
+    """Plane strain with triangular P1 or isotropic quadrilateral GLL spatial basis.
 
     Time, source and receiver configuration lives in SimulationConfig2D.
     """
@@ -72,6 +85,19 @@ class PlaneStrainConfig(Config):
     material: Isotropic | Layered | VTI | LayeredVTI
     constraints: tuple[ZeroDisplacement, ...] = ()
     boundaries: BoundaryConditions2D = BoundaryConditions2D()
+    discretization: Annotated[TriP1 | QuadGLL, Field(discriminator="type")] = TriP1()
+
+    @model_validator(mode="after")
+    def sem_scope(self):
+        if isinstance(self.discretization, QuadGLL):
+            if self.has_vti or not isinstance(self.material, Isotropic | Layered):
+                raise ValueError("quad_gll requires isotropic material; VTI SEM is unsupported")
+            if self.constraints:
+                raise ValueError(
+                    "quad_gll supports free/absorbing boundaries; displacement constraints "
+                    "are unsupported"
+                )
+        return self
 
     @property
     def has_vti(self):
@@ -93,6 +119,11 @@ class PlaneStrainConfig(Config):
         edges = [layers[0].lower, *(layer.upper for layer in layers)]
         rows = [(z - lo) / (hi - lo) * count for z in edges]
         if any(abs(row - round(row)) > 64 * math.ulp(float(count)) for row in rows):
+            if isinstance(self.discretization, QuadGLL):
+                raise ValueError(
+                    "GLL SEM requires heterogeneous interfaces to coincide with element "
+                    "boundaries; adjust the mesh or layer depths (horizontal mesh rows)"
+                )
             raise ValueError("Every layer interface must coincide with a horizontal mesh row")
         if any(round(a) >= round(b) for a, b in zip(rows[:-1], rows[1:], strict=True)):
             raise ValueError("Every layer must span at least one mesh row")
@@ -175,7 +206,7 @@ class Receiver2D(Config):
 
 
 class SimulationConfig2D(PlaneStrainConfig):
-    """Plane-strain experiment, zero initial data and vector P1 FE."""
+    """Plane-strain experiment with zero initial data and vector point coupling."""
 
     # Reuse time validation, but stability is checked on the assembled 2D operator.
     time: TimeConfig

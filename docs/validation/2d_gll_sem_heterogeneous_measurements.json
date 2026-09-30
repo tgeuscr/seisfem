@@ -1,0 +1,526 @@
+{
+  "baseline": "d87afcdc961f03e0cfd146b66309ecaba37b3fd6",
+  "scope": "element-aligned horizontal isotropic layers, free boundaries, assembled GLL SEM",
+  "sum_factorization": true,
+  "records": {
+    "homogeneous-1": {
+      "M": 0.0,
+      "K": 0.0,
+      "mass": 0.0,
+      "dt": 0.0,
+      "u": 0.0,
+      "v": 0.0
+    },
+    "homogeneous-2": {
+      "M": 0.0,
+      "K": 0.0,
+      "mass": 0.0,
+      "dt": 0.0,
+      "u": 0.0,
+      "v": 0.0
+    },
+    "homogeneous-4": {
+      "M": 0.0,
+      "K": 0.0,
+      "mass": 0.0,
+      "dt": 0.0,
+      "u": 0.0,
+      "v": 0.0
+    },
+    "homogeneous-6": {
+      "M": 0.0,
+      "K": 0.0,
+      "mass": 0.0,
+      "dt": 0.0,
+      "u": 0.0,
+      "v": 0.0
+    },
+    "mpi-2": {
+      "errors": {
+        "cells": 0.0,
+        "u": 1.4733691556300576e-14,
+        "v": 1.0984739082180817e-14,
+        "safe_dt": 0.0,
+        "dtcrit": 3.7128643870489906e-16,
+        "mass": 0.0,
+        "action": 3.557044343840117e-14,
+        "final_u": 1.3773698682266707e-14,
+        "final_v": 4.701076578000419e-13
+      },
+      "rank_layers": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ]
+      ]
+    },
+    "mpi-4": {
+      "errors": {
+        "cells": 0.0,
+        "u": 1.0268936539239794e-14,
+        "v": 1.0740633769243466e-14,
+        "safe_dt": 0.0,
+        "dtcrit": 3.7128643870489906e-16,
+        "mass": 1.3387252434653338e-17,
+        "action": 3.3734511001348524e-14,
+        "final_u": 3.050809895044121e-14,
+        "final_v": 4.113442005750367e-13
+      },
+      "rank_layers": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          1,
+          2
+        ]
+      ]
+    },
+    "operators-1": {
+      "degree": 1,
+      "errors": {
+        "M": 5.125460382444025e-16,
+        "K": 5.099757112009514e-16,
+        "action": 3.902984973696774e-16
+      },
+      "mass_offdiagonal_relative": 0.0,
+      "integrated_mass_error": 5.551115123125783e-16,
+      "symmetry": 0.0,
+      "rigid": 7.578583593274441e-17,
+      "minimum_eigenvalue": -1.0307922260851133e-14,
+      "dtcrit": 0.2182114315335608,
+      "safe_dt": 0.1922728827912277,
+      "dtcrit_error": 0.0,
+      "energy_drift": 1.3679192647576557e-15,
+      "sum_factorization": true
+    },
+    "operators-2": {
+      "degree": 2,
+      "errors": {
+        "M": 1.0550142227426282e-15,
+        "K": 9.226106878826227e-16,
+        "action": 9.36035096646291e-16
+      },
+      "mass_offdiagonal_relative": 1.1102230246251562e-16,
+      "integrated_mass_error": 1.1102230246251565e-15,
+      "symmetry": 5.4297993288615046e-17,
+      "rigid": 2.1719197315446018e-16,
+      "minimum_eigenvalue": -5.630350402105405e-15,
+      "dtcrit": 0.08575071497554781,
+      "safe_dt": 0.07274926432136607,
+      "dtcrit_error": 0.0,
+      "energy_drift": 5.78350950194492e-16,
+      "sum_factorization": true
+    },
+    "operators-3": {
+      "degree": 3,
+      "errors": {
+        "M": 2.5293751429347466e-15,
+        "K": 1.8945126952783003e-15,
+        "action": 1.7940292549371343e-15
+      },
+      "mass_offdiagonal_relative": 1.693090112553364e-16,
+      "integrated_mass_error": 7.771561172376096e-16,
+      "symmetry": 1.1120229025508354e-16,
+      "rigid": 2.780057256377089e-16,
+      "minimum_eigenvalue": -6.911462771684932e-14,
+      "dtcrit": 0.04724197354994342,
+      "safe_dt": 0.037806445562352894,
+      "dtcrit_error": 7.771561172376096e-16,
+      "energy_drift": 1.2031094248294996e-15,
+      "sum_factorization": true
+    },
+    "operators-4": {
+      "degree": 4,
+      "errors": {
+        "M": 1.2180813814272477e-14,
+        "K": 8.233185832344095e-15,
+        "action": 8.186242197719412e-15
+      },
+      "mass_offdiagonal_relative": 2.0643209364124002e-16,
+      "integrated_mass_error": 5.551115123125783e-16,
+      "symmetry": 8.995749733859333e-17,
+      "rigid": 5.3974498403156e-16,
+      "minimum_eigenvalue": -6.221776861601597e-14,
+      "dtcrit": 0.029348814231084045,
+      "safe_dt": 0.02307973148057443,
+      "dtcrit_error": 5.551115123125783e-16,
+      "energy_drift": 5.913805416386721e-16,
+      "sum_factorization": true
+    },
+    "operators-5": {
+      "degree": 5,
+      "errors": {
+        "M": 6.778164574251918e-14,
+        "K": 5.101656805613167e-14,
+        "action": 4.871735903608387e-14
+      },
+      "mass_offdiagonal_relative": 7.364643742026628e-16,
+      "integrated_mass_error": 1.1102230246251565e-15,
+      "symmetry": 1.6286269549221115e-16,
+      "rigid": 6.514507819688446e-16,
+      "minimum_eigenvalue": -4.891311199436085e-14,
+      "dtcrit": 0.019840324530188816,
+      "safe_dt": 0.015527061947930031,
+      "dtcrit_error": 4.440892098500626e-16,
+      "energy_drift": 6.764807626984981e-16,
+      "sum_factorization": true
+    },
+    "operators-6": {
+      "degree": 6,
+      "errors": {
+        "M": 1.9809825624823683e-13,
+        "K": 1.402878076267845e-13,
+        "action": 1.3973053648126655e-13
+      },
+      "mass_offdiagonal_relative": 2.60402547212219e-16,
+      "integrated_mass_error": 2.55351295663786e-15,
+      "symmetry": 1.380133449382091e-16,
+      "rigid": 7.849508993360643e-16,
+      "minimum_eigenvalue": -6.73795284480185e-13,
+      "dtcrit": 0.014274204046760086,
+      "safe_dt": 0.01115010987074469,
+      "dtcrit_error": 2.220446049250313e-16,
+      "energy_drift": 8.035881087963542e-16,
+      "sum_factorization": true
+    },
+    "p1-compatibility": {
+      "mass": {
+        "bitwise_identical": true,
+        "absolute_error": 0.0
+      },
+      "M": {
+        "bitwise_identical": true,
+        "absolute_error": 0.0
+      },
+      "K": {
+        "bitwise_identical": true,
+        "absolute_error": 0.0
+      },
+      "dt": {
+        "bitwise_identical": true,
+        "absolute_error": 0.0
+      },
+      "source": {
+        "bitwise_identical": true,
+        "absolute_error": 0.0
+      },
+      "action": {
+        "bitwise_identical": true,
+        "absolute_error": 0.0
+      },
+      "displacement": {
+        "bitwise_identical": true,
+        "absolute_error": 0.0
+      },
+      "velocity": {
+        "bitwise_identical": true,
+        "absolute_error": 0.0
+      },
+      "layered_snapshot": {
+        "cells": {
+          "bitwise_identical": true,
+          "absolute_error": 0.0
+        },
+        "mass": {
+          "bitwise_identical": true,
+          "absolute_error": 0.0
+        },
+        "action": {
+          "bitwise_identical": true,
+          "absolute_error": 0.0
+        },
+        "dt": {
+          "bitwise_identical": true,
+          "absolute_error": 0.0
+        },
+        "coordinates": {
+          "bitwise_identical": true,
+          "absolute_error": 0.0
+        },
+        "M": {
+          "bitwise_identical": true,
+          "absolute_error": 0.0
+        },
+        "K": {
+          "bitwise_identical": true,
+          "absolute_error": 0.0
+        },
+        "u": {
+          "bitwise_identical": true,
+          "absolute_error": 0.0
+        },
+        "v": {
+          "bitwise_identical": true,
+          "absolute_error": 0.0
+        },
+        "receiver_coordinates": {
+          "bitwise_identical": true,
+          "absolute_error": 0.0
+        }
+      }
+    },
+    "packet-decrease-h100": {
+      "incident": 1.000005201907361,
+      "R": 0.285771876121011,
+      "T": 1.2858812351235844,
+      "R_error": 5.7590406725316345e-05,
+      "T_error": 0.00016694940929862234,
+      "R_flux": 0.08166556518172247,
+      "T_flux": 0.9186058615794195,
+      "flux_error": 0.00023851464064372774,
+      "flux_closure": 0.0002714267611418908,
+      "arrival_errors": [
+        -1.2613692679297461e-05,
+        -5.647835249722455e-05,
+        1.4561738985507944e-05
+      ],
+      "waveform_errors": [
+        0.00042388974638016155,
+        0.0011390901956001454,
+        0.002572475730191201
+      ],
+      "transverse_peak": 4.122733671736707e-14,
+      "analytical": {
+        "R": 0.2857142857142857,
+        "T": 1.2857142857142858,
+        "R_flux": 0.08163265306122448,
+        "T_flux": 0.9183673469387758
+      },
+      "degree": 4,
+      "h": 100,
+      "case": "decrease",
+      "dt": 0.0005830903790087463,
+      "safe_dt": 0.0038886943630971884,
+      "energy_drift": 1.854138884356283e-14,
+      "dofs": 5778
+    },
+    "packet-decrease-h50": {
+      "incident": 1.0000003292808175,
+      "R": 0.2857139940120962,
+      "T": 1.2857184937592343,
+      "R_error": 2.9170218951435345e-07,
+      "T_error": 4.208044948494916e-06,
+      "R_flux": 0.08163248637434413,
+      "T_flux": 0.9183733584413969,
+      "flux_error": 6.011502621139364e-06,
+      "flux_closure": 5.844815740951859e-06,
+      "arrival_errors": [
+        -3.5269859107178725e-06,
+        -1.1257443999435068e-05,
+        -1.2885741633605896e-05
+      ],
+      "waveform_errors": [
+        0.00012113875204972056,
+        0.0001046998547676672,
+        0.0005587943582558516
+      ],
+      "transverse_peak": 7.091781867488548e-14,
+      "analytical": {
+        "R": 0.2857142857142857,
+        "T": 1.2857142857142858,
+        "R_flux": 0.08163265306122448,
+        "T_flux": 0.9183673469387758
+      },
+      "degree": 4,
+      "h": 50,
+      "case": "decrease",
+      "dt": 0.0003033586132177681,
+      "safe_dt": 0.002022615223944735,
+      "energy_drift": 4.629015556017006e-14,
+      "dofs": 11538
+    },
+    "packet-identical": {
+      "incident": 0.9999999610783893,
+      "R": -3.217364765227692e-13,
+      "T": 0.9999999624306668,
+      "R_error": 3.217364765227692e-13,
+      "T_error": 3.756933319998268e-08,
+      "R_flux": 1.0351436032528643e-25,
+      "T_flux": 0.999999924861335,
+      "flux_error": 7.513866495667543e-08,
+      "flux_closure": 7.513866495667543e-08,
+      "arrival_errors": [
+        -2.9220342611102623e-06,
+        null,
+        -8.753398867966666e-06
+      ],
+      "waveform_errors": [
+        9.814597744960474e-05,
+        3.804996728208491e-09,
+        0.0002929276810778703
+      ],
+      "transverse_peak": 7.173712561537936e-14,
+      "analytical": {
+        "R": 0.0,
+        "T": 1.0,
+        "R_flux": 0.0,
+        "T_flux": 1.0
+      },
+      "degree": 6,
+      "h": 50,
+      "case": "identical",
+      "dt": 0.00022201078338090707,
+      "safe_dt": 0.0014801895622058932,
+      "energy_drift": 2.3898320812175835e-14,
+      "dofs": 24986,
+      "homogeneous_trace_errors": {
+        "u": 0.0,
+        "v": 0.0
+      }
+    },
+    "packet-increase-h100": {
+      "incident": 1.0002417314527214,
+      "R": -0.2857754246350371,
+      "T": 0.7141562575505096,
+      "R_error": 6.113892075138017e-05,
+      "T_error": 0.0001294567352047027,
+      "R_flux": 0.08166759332533575,
+      "T_flux": 0.9180344883573898,
+      "flux_error": 0.0003328585813858753,
+      "flux_closure": 0.00029791831727443707,
+      "arrival_errors": [
+        3.775023542240685e-05,
+        0.00015786878146051286,
+        6.797116885537413e-05
+      ],
+      "waveform_errors": [
+        0.0017540280605718196,
+        0.0016305435473850326,
+        0.0017817084841672535
+      ],
+      "transverse_peak": 1.602103495366699e-14,
+      "analytical": {
+        "R": -0.2857142857142857,
+        "T": 0.7142857142857143,
+        "R_flux": 0.08163265306122448,
+        "T_flux": 0.9183673469387756
+      },
+      "degree": 4,
+      "h": 100,
+      "case": "increase",
+      "dt": 0.0005830903790087463,
+      "safe_dt": 0.0038886943630971884,
+      "energy_drift": 2.7986691860358435e-14,
+      "dofs": 5778
+    },
+    "packet-increase-h50": {
+      "incident": 1.0000036193834236,
+      "R": -0.28571397090459,
+      "T": 0.7142833609890907,
+      "R_error": 3.148096957006352e-07,
+      "T_error": 2.353296623569534e-06,
+      "R_flux": 0.0816324731700689,
+      "T_flux": 0.918361295614569,
+      "flux_error": 6.051324206612918e-06,
+      "flux_closure": 6.2312153620291966e-06,
+      "arrival_errors": [
+        -4.832181068781249e-06,
+        -1.5627327212275333e-05,
+        -1.405373469176574e-05
+      ],
+      "waveform_errors": [
+        0.000169055633719175,
+        0.00015694240218702612,
+        0.00034392397952507877
+      ],
+      "transverse_peak": 2.5182581647012426e-14,
+      "analytical": {
+        "R": -0.2857142857142857,
+        "T": 0.7142857142857143,
+        "R_flux": 0.08163265306122448,
+        "T_flux": 0.9183673469387756
+      },
+      "degree": 4,
+      "h": 50,
+      "case": "increase",
+      "dt": 0.0003033586132177681,
+      "safe_dt": 0.002022615223944735,
+      "energy_drift": 4.736667541089314e-14,
+      "dofs": 11538
+    },
+    "triangle-h10": {
+      "incident": 1.0018467389403025,
+      "R": -0.2843531880566046,
+      "T": 0.7094924494731594,
+      "R_error": 0.0013610976576811096,
+      "T_error": 0.0047932648125549315,
+      "R_flux": 0.08085673555795474,
+      "T_flux": 0.9060831645469625,
+      "flux_error": 0.01228418239181317,
+      "flux_closure": 0.013060099895082833,
+      "arrival_errors": [
+        0.0014689707486149062,
+        0.004371671372324526,
+        0.0033349019712751726
+      ],
+      "waveform_errors": [
+        0.04975341993258853,
+        0.042494339375696716,
+        0.08059351712243941
+      ],
+      "transverse_peak": 0.0003506388018175655,
+      "analytical": {
+        "R": -0.2857142857142857,
+        "T": 0.7142857142857143,
+        "R_flux": 0.08163265306122448,
+        "T_flux": 0.9183673469387756
+      },
+      "degree": 0,
+      "h": 10,
+      "case": "increase",
+      "dt": 0.0004536616979909267,
+      "safe_dt": 0.0030252234376937004,
+      "energy_drift": 1.8132936821094092e-14,
+      "dofs": 8010
+    },
+    "triangle-h5": {
+      "incident": 1.0005385306907284,
+      "R": -0.2858882630090928,
+      "T": 0.713841296413062,
+      "R_error": 0.000173977294807115,
+      "T_error": 0.0004444178726522585,
+      "R_flux": 0.08173209892635623,
+      "T_flux": 0.9172249136364261,
+      "flux_error": 0.0011424333023495326,
+      "flux_closure": 0.0010429874372176462,
+      "arrival_errors": [
+        0.0003673532522072698,
+        0.001102500586470434,
+        0.0008400084296589228
+      ],
+      "waveform_errors": [
+        0.012360461861133877,
+        0.010576615119054271,
+        0.02011712352117992
+      ],
+      "transverse_peak": 0.00018166353879008594,
+      "analytical": {
+        "R": -0.2857142857142857,
+        "T": 0.7142857142857143,
+        "R_flux": 0.08163265306122448,
+        "T_flux": 0.9183673469387756
+      },
+      "degree": 0,
+      "h": 5,
+      "case": "increase",
+      "dt": 0.00022838499184339313,
+      "safe_dt": 0.0015226129508656874,
+      "energy_drift": 3.080789371740021e-14,
+      "dofs": 16010
+    }
+  }
+}

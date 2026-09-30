@@ -1,0 +1,851 @@
+{
+  "baseline_commit": "5023ae3824461547d9d51f7872eae7200691c122",
+  "compiler_options": {
+    "sum_factorization": true
+  },
+  "global_matrix_assembled": true,
+  "orders": {
+    "2": {
+      "degree": 2,
+      "coordinate_tensor_product": true,
+      "same_mesh_errors": {
+        "scalar_mass": 5.273172463827554e-16,
+        "scalar_stiffness": 2.4077674539739493e-16,
+        "mass": 5.273172463827554e-16,
+        "stiffness": 2.2917552309490163e-16
+      },
+      "legacy_mesh_errors": {
+        "mass": 5.273172463827554e-16,
+        "stiffness": 2.4844742790527526e-16
+      },
+      "corner_coordinate_error": 0.0,
+      "mass_offdiagonal_absolute": 6.431069668569415e-17,
+      "mass_offdiagonal_relative": 1.1102230246251562e-16,
+      "integrated_mass_relative_error": 4.440892098500626e-16,
+      "symmetry": 4.160676063531342e-17,
+      "rigid_residual": 3.3285408508250734e-16,
+      "stiffness_action_relative_error": 1.2964302929684183e-15,
+      "dtcrit_relative_difference": 3.3306690738754696e-16,
+      "safe_dt_relative_difference": 3.3306690738754696e-16
+    },
+    "4": {
+      "degree": 4,
+      "coordinate_tensor_product": true,
+      "same_mesh_errors": {
+        "scalar_mass": 5.816833718494168e-16,
+        "scalar_stiffness": 6.0997013173409e-16,
+        "mass": 5.8168337184941675e-16,
+        "stiffness": 6.212729233709272e-16
+      },
+      "legacy_mesh_errors": {
+        "mass": 5.816833718494167e-16,
+        "stiffness": 6.2899721315899e-16
+      },
+      "corner_coordinate_error": 0.0,
+      "mass_offdiagonal_absolute": 3.401321291376716e-17,
+      "mass_offdiagonal_relative": 2.0643209364123997e-16,
+      "integrated_mass_relative_error": 5.551115123125783e-16,
+      "symmetry": 1.377187663660725e-16,
+      "rigid_residual": 6.885938318303625e-16,
+      "stiffness_action_relative_error": 1.985751819286125e-14,
+      "dtcrit_relative_difference": 0.0,
+      "safe_dt_relative_difference": 4.440892098500626e-16
+    },
+    "6": {
+      "degree": 6,
+      "coordinate_tensor_product": true,
+      "same_mesh_errors": {
+        "scalar_mass": 5.960281451668989e-16,
+        "scalar_stiffness": 1.3033208946704639e-15,
+        "mass": 5.960281451668988e-16,
+        "stiffness": 1.3804671902583329e-15
+      },
+      "legacy_mesh_errors": {
+        "mass": 5.960281451668987e-16,
+        "stiffness": 1.356008184884461e-15
+      },
+      "corner_coordinate_error": 0.0,
+      "mass_offdiagonal_absolute": 2.0174466701838477e-17,
+      "mass_offdiagonal_relative": 2.6040254721221894e-16,
+      "integrated_mass_relative_error": 0.0,
+      "symmetry": 9.999255494516908e-17,
+      "rigid_residual": 9.999255494516909e-16,
+      "stiffness_action_relative_error": 8.444303597385388e-14,
+      "dtcrit_relative_difference": 3.1086244689504383e-15,
+      "safe_dt_relative_difference": 3.552713678800501e-15
+    }
+  },
+  "sem_compatibility": {
+    "baseline_commit": "5023ae3824461547d9d51f7872eae7200691c122",
+    "P": {
+      ".packet.degree": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".packet.effective": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".packet.cells_per_axis": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".packet.elements": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".packet.dofs": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".packet.angle": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".packet.points_per_wavelength": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".packet.h_element": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".packet.extent": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".packet.dtcrit": {
+        "absolute": 3.469446951953614e-18,
+        "relative": 4.419275292646695e-16
+      },
+      ".packet.safe_dt": {
+        "absolute": 3.469446951953614e-18,
+        "relative": 5.615352053442961e-16
+      },
+      ".packet.requested_fraction": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".packet.actual_fraction": {
+        "absolute": 1.0408340855860843e-17,
+        "relative": 5.205112659885621e-16
+      },
+      ".packet.dt": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".packet.steps": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".packet.spectral_residual": {
+        "absolute": 5.217984480731866e-15,
+        "relative": 0.2921708024489792
+      },
+      ".packet.phase_speed": {
+        "absolute": 5.002220859751105e-12,
+        "relative": 1.6674076836914192e-15
+      },
+      ".packet.speed_error": {
+        "absolute": 1.6503079606952067e-15,
+        "relative": 3.767225528624363e-09
+      },
+      ".packet.signed_speed_error": {
+        "absolute": 1.6503079606952067e-15,
+        "relative": 3.767225528624363e-09
+      },
+      ".packet.phase_residual": {
+        "absolute": 1.0235673613079527e-14,
+        "relative": 3.75192567100161e-09
+      },
+      ".packet.continuum_phase_residual": {
+        "absolute": 1.3351731709349518e-16,
+        "relative": 5.48054193286031e-09
+      },
+      ".packet.polarization_error": {
+        "absolute": 1.6389880006298634e-14,
+        "relative": 5.748004021823802e-09
+      },
+      ".packet.waveform_error": {
+        "absolute": 1.4987035050484376e-14,
+        "relative": 1.8549561373130132e-11
+      },
+      ".packet.field_error": {
+        "absolute": 3.219429930978457e-15,
+        "relative": 2.7078539773031207e-12
+      },
+      ".packet.arrival_time": {
+        "absolute": 3.70536934468646e-15,
+        "relative": 3.869735874682955e-14
+      },
+      ".packet.reference_arrival": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".packet.arrival_error": {
+        "absolute": 3.870290047648661e-14,
+        "relative": 2.7089819337997374e-10
+      },
+      ".packet.phase_angle": {
+        "absolute": 9.237055564881302e-14,
+        "relative": 3.694677228754298e-15
+      },
+      ".packet.reference_phase_angle": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".packet.angle_error": {
+        "absolute": 9.237055564881302e-14,
+        "relative": 8.078062365060166e-11
+      },
+      ".packet.energy_drift": {
+        "absolute": 1.7722339770842888e-14,
+        "relative": 1.2465753424657855
+      },
+      ".packet.work_proxy": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".packet.mass": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".packet.stiffness_form": {
+        "absolute": 0.0006103515625,
+        "relative": 9.737566800378104e-16
+      },
+      ".packet.action_square": {
+        "absolute": 5242880.0,
+        "relative": 8.945999462999313e-16
+      },
+      ".packet.trace": {
+        "absolute": 1.1091128016005314e-13,
+        "relative": 1.2452452503466323e-13
+      },
+      ".packet.velocity_trace": {
+        "absolute": 1.007016692256002e-11,
+        "relative": 3.433306829913358e-13
+      },
+      ".packet.field_samples": {
+        "absolute": 1.2995854392627848e-13,
+        "relative": 2.1312619276426347e-13
+      },
+      ".source_work": {
+        "absolute": 1.942890293094024e-16,
+        "relative": 9.314389137620199e-16
+      },
+      ".source_work_expected": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".displacement": {
+        "absolute": 2.7755575615628914e-16,
+        "relative": 3.611981763246641e-15
+      },
+      ".velocity": {
+        "absolute": 3.952393967665557e-14,
+        "relative": 1.2677883347511012e-14
+      }
+    },
+    "P_fields": {
+      "coordinate_absolute": 4.547473508864641e-13,
+      "mass": {
+        "absolute": 1.955777406692505e-08,
+        "relative": 1.7580119178588086e-15
+      },
+      "stiffness_action": {
+        "absolute": 6.270408630371094e-05,
+        "relative": 5.095678046428254e-15
+      },
+      "final_u": {
+        "absolute": 2.9473645746236343e-13,
+        "relative": 3.350700359306707e-13
+      },
+      "final_v": {
+        "absolute": 2.1259438653942198e-11,
+        "relative": 7.274692671035382e-13
+      }
+    },
+    "SV": {
+      ".degree": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".effective": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".cells_per_axis": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".elements": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".dofs": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".angle": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".points_per_wavelength": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".h_element": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".extent": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".dtcrit": {
+        "absolute": 3.469446951953614e-18,
+        "relative": 4.419275292646695e-16
+      },
+      ".safe_dt": {
+        "absolute": 3.469446951953614e-18,
+        "relative": 5.615352053442961e-16
+      },
+      ".requested_fraction": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".actual_fraction": {
+        "absolute": 1.0408340855860843e-17,
+        "relative": 5.205112659885621e-16
+      },
+      ".dt": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".steps": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".spectral_residual": {
+        "absolute": 5.217984480731866e-15,
+        "relative": 0.2921708024489792
+      },
+      ".phase_speed": {
+        "absolute": 6.821210263296962e-13,
+        "relative": 4.012003012976341e-16
+      },
+      ".speed_error": {
+        "absolute": 4.151545643718557e-16,
+        "relative": 3.5168020050727284e-12
+      },
+      ".signed_speed_error": {
+        "absolute": 4.151545643718557e-16,
+        "relative": 3.5168020050727284e-12
+      },
+      ".phase_residual": {
+        "absolute": 2.7820627745978044e-15,
+        "relative": 3.750784378061489e-12
+      },
+      ".continuum_phase_residual": {
+        "absolute": 1.735276653011452e-16,
+        "relative": 3.320816931784515e-08
+      },
+      ".polarization_error": {
+        "absolute": 1.5822846505253452e-15,
+        "relative": 1.2508417716161708e-11
+      },
+      ".waveform_error": {
+        "absolute": 6.392456008974534e-16,
+        "relative": 1.227004302841505e-13
+      },
+      ".field_error": {
+        "absolute": 4.242266260501282e-15,
+        "relative": 5.668029018820055e-13
+      },
+      ".arrival_time": {
+        "absolute": 1.124100812432971e-15,
+        "relative": 1.1753610625409878e-14
+      },
+      ".reference_arrival": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".arrival_error": {
+        "absolute": 1.1757522039301804e-14,
+        "relative": 3.549764125222731e-11
+      },
+      ".phase_angle": {
+        "absolute": 1.7763568394002505e-13,
+        "relative": 7.103909818004495e-15
+      },
+      ".reference_phase_angle": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".angle_error": {
+        "absolute": 1.7763568394002505e-13,
+        "relative": 3.324507187758775e-11
+      },
+      ".energy_drift": {
+        "absolute": 1.028819339534248e-15,
+        "relative": 0.02857142857142842
+      },
+      ".work_proxy": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".mass": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".stiffness_form": {
+        "absolute": 0.0001220703125,
+        "relative": 2.2858314014561247e-16
+      },
+      ".action_square": {
+        "absolute": 1048576.0,
+        "relative": 2.5093804246482933e-16
+      },
+      ".trace": {
+        "absolute": 1.0919043447188415e-13,
+        "relative": 1.2097803294394233e-13
+      },
+      ".velocity_trace": {
+        "absolute": 8.078870905592339e-12,
+        "relative": 2.826288061240414e-13
+      },
+      ".field_samples": {
+        "absolute": 1.4066525722000733e-13,
+        "relative": 1.738594592247274e-13
+      }
+    },
+    "SV_fields": {
+      "coordinate_absolute": 4.547473508864641e-13,
+      "mass": {
+        "absolute": 1.955777406692505e-08,
+        "relative": 1.7580119178588086e-15
+      },
+      "stiffness_action": {
+        "absolute": 6.4849853515625e-05,
+        "relative": 6.7832780562578864e-15
+      },
+      "final_u": {
+        "absolute": 2.142730437526552e-13,
+        "relative": 2.407101764524842e-13
+      },
+      "final_v": {
+        "absolute": 1.8033574633591343e-11,
+        "relative": 6.335191914902231e-13
+      }
+    }
+  },
+  "p1_compatibility": {
+    "mass": {
+      "bitwise_equal": true,
+      "max_absolute_error": 0.0
+    },
+    "M": {
+      "bitwise_equal": true,
+      "max_absolute_error": 0.0
+    },
+    "K": {
+      "bitwise_equal": true,
+      "max_absolute_error": 0.0
+    },
+    "dt": {
+      "bitwise_equal": true,
+      "max_absolute_error": 0.0
+    },
+    "source": {
+      "bitwise_equal": true,
+      "max_absolute_error": 0.0
+    },
+    "action": {
+      "bitwise_equal": true,
+      "max_absolute_error": 0.0
+    },
+    "displacement": {
+      "bitwise_equal": true,
+      "max_absolute_error": 0.0
+    },
+    "velocity": {
+      "bitwise_equal": true,
+      "max_absolute_error": 0.0
+    }
+  },
+  "mpi": {
+    "2": {
+      ".packet.degree": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".packet.effective": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".packet.cells_per_axis": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".packet.elements": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".packet.dofs": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".packet.angle": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".packet.points_per_wavelength": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".packet.h_element": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".packet.extent": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".packet.dtcrit": {
+        "absolute": 5.204170427930421e-18,
+        "relative": 6.628912938970039e-16
+      },
+      ".packet.safe_dt": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".packet.requested_fraction": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".packet.actual_fraction": {
+        "absolute": 1.3877787807814457e-17,
+        "relative": 6.940150213180832e-16
+      },
+      ".packet.dt": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".packet.steps": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".packet.spectral_residual": {
+        "absolute": 5.328669179776378e-15,
+        "relative": 0.2309047491436796
+      },
+      ".packet.phase_speed": {
+        "absolute": 1.2732925824820995e-11,
+        "relative": 4.244310467578165e-15
+      },
+      ".packet.speed_error": {
+        "absolute": 4.211581803772725e-15,
+        "relative": 9.61395012638008e-09
+      },
+      ".packet.signed_speed_error": {
+        "absolute": 4.211581803772725e-15,
+        "relative": 9.61395012638008e-09
+      },
+      ".packet.phase_residual": {
+        "absolute": 2.6293597172184465e-14,
+        "relative": 9.638019496547834e-09
+      },
+      ".packet.continuum_phase_residual": {
+        "absolute": 1.68551599026113e-16,
+        "relative": 6.91860892174563e-09
+      },
+      ".packet.polarization_error": {
+        "absolute": 3.1944785849896554e-14,
+        "relative": 1.1203178944957627e-08
+      },
+      ".packet.waveform_error": {
+        "absolute": 8.351067233569598e-15,
+        "relative": 1.033617614528467e-11
+      },
+      ".packet.field_error": {
+        "absolute": 3.768036230256122e-15,
+        "relative": 3.169285280761697e-12
+      },
+      ".packet.arrival_time": {
+        "absolute": 1.6653345369377348e-15,
+        "relative": 1.7392071346889013e-14
+      },
+      ".packet.reference_arrival": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".packet.arrival_error": {
+        "absolute": 1.7394560184597063e-14,
+        "relative": 1.2175198420161956e-10
+      },
+      ".packet.phase_angle": {
+        "absolute": 3.197442310920451e-14,
+        "relative": 1.2789267330303292e-15
+      },
+      ".packet.reference_phase_angle": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".packet.angle_error": {
+        "absolute": 3.197442310920451e-14,
+        "relative": 2.7962523569103285e-11
+      },
+      ".packet.energy_drift": {
+        "absolute": 6.6215335407545355e-15,
+        "relative": 0.20731707317073564
+      },
+      ".packet.work_proxy": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".packet.mass": {
+        "absolute": 0.0002593994140625,
+        "relative": 5.11757051101825e-15
+      },
+      ".packet.stiffness_form": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".packet.action_square": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".packet.trace": {
+        "absolute": 7.72715225139109e-14,
+        "relative": 8.675582524937817e-14
+      },
+      ".packet.velocity_trace": {
+        "absolute": 7.94209142895852e-12,
+        "relative": 2.707764127101892e-13
+      },
+      ".packet.field_samples": {
+        "absolute": 1.171215902040501e-13,
+        "relative": 1.9207416347207804e-13
+      },
+      ".source_work": {
+        "absolute": 2.7755575615628914e-17,
+        "relative": 1.3306270196600272e-16
+      },
+      ".source_work_expected": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".displacement": {
+        "absolute": 1.3877787807814457e-17,
+        "relative": 1.805990881623327e-16
+      },
+      ".velocity": {
+        "absolute": 2.220446049250313e-15,
+        "relative": 7.122406375006179e-16
+      },
+      "diagonal_mass": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      "stiffness_action": {
+        "absolute": 1.52587890625e-05,
+        "relative": 1.240012908636533e-15
+      },
+      "final_u": {
+        "absolute": 1.697253448895708e-13,
+        "relative": 1.9295162159489281e-13
+      },
+      "final_v": {
+        "absolute": 1.8562928971732617e-11,
+        "relative": 6.351983490334896e-13
+      }
+    },
+    "4": {
+      ".packet.degree": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".packet.effective": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".packet.cells_per_axis": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".packet.elements": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".packet.dofs": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".packet.angle": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".packet.points_per_wavelength": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".packet.h_element": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".packet.extent": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".packet.dtcrit": {
+        "absolute": 1.734723475976807e-18,
+        "relative": 2.2096376463233464e-16
+      },
+      ".packet.safe_dt": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".packet.requested_fraction": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".packet.actual_fraction": {
+        "absolute": 3.469446951953614e-18,
+        "relative": 1.735037553295208e-16
+      },
+      ".packet.dt": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".packet.steps": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".packet.spectral_residual": {
+        "absolute": 1.0618904793760083e-14,
+        "relative": 0.46014407441347055
+      },
+      ".packet.phase_speed": {
+        "absolute": 5.002220859751105e-12,
+        "relative": 1.667407683691422e-15
+      },
+      ".packet.speed_error": {
+        "absolute": 1.646548775535733e-15,
+        "relative": 3.758644268638542e-09
+      },
+      ".packet.signed_speed_error": {
+        "absolute": 1.646548775535733e-15,
+        "relative": 3.758644268638542e-09
+      },
+      ".packet.phase_residual": {
+        "absolute": 1.0336560742811671e-14,
+        "relative": 3.788906223598052e-09
+      },
+      ".packet.continuum_phase_residual": {
+        "absolute": 9.010554513156485e-18,
+        "relative": 3.698600500072483e-10
+      },
+      ".packet.polarization_error": {
+        "absolute": 2.863623831198805e-14,
+        "relative": 1.004285655966269e-08
+      },
+      ".packet.waveform_error": {
+        "absolute": 1.687907626168883e-14,
+        "relative": 2.0891354425838468e-11
+      },
+      ".packet.field_error": {
+        "absolute": 2.9069628648681345e-15,
+        "relative": 2.4450387566260753e-12
+      },
+      ".packet.arrival_time": {
+        "absolute": 5.689893001203927e-16,
+        "relative": 5.942291043520413e-15
+      },
+      ".packet.reference_arrival": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".packet.arrival_error": {
+        "absolute": 5.943135523642229e-15,
+        "relative": 4.159855349624261e-11
+      },
+      ".packet.phase_angle": {
+        "absolute": 6.394884621840902e-14,
+        "relative": 2.5578534660606583e-15
+      },
+      ".packet.reference_phase_angle": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".packet.angle_error": {
+        "absolute": 6.394884621840902e-14,
+        "relative": 5.592504713820657e-11
+      },
+      ".packet.energy_drift": {
+        "absolute": 1.262177448353619e-29,
+        "relative": 3.9518176990909233e-16
+      },
+      ".packet.work_proxy": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".packet.mass": {
+        "absolute": 0.0013580322265625,
+        "relative": 2.6791986792977895e-14
+      },
+      ".packet.stiffness_form": {
+        "absolute": 0.0001220703125,
+        "relative": 1.9475133600756225e-16
+      },
+      ".packet.action_square": {
+        "absolute": 1048576.0,
+        "relative": 1.789199892599864e-16
+      },
+      ".packet.trace": {
+        "absolute": 7.405187574249794e-14,
+        "relative": 8.314099919732075e-14
+      },
+      ".packet.velocity_trace": {
+        "absolute": 7.862155371185509e-12,
+        "relative": 2.6805108536240154e-13
+      },
+      ".packet.field_samples": {
+        "absolute": 7.105427357601002e-14,
+        "relative": 1.1652582700124883e-13
+      },
+      ".source_work": {
+        "absolute": 2.7755575615628914e-17,
+        "relative": 1.3306270196600272e-16
+      },
+      ".source_work_expected": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      ".displacement": {
+        "absolute": 1.3877787807814457e-17,
+        "relative": 1.805990881623327e-16
+      },
+      ".velocity": {
+        "absolute": 1.9984014443252818e-15,
+        "relative": 6.410165737505561e-16
+      },
+      "diagonal_mass": {
+        "absolute": 0.0,
+        "relative": 0.0
+      },
+      "stiffness_action": {
+        "absolute": 3.0159950256347656e-05,
+        "relative": 2.4509630147268973e-15
+      },
+      "final_u": {
+        "absolute": 2.1938006966593093e-13,
+        "relative": 2.494014091718778e-13
+      },
+      "final_v": {
+        "absolute": 1.8385293287792592e-11,
+        "relative": 6.291198959326906e-13
+      }
+    }
+  }
+}

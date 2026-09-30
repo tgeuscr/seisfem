@@ -1,0 +1,55 @@
+Element-aligned heterogeneous isotropic GLL SEM audit — 2026-09-24
+Baseline: feature/2d-gll-sem @ d87afcdc961f03e0cfd146b66309ecaba37b3fd6
+
+Production scope:
+  src/seisfem/config2d.py: accept aligned isotropic layers; actionable cut-cell error.
+  src/seisfem/materials2d.py: optional scalar DG0 space; default unchanged.
+  src/seisfem/sem2d.py: TP discontinuous Q0 rho/lambda/mu, shared material mapping.
+  FFCx sum_factorization=True retained for mass and stiffness; no row-sum lumping.
+  Global PETSc K remains assembled; no matrix-free, VTI or absorbing SEM extension.
+
+Development evidence:
+  Installed Basix 0.11 TP discontinuous P0/gll_warped has TP metadata True.
+  Heterogeneous GLL mass/stiffness compile successfully with sum factorization.
+  Initial operators/configuration/homogeneous-limit: 11 passed in 4.13 s.
+  Focused operators/configuration/factorization/MPI: 28 passed in 1.93 s.
+  Interface refinement, zero contrast and triangular comparison: 4 passed in 59.00 s.
+  Serial/2/4-rank heterogeneous test: passed; both materials span multiple ranks.
+  Initial general-lambda packet probes exposed coarse-side numerical contamination.
+  Formal normal-incidence control uses Vs=Vp/sqrt(2), satisfying free sides to roundoff.
+  No solver physics or tolerance was modified to accommodate that probe.
+
+Compatibility:
+  Ran tests/sem2d/compatibility.py with archived main src, archived d87afcd src,
+  and current src via PYTHONPATH. All eight arrays bitwise identical (error zero).
+  Ran tests/heterogeneous2d/mpi_worker.py with archived d87afcd and current src.
+  All layered operator/material/receiver arrays also bitwise identical.
+  Snapshot archives and raw npz files are outside the working tree in /tmp/sem-het*.
+
+Measurements:
+  OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 SEISFEM_SEM_REPORT_DIR=/tmp/sem-het
+  python -m tests.sem2d.heterogeneous_report /tmp/sem-het \
+    docs/validation/2d_gll_sem_heterogeneous_measurements.json
+  Original homogeneous research measurements and plots were not regenerated.
+
+Complete SEM gate:
+  OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 SEISFEM_SEM_REPORT_DIR=/tmp/sem-het \
+    python -m pytest -ra tests/sem2d
+  82 passed in 546.55s (0:09:06).
+
+Remaining gates completed 2026-09-25:
+  OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 python -m pytest -ra \
+    tests/plane_strain tests/absorbing2d tests/heterogeneous2d \
+    tests/heterogeneous_absorbing2d tests/oblique2d tests/vti2d tests/vti_interface2d
+  283 passed in 1857.00s (0:30:57).
+
+  OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 python -m pytest -ra
+  504 passed in 2461.49s (0:41:01).
+  All three regression-driver subprocesses returned zero; no failures or skips.
+
+  ruff check src tests examples docs — passed
+  ruff format --check src tests examples docs — passed
+  pre-commit run --all-files — passed
+  git diff --check and git diff --cached --check — passed
+  Final diff reviewed; only intentional production/test/documentation changes.
+  No merge, tag or push. Pre-existing user files remain untouched and untracked.

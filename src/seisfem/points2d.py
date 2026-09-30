@@ -1,5 +1,6 @@
-"""Cached point functionals for affine triangular vector P1 elements."""
+"""Cached point functionals for triangular P1 and quadrilateral GLL elements."""
 
+import basix
 import numpy as np
 from dolfinx import fem, geometry, la
 
@@ -8,9 +9,9 @@ from .config2d import unit_direction
 
 
 class PointMap2D:
-    """Elect one owned triangle per point using a partition-independent cell key.
+    """Elect one owned cell per point using a partition-independent cell key.
 
-    The key is the sorted physical vertex coordinates of a triangle, then rank
+    The key is the sorted physical vertex coordinates of a cell, then rank
     as a final tie breaker. Only elected ranks store interpolation supports.
     Setup replicates O(points*ranks) candidate keys, never the complete mesh.
     Methods taking owned field arrays are collective because they refresh ghosts.
@@ -19,9 +20,19 @@ class PointMap2D:
     def __init__(self, V, positions):
         self.V = V
         msh, comm = V.mesh, V.mesh.comm
+        quadrilateral = msh.topology.cell_type.name == "quadrilateral"
 
         def validate():
-            if V.dofmap.bs != 2 or V.dofmap.index_map_bs != 2 or V.element.space_dimension != 6:
+            if V.dofmap.bs != 2 or V.dofmap.index_map_bs != 2:
+                raise ValueError("PointMap2D requires a blocked two-component space")
+            if quadrilateral:
+                element = V.element.basix_element
+                if (
+                    element.family != basix.ElementFamily.P
+                    or element.lagrange_variant != basix.LagrangeVariant.gll_warped
+                ):
+                    raise ValueError("Quadrilateral point coupling requires a GLL nodal space")
+            elif V.element.space_dimension != 6:
                 raise ValueError("PointMap2D requires triangular vector P1 with two components")
             points = np.asarray(positions, dtype=float)
             if points.shape == (0,):
@@ -69,6 +80,19 @@ class PointMap2D:
         self.cell_keys = tuple(winner[0] for winner in winners)
 
         def supports():
+            if quadrilateral:
+                nodes = np.array([V.dofmap.cell_dofs(c) for c in self.cells], dtype=np.int32)
+                nodes = nodes.reshape(-1, V.element.space_dimension // 2)
+                reference = np.empty((len(self.cells), 2))
+                weights = np.empty(nodes.shape)
+                for j, cell in enumerate(self.cells):
+                    vertices = msh.geometry.x[msh.geometry.dofmaps[0][cell]]
+                    point = xyz[self.ids[j] : self.ids[j] + 1]
+                    reference[j] = msh.geometry.cmaps[0].pull_back(point, vertices, tol=1e-12)[0]
+                    weights[j] = V.element.basix_element.tabulate(0, reference[j : j + 1])[
+                        0, 0, :, 0
+                    ]
+                return nodes, reference, weights
             nodes = np.array([V.dofmap.cell_dofs(c) for c in self.cells], dtype=np.int32)
             nodes = nodes.reshape(-1, 3)
             vertices = coordinates[nodes]
@@ -89,7 +113,7 @@ class PointMap2D:
             comm, supports, "point interpolation support"
         )
         self.dofs = 2 * self.nodes[:, :, None] + np.arange(2)
-        blocks = V.dofmap.index_map.local_to_global(self.nodes.ravel()).reshape(-1, 3)
+        blocks = V.dofmap.index_map.local_to_global(self.nodes.ravel()).reshape(self.nodes.shape)
         self.global_dofs = 2 * blocks[:, :, None] + np.arange(2)
         self._sample = fem.Function(V)
         self.n = 2 * V.dofmap.index_map.size_local

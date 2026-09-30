@@ -1,4 +1,4 @@
-"""Isotropic/VTI plane-strain vector P1 operators on affine rectangle triangles."""
+"""Shared plane-strain dynamics with triangular P1 or quadrilateral GLL assembly."""
 
 from contextlib import contextmanager
 from dataclasses import dataclass
@@ -57,12 +57,14 @@ class SpectralDiagnostic:
 class PlaneStrainOperators:
     """Collective operator owner; scalar storage is [ux0,uz0,ux1,uz1,...].
 
-    M and K are unmodified consistent matrices. `mass` contains positive lumped
-    entries for owned scalar DOFs, including constrained ones. `fixed` identifies
+    M and K are unmodified assembled matrices. `mass` contains positive owned
+    entries: row-sum lumping for triangles, collocated diagonal for GLL quads.
+    Constrained entries remain present. `fixed` identifies
     zero-displacement components for time-step projection; no artificial boundary
     diagonals are inserted. Geometry coordinates are per two-component node.
     C is the consistent boundary impedance matrix (None without absorbers);
-    damping is its nonnegative row-sum lumping on owned scalar DOFs.
+    damping is its nonnegative row-sum lumping for triangles, or its
+    collocated GLL diagonal for SEM, on owned scalar DOFs.
     """
 
     def __init__(self, config: PlaneStrainConfig, comm=MPI.COMM_WORLD):
@@ -84,6 +86,11 @@ class PlaneStrainOperators:
 
     def _assemble(self):
         cfg = self.config
+        if cfg.discretization.type == "quad_gll":
+            from .sem2d import assemble_gll
+
+            assemble_gll(self)
+            return
         domain = cfg.domain
         self.mesh = mesh.create_rectangle(
             self.comm,

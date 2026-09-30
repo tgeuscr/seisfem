@@ -1,0 +1,2287 @@
+{
+  "baseline": "edaec57c75fb2303c8c28860dcded46b6d0d0fa1",
+  "volume_sum_factorization": true,
+  "facet_sum_factorization": false,
+  "boundary": "sigma*n + [Zs*I+(Zp-Zs)*n*n^T]*v = 0",
+  "records": {
+    "compatibility": {
+      "free": {
+        "M": {
+          "bitwise": true,
+          "absolute_error": 0.0
+        },
+        "K": {
+          "bitwise": true,
+          "absolute_error": 0.0
+        },
+        "mass": {
+          "bitwise": true,
+          "absolute_error": 0.0
+        },
+        "dt": {
+          "bitwise": true,
+          "absolute_error": 0.0
+        },
+        "source": {
+          "bitwise": true,
+          "absolute_error": 0.0
+        },
+        "action": {
+          "bitwise": true,
+          "absolute_error": 0.0
+        },
+        "u": {
+          "bitwise": true,
+          "absolute_error": 0.0
+        },
+        "v": {
+          "bitwise": true,
+          "absolute_error": 0.0
+        },
+        "final_u": {
+          "bitwise": true,
+          "absolute_error": 0.0
+        },
+        "final_v": {
+          "bitwise": true,
+          "absolute_error": 0.0
+        },
+        "damping": {
+          "bitwise": true,
+          "absolute_error": 0.0
+        }
+      },
+      "layered": {
+        "M": {
+          "bitwise": true,
+          "absolute_error": 0.0
+        },
+        "K": {
+          "bitwise": true,
+          "absolute_error": 0.0
+        },
+        "mass": {
+          "bitwise": true,
+          "absolute_error": 0.0
+        },
+        "dt": {
+          "bitwise": true,
+          "absolute_error": 0.0
+        },
+        "source": {
+          "bitwise": true,
+          "absolute_error": 0.0
+        },
+        "action": {
+          "bitwise": true,
+          "absolute_error": 0.0
+        },
+        "u": {
+          "bitwise": true,
+          "absolute_error": 0.0
+        },
+        "v": {
+          "bitwise": true,
+          "absolute_error": 0.0
+        },
+        "final_u": {
+          "bitwise": true,
+          "absolute_error": 0.0
+        },
+        "final_v": {
+          "bitwise": true,
+          "absolute_error": 0.0
+        },
+        "damping": {
+          "bitwise": true,
+          "absolute_error": 0.0
+        }
+      },
+      "tri": {
+        "mass": {
+          "bitwise": true,
+          "absolute_error": 0.0
+        },
+        "M": {
+          "bitwise": true,
+          "absolute_error": 0.0
+        },
+        "K": {
+          "bitwise": true,
+          "absolute_error": 0.0
+        },
+        "dt": {
+          "bitwise": true,
+          "absolute_error": 0.0
+        },
+        "source": {
+          "bitwise": true,
+          "absolute_error": 0.0
+        },
+        "action": {
+          "bitwise": true,
+          "absolute_error": 0.0
+        },
+        "displacement": {
+          "bitwise": true,
+          "absolute_error": 0.0
+        },
+        "velocity": {
+          "bitwise": true,
+          "absolute_error": 0.0
+        }
+      },
+      "tri-layered": {
+        "cells": {
+          "bitwise": true,
+          "absolute_error": 0.0
+        },
+        "mass": {
+          "bitwise": true,
+          "absolute_error": 0.0
+        },
+        "action": {
+          "bitwise": true,
+          "absolute_error": 0.0
+        },
+        "dt": {
+          "bitwise": true,
+          "absolute_error": 0.0
+        },
+        "coordinates": {
+          "bitwise": true,
+          "absolute_error": 0.0
+        },
+        "M": {
+          "bitwise": true,
+          "absolute_error": 0.0
+        },
+        "K": {
+          "bitwise": true,
+          "absolute_error": 0.0
+        },
+        "u": {
+          "bitwise": true,
+          "absolute_error": 0.0
+        },
+        "v": {
+          "bitwise": true,
+          "absolute_error": 0.0
+        },
+        "receiver_coordinates": {
+          "bitwise": true,
+          "absolute_error": 0.0
+        }
+      }
+    },
+    "energy-p1": {
+      "balance": 2.1712532086037548e-16,
+      "cumulative": 7.237510695345849e-16,
+      "remaining": 0.0001827643699164612,
+      "dt": 0.16065032742541288,
+      "dtcrit": 0.23255794086783807
+    },
+    "energy-p2": {
+      "balance": 1.586371527628391e-16,
+      "cumulative": 1.1714743588640427e-15,
+      "remaining": 0.004356895997534416,
+      "dt": 0.06174082588456645,
+      "dtcrit": 0.09101068515675749
+    },
+    "energy-p4": {
+      "balance": 3.4601431491022426e-16,
+      "cumulative": 3.9079263801625326e-16,
+      "remaining": 0.029300195514473007,
+      "dt": 0.019863359553516702,
+      "dtcrit": 0.032445557615169096
+    },
+    "energy-p6": {
+      "balance": 3.536906924961354e-16,
+      "cumulative": 2.1976897397818123e-16,
+      "remaining": 0.07509916145504003,
+      "dt": 0.009617126059780816,
+      "dtcrit": 0.016028621794150266
+    },
+    "local-P-0": {
+      "history_relative_error": 6.9371733199712934e-15,
+      "mode": "P",
+      "layer": 0,
+      "provenance": {
+        "dt": 0.001,
+        "safe_dt": 0.0023196534729939336,
+        "mesh": {
+          "lower": [
+            0.0,
+            -4800.0
+          ],
+          "upper": [
+            2400.0,
+            4800.0
+          ],
+          "cells": [
+            24,
+            96
+          ],
+          "diagonal": "right"
+        },
+        "material": {
+          "type": "layered",
+          "layers": [
+            {
+              "lower": -4800.0,
+              "upper": 0.0,
+              "material": {
+                "density": 2400.0,
+                "vp": 3200.0,
+                "vs": 1800.0,
+                "lambda": null,
+                "mu": null
+              }
+            },
+            {
+              "lower": 0.0,
+              "upper": 4800.0,
+              "material": {
+                "density": 2800.0,
+                "vp": 4000.0,
+                "vs": 2200.0,
+                "lambda": null,
+                "mu": null
+              }
+            }
+          ]
+        },
+        "receiver": [
+          1800.0,
+          -2400.0
+        ],
+        "center": [
+          800.0,
+          -2400.0
+        ],
+        "degree": 4,
+        "mode": "P",
+        "angle": 0,
+        "beam": true,
+        "frequency": 8.0,
+        "transverse_width": 400.0,
+        "longitudinal_width": 127.32395447351627,
+        "direction": [
+          1.0,
+          0.0
+        ],
+        "boundaries": {
+          "left": "free",
+          "right": "absorbing",
+          "lower": "free",
+          "upper": "free"
+        },
+        "duration": 0.788
+      }
+    },
+    "local-S-1": {
+      "history_relative_error": 1.7982339717867914e-08,
+      "mode": "S",
+      "layer": 1,
+      "provenance": {
+        "dt": 0.001,
+        "safe_dt": 0.0023196534729939336,
+        "mesh": {
+          "lower": [
+            0.0,
+            -4800.0
+          ],
+          "upper": [
+            2400.0,
+            4800.0
+          ],
+          "cells": [
+            24,
+            96
+          ],
+          "diagonal": "right"
+        },
+        "material": {
+          "type": "layered",
+          "layers": [
+            {
+              "lower": -4800.0,
+              "upper": 0.0,
+              "material": {
+                "density": 2400.0,
+                "vp": 3200.0,
+                "vs": 1800.0,
+                "lambda": null,
+                "mu": null
+              }
+            },
+            {
+              "lower": 0.0,
+              "upper": 4800.0,
+              "material": {
+                "density": 2800.0,
+                "vp": 4000.0,
+                "vs": 2200.0,
+                "lambda": null,
+                "mu": null
+              }
+            }
+          ]
+        },
+        "receiver": [
+          1800.0,
+          2400.0
+        ],
+        "center": [
+          800.0,
+          2400.0
+        ],
+        "degree": 4,
+        "mode": "S",
+        "angle": 0,
+        "beam": true,
+        "frequency": 8.0,
+        "transverse_width": 400.0,
+        "longitudinal_width": 87.53521870054244,
+        "direction": [
+          1.0,
+          0.0
+        ],
+        "boundaries": {
+          "left": "free",
+          "right": "absorbing",
+          "lower": "free",
+          "upper": "free"
+        },
+        "duration": 1.1
+      }
+    },
+    "mpi-2": {
+      "errors": {
+        "cells": 0.0,
+        "facets": 0.0,
+        "u": 1.9644922075520068e-14,
+        "v": 1.4018619418828214e-14,
+        "safe_dt": 0.0,
+        "dtcrit": 3.7128643870489906e-16,
+        "mass": 0.0,
+        "action": 3.557044343840117e-14,
+        "final_u": 2.024352766047399e-14,
+        "final_v": 9.446023242674526e-13,
+        "damping": 0.0,
+        "damping_action": 3.426117458590764e-17
+      },
+      "rank_layers": [
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ]
+      ]
+    },
+    "mpi-4": {
+      "errors": {
+        "cells": 0.0,
+        "facets": 0.0,
+        "u": 1.882638365570673e-14,
+        "v": 1.1821671599459614e-14,
+        "safe_dt": 0.0,
+        "dtcrit": 0.0,
+        "mass": 1.3387252434653338e-17,
+        "action": 3.3734511001348524e-14,
+        "final_u": 1.9243847282178976e-14,
+        "final_v": 7.674893884673052e-13,
+        "damping": 0.0,
+        "damping_action": 3.426117458590764e-17
+      },
+      "rank_layers": [
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          1,
+          2
+        ]
+      ]
+    },
+    "normal-P-h100": {
+      "mode": "P",
+      "h": 100,
+      "degree": 4,
+      "angle": 0,
+      "beam": false,
+      "layered": false,
+      "layer": 0,
+      "incident": 0.9999789838942911,
+      "incident_control_difference": 1.1915094520224109e-12,
+      "free_reflection": 1.0001035112918937,
+      "residual_reflection": 0.0004349561677427984,
+      "reflection_ratio": 0.0004349111495278518,
+      "suppression_db": -67.23198916946387,
+      "reflected_waveform_ratio": 0.00043966091598522043,
+      "interior_field_ratio": 0.0006082189406148191,
+      "interior_field_error_rms": 0.00014246561906034274,
+      "free_field_error_rms": 0.23423410477209267,
+      "reflected_waveform_rms": 0.00013443134650244643,
+      "free_arrival_error": -0.0004999999999999449,
+      "reference_incident_time": 0.312,
+      "provenance": {
+        "free": {
+          "dt": 0.001,
+          "safe_dt": 0.003826393697734092,
+          "mesh": {
+            "lower": [
+              0.0,
+              -12000.0
+            ],
+            "upper": [
+              2400.0,
+              12000.0
+            ],
+            "cells": [
+              24,
+              24
+            ],
+            "diagonal": "right"
+          },
+          "material": {
+            "density": 2400.0,
+            "vp": 3200.0,
+            "vs": 1800.0,
+            "lambda": null,
+            "mu": null
+          },
+          "receiver": [
+            1800.0,
+            0.0
+          ],
+          "center": [
+            800.0,
+            0.0
+          ],
+          "degree": 4,
+          "mode": "P",
+          "angle": 0,
+          "beam": false,
+          "frequency": 8.0,
+          "transverse_width": null,
+          "longitudinal_width": 127.32395447351627,
+          "direction": [
+            1.0,
+            0.0
+          ],
+          "boundaries": {
+            "left": "free",
+            "right": "free",
+            "lower": "free",
+            "upper": "free"
+          },
+          "duration": 0.788
+        },
+        "absorbing": {
+          "dt": 0.001,
+          "safe_dt": 0.003826393697734092,
+          "mesh": {
+            "lower": [
+              0.0,
+              -12000.0
+            ],
+            "upper": [
+              2400.0,
+              12000.0
+            ],
+            "cells": [
+              24,
+              24
+            ],
+            "diagonal": "right"
+          },
+          "material": {
+            "density": 2400.0,
+            "vp": 3200.0,
+            "vs": 1800.0,
+            "lambda": null,
+            "mu": null
+          },
+          "receiver": [
+            1800.0,
+            0.0
+          ],
+          "center": [
+            800.0,
+            0.0
+          ],
+          "degree": 4,
+          "mode": "P",
+          "angle": 0,
+          "beam": false,
+          "frequency": 8.0,
+          "transverse_width": null,
+          "longitudinal_width": 127.32395447351627,
+          "direction": [
+            1.0,
+            0.0
+          ],
+          "boundaries": {
+            "left": "free",
+            "right": "absorbing",
+            "lower": "free",
+            "upper": "free"
+          },
+          "duration": 0.788
+        },
+        "reference": {
+          "dt": 0.001,
+          "safe_dt": 0.003826393697734092,
+          "mesh": {
+            "lower": [
+              0.0,
+              -12000.0
+            ],
+            "upper": [
+              4800.0,
+              12000.0
+            ],
+            "cells": [
+              48,
+              24
+            ],
+            "diagonal": "right"
+          },
+          "material": {
+            "density": 2400.0,
+            "vp": 3200.0,
+            "vs": 1800.0,
+            "lambda": null,
+            "mu": null
+          },
+          "receiver": [
+            1800.0,
+            0.0
+          ],
+          "center": [
+            800.0,
+            0.0
+          ],
+          "degree": 4,
+          "mode": "P",
+          "angle": 0,
+          "beam": false,
+          "frequency": 8.0,
+          "transverse_width": null,
+          "longitudinal_width": 127.32395447351627,
+          "direction": [
+            1.0,
+            0.0
+          ],
+          "boundaries": {
+            "left": "free",
+            "right": "free",
+            "lower": "free",
+            "upper": "free"
+          },
+          "duration": 0.788
+        }
+      }
+    },
+    "normal-P-h50": {
+      "mode": "P",
+      "h": 50,
+      "degree": 4,
+      "angle": 0,
+      "beam": false,
+      "layered": false,
+      "layer": 0,
+      "incident": 1.0000582498454038,
+      "incident_control_difference": 4.187378556854428e-15,
+      "free_reflection": 0.9999958911388538,
+      "residual_reflection": 5.95858308125948e-05,
+      "reflection_ratio": 5.9586075643505865e-05,
+      "suppression_db": -84.4971043279174,
+      "reflected_waveform_ratio": 5.8516813022719915e-05,
+      "interior_field_ratio": 6.098238155338299e-05,
+      "interior_field_error_rms": 1.4328915347636921e-05,
+      "free_field_error_rms": 0.23496811673538234,
+      "reflected_waveform_rms": 1.7870111419026833e-05,
+      "free_arrival_error": 0.0,
+      "reference_incident_time": 0.3125,
+      "provenance": {
+        "free": {
+          "dt": 0.0005,
+          "safe_dt": 0.0019396848337005896,
+          "mesh": {
+            "lower": [
+              0.0,
+              -12000.0
+            ],
+            "upper": [
+              2400.0,
+              12000.0
+            ],
+            "cells": [
+              48,
+              24
+            ],
+            "diagonal": "right"
+          },
+          "material": {
+            "density": 2400.0,
+            "vp": 3200.0,
+            "vs": 1800.0,
+            "lambda": null,
+            "mu": null
+          },
+          "receiver": [
+            1800.0,
+            0.0
+          ],
+          "center": [
+            800.0,
+            0.0
+          ],
+          "degree": 4,
+          "mode": "P",
+          "angle": 0,
+          "beam": false,
+          "frequency": 8.0,
+          "transverse_width": null,
+          "longitudinal_width": 127.32395447351627,
+          "direction": [
+            1.0,
+            0.0
+          ],
+          "boundaries": {
+            "left": "free",
+            "right": "free",
+            "lower": "free",
+            "upper": "free"
+          },
+          "duration": 0.7875
+        },
+        "absorbing": {
+          "dt": 0.0005,
+          "safe_dt": 0.0019396848337005896,
+          "mesh": {
+            "lower": [
+              0.0,
+              -12000.0
+            ],
+            "upper": [
+              2400.0,
+              12000.0
+            ],
+            "cells": [
+              48,
+              24
+            ],
+            "diagonal": "right"
+          },
+          "material": {
+            "density": 2400.0,
+            "vp": 3200.0,
+            "vs": 1800.0,
+            "lambda": null,
+            "mu": null
+          },
+          "receiver": [
+            1800.0,
+            0.0
+          ],
+          "center": [
+            800.0,
+            0.0
+          ],
+          "degree": 4,
+          "mode": "P",
+          "angle": 0,
+          "beam": false,
+          "frequency": 8.0,
+          "transverse_width": null,
+          "longitudinal_width": 127.32395447351627,
+          "direction": [
+            1.0,
+            0.0
+          ],
+          "boundaries": {
+            "left": "free",
+            "right": "absorbing",
+            "lower": "free",
+            "upper": "free"
+          },
+          "duration": 0.7875
+        },
+        "reference": {
+          "dt": 0.0005,
+          "safe_dt": 0.0019396848337005896,
+          "mesh": {
+            "lower": [
+              0.0,
+              -12000.0
+            ],
+            "upper": [
+              4800.0,
+              12000.0
+            ],
+            "cells": [
+              96,
+              24
+            ],
+            "diagonal": "right"
+          },
+          "material": {
+            "density": 2400.0,
+            "vp": 3200.0,
+            "vs": 1800.0,
+            "lambda": null,
+            "mu": null
+          },
+          "receiver": [
+            1800.0,
+            0.0
+          ],
+          "center": [
+            800.0,
+            0.0
+          ],
+          "degree": 4,
+          "mode": "P",
+          "angle": 0,
+          "beam": false,
+          "frequency": 8.0,
+          "transverse_width": null,
+          "longitudinal_width": 127.32395447351627,
+          "direction": [
+            1.0,
+            0.0
+          ],
+          "boundaries": {
+            "left": "free",
+            "right": "free",
+            "lower": "free",
+            "upper": "free"
+          },
+          "duration": 0.7875
+        }
+      }
+    },
+    "normal-S-h100": {
+      "mode": "S",
+      "h": 100,
+      "degree": 4,
+      "angle": 0,
+      "beam": false,
+      "layered": false,
+      "layer": 0,
+      "incident": 0.9821820659117967,
+      "incident_control_difference": 1.3846956204634584e-14,
+      "free_reflection": 0.9824713366014892,
+      "residual_reflection": 0.008309671788223146,
+      "reflection_ratio": 0.008457927960491454,
+      "suppression_db": -41.454720364615376,
+      "reflected_waveform_ratio": 0.008377441204579578,
+      "interior_field_ratio": 0.012069325806473422,
+      "interior_field_error_rms": 0.002459458093163008,
+      "free_field_error_rms": 0.20377758729852746,
+      "reflected_waveform_rms": 0.0025617773010288146,
+      "free_arrival_error": 0.0007777777777777661,
+      "reference_incident_time": 0.556,
+      "provenance": {
+        "free": {
+          "dt": 0.001,
+          "safe_dt": 0.003826393697734092,
+          "mesh": {
+            "lower": [
+              0.0,
+              -12000.0
+            ],
+            "upper": [
+              2400.0,
+              12000.0
+            ],
+            "cells": [
+              24,
+              24
+            ],
+            "diagonal": "right"
+          },
+          "material": {
+            "density": 2400.0,
+            "vp": 3200.0,
+            "vs": 1800.0,
+            "lambda": null,
+            "mu": null
+          },
+          "receiver": [
+            1800.0,
+            0.0
+          ],
+          "center": [
+            800.0,
+            0.0
+          ],
+          "degree": 4,
+          "mode": "S",
+          "angle": 0,
+          "beam": false,
+          "frequency": 8.0,
+          "transverse_width": null,
+          "longitudinal_width": 71.6197243913529,
+          "direction": [
+            1.0,
+            0.0
+          ],
+          "boundaries": {
+            "left": "free",
+            "right": "free",
+            "lower": "free",
+            "upper": "free"
+          },
+          "duration": 1.323
+        },
+        "absorbing": {
+          "dt": 0.001,
+          "safe_dt": 0.003826393697734092,
+          "mesh": {
+            "lower": [
+              0.0,
+              -12000.0
+            ],
+            "upper": [
+              2400.0,
+              12000.0
+            ],
+            "cells": [
+              24,
+              24
+            ],
+            "diagonal": "right"
+          },
+          "material": {
+            "density": 2400.0,
+            "vp": 3200.0,
+            "vs": 1800.0,
+            "lambda": null,
+            "mu": null
+          },
+          "receiver": [
+            1800.0,
+            0.0
+          ],
+          "center": [
+            800.0,
+            0.0
+          ],
+          "degree": 4,
+          "mode": "S",
+          "angle": 0,
+          "beam": false,
+          "frequency": 8.0,
+          "transverse_width": null,
+          "longitudinal_width": 71.6197243913529,
+          "direction": [
+            1.0,
+            0.0
+          ],
+          "boundaries": {
+            "left": "free",
+            "right": "absorbing",
+            "lower": "free",
+            "upper": "free"
+          },
+          "duration": 1.323
+        },
+        "reference": {
+          "dt": 0.001,
+          "safe_dt": 0.003826393697734092,
+          "mesh": {
+            "lower": [
+              0.0,
+              -12000.0
+            ],
+            "upper": [
+              4800.0,
+              12000.0
+            ],
+            "cells": [
+              48,
+              24
+            ],
+            "diagonal": "right"
+          },
+          "material": {
+            "density": 2400.0,
+            "vp": 3200.0,
+            "vs": 1800.0,
+            "lambda": null,
+            "mu": null
+          },
+          "receiver": [
+            1800.0,
+            0.0
+          ],
+          "center": [
+            800.0,
+            0.0
+          ],
+          "degree": 4,
+          "mode": "S",
+          "angle": 0,
+          "beam": false,
+          "frequency": 8.0,
+          "transverse_width": null,
+          "longitudinal_width": 71.6197243913529,
+          "direction": [
+            1.0,
+            0.0
+          ],
+          "boundaries": {
+            "left": "free",
+            "right": "free",
+            "lower": "free",
+            "upper": "free"
+          },
+          "duration": 1.323
+        }
+      }
+    },
+    "normal-S-h50": {
+      "mode": "S",
+      "h": 50,
+      "degree": 4,
+      "angle": 0,
+      "beam": false,
+      "layered": false,
+      "layer": 0,
+      "incident": 1.0000654464656986,
+      "incident_control_difference": 1.3710357059707659e-14,
+      "free_reflection": 0.9999468970218957,
+      "residual_reflection": 0.00017812521473783117,
+      "reflection_ratio": 0.00017813467421953587,
+      "suppression_db": -74.98503072286306,
+      "reflected_waveform_ratio": 0.0001914926497483488,
+      "interior_field_ratio": 0.0004046548253233505,
+      "interior_field_error_rms": 8.16475743008906e-05,
+      "free_field_error_rms": 0.2017709148424163,
+      "reflected_waveform_rms": 5.855102812883522e-05,
+      "free_arrival_error": -0.00022222222222234578,
+      "reference_incident_time": 0.5555,
+      "provenance": {
+        "free": {
+          "dt": 0.0005,
+          "safe_dt": 0.0019396848337005896,
+          "mesh": {
+            "lower": [
+              0.0,
+              -12000.0
+            ],
+            "upper": [
+              2400.0,
+              12000.0
+            ],
+            "cells": [
+              48,
+              24
+            ],
+            "diagonal": "right"
+          },
+          "material": {
+            "density": 2400.0,
+            "vp": 3200.0,
+            "vs": 1800.0,
+            "lambda": null,
+            "mu": null
+          },
+          "receiver": [
+            1800.0,
+            0.0
+          ],
+          "center": [
+            800.0,
+            0.0
+          ],
+          "degree": 4,
+          "mode": "S",
+          "angle": 0,
+          "beam": false,
+          "frequency": 8.0,
+          "transverse_width": null,
+          "longitudinal_width": 71.6197243913529,
+          "direction": [
+            1.0,
+            0.0
+          ],
+          "boundaries": {
+            "left": "free",
+            "right": "free",
+            "lower": "free",
+            "upper": "free"
+          },
+          "duration": 1.3225
+        },
+        "absorbing": {
+          "dt": 0.0005,
+          "safe_dt": 0.0019396848337005896,
+          "mesh": {
+            "lower": [
+              0.0,
+              -12000.0
+            ],
+            "upper": [
+              2400.0,
+              12000.0
+            ],
+            "cells": [
+              48,
+              24
+            ],
+            "diagonal": "right"
+          },
+          "material": {
+            "density": 2400.0,
+            "vp": 3200.0,
+            "vs": 1800.0,
+            "lambda": null,
+            "mu": null
+          },
+          "receiver": [
+            1800.0,
+            0.0
+          ],
+          "center": [
+            800.0,
+            0.0
+          ],
+          "degree": 4,
+          "mode": "S",
+          "angle": 0,
+          "beam": false,
+          "frequency": 8.0,
+          "transverse_width": null,
+          "longitudinal_width": 71.6197243913529,
+          "direction": [
+            1.0,
+            0.0
+          ],
+          "boundaries": {
+            "left": "free",
+            "right": "absorbing",
+            "lower": "free",
+            "upper": "free"
+          },
+          "duration": 1.3225
+        },
+        "reference": {
+          "dt": 0.0005,
+          "safe_dt": 0.0019396848337005896,
+          "mesh": {
+            "lower": [
+              0.0,
+              -12000.0
+            ],
+            "upper": [
+              4800.0,
+              12000.0
+            ],
+            "cells": [
+              96,
+              24
+            ],
+            "diagonal": "right"
+          },
+          "material": {
+            "density": 2400.0,
+            "vp": 3200.0,
+            "vs": 1800.0,
+            "lambda": null,
+            "mu": null
+          },
+          "receiver": [
+            1800.0,
+            0.0
+          ],
+          "center": [
+            800.0,
+            0.0
+          ],
+          "degree": 4,
+          "mode": "S",
+          "angle": 0,
+          "beam": false,
+          "frequency": 8.0,
+          "transverse_width": null,
+          "longitudinal_width": 71.6197243913529,
+          "direction": [
+            1.0,
+            0.0
+          ],
+          "boundaries": {
+            "left": "free",
+            "right": "free",
+            "lower": "free",
+            "upper": "free"
+          },
+          "duration": 1.3225
+        }
+      }
+    },
+    "oblique-P": {
+      "mode": "P",
+      "h": 100,
+      "degree": 4,
+      "angle": 25,
+      "beam": true,
+      "layered": false,
+      "layer": 0,
+      "incident": 0.41807489807482584,
+      "incident_control_difference": 3.7078258112866504e-14,
+      "free_reflection": 1.2261962824574408,
+      "residual_reflection": 0.01670168896451633,
+      "reflection_ratio": 0.01362073038669159,
+      "suppression_db": -37.31599207107121,
+      "reflected_waveform_ratio": 0.01238234162067687,
+      "interior_field_ratio": 0.011747405616624565,
+      "interior_field_error_rms": 0.0016899449254341471,
+      "free_field_error_rms": 0.14385686342885695,
+      "reflected_waveform_rms": 0.0021230716390650615,
+      "free_arrival_error": -0.00649999999999995,
+      "reference_incident_time": 0.384,
+      "provenance": {
+        "free": {
+          "dt": 0.001,
+          "safe_dt": 0.0028970300434057556,
+          "mesh": {
+            "lower": [
+              0.0,
+              -4800.0
+            ],
+            "upper": [
+              2400.0,
+              4800.0
+            ],
+            "cells": [
+              24,
+              96
+            ],
+            "diagonal": "right"
+          },
+          "material": {
+            "density": 2400.0,
+            "vp": 3200.0,
+            "vs": 1800.0,
+            "lambda": null,
+            "mu": null
+          },
+          "receiver": [
+            1856.21532777801,
+            253.57095704441966
+          ],
+          "center": [
+            949.9075407413602,
+            -676.1892187851191
+          ],
+          "degree": 4,
+          "mode": "P",
+          "angle": 25,
+          "beam": true,
+          "frequency": 8.0,
+          "transverse_width": 400.0,
+          "longitudinal_width": 127.32395447351627,
+          "direction": [
+            0.9063077870366499,
+            0.42261826174069944
+          ],
+          "boundaries": {
+            "left": "free",
+            "right": "free",
+            "lower": "free",
+            "upper": "free"
+          },
+          "duration": 0.788
+        },
+        "absorbing": {
+          "dt": 0.001,
+          "safe_dt": 0.0028970300434057556,
+          "mesh": {
+            "lower": [
+              0.0,
+              -4800.0
+            ],
+            "upper": [
+              2400.0,
+              4800.0
+            ],
+            "cells": [
+              24,
+              96
+            ],
+            "diagonal": "right"
+          },
+          "material": {
+            "density": 2400.0,
+            "vp": 3200.0,
+            "vs": 1800.0,
+            "lambda": null,
+            "mu": null
+          },
+          "receiver": [
+            1856.21532777801,
+            253.57095704441966
+          ],
+          "center": [
+            949.9075407413602,
+            -676.1892187851191
+          ],
+          "degree": 4,
+          "mode": "P",
+          "angle": 25,
+          "beam": true,
+          "frequency": 8.0,
+          "transverse_width": 400.0,
+          "longitudinal_width": 127.32395447351627,
+          "direction": [
+            0.9063077870366499,
+            0.42261826174069944
+          ],
+          "boundaries": {
+            "left": "free",
+            "right": "absorbing",
+            "lower": "free",
+            "upper": "free"
+          },
+          "duration": 0.788
+        },
+        "reference": {
+          "dt": 0.001,
+          "safe_dt": 0.0028970300434057556,
+          "mesh": {
+            "lower": [
+              0.0,
+              -4800.0
+            ],
+            "upper": [
+              4800.0,
+              4800.0
+            ],
+            "cells": [
+              48,
+              96
+            ],
+            "diagonal": "right"
+          },
+          "material": {
+            "density": 2400.0,
+            "vp": 3200.0,
+            "vs": 1800.0,
+            "lambda": null,
+            "mu": null
+          },
+          "receiver": [
+            1856.21532777801,
+            253.57095704441966
+          ],
+          "center": [
+            949.9075407413602,
+            -676.1892187851191
+          ],
+          "degree": 4,
+          "mode": "P",
+          "angle": 25,
+          "beam": true,
+          "frequency": 8.0,
+          "transverse_width": 400.0,
+          "longitudinal_width": 127.32395447351627,
+          "direction": [
+            0.9063077870366499,
+            0.42261826174069944
+          ],
+          "boundaries": {
+            "left": "free",
+            "right": "free",
+            "lower": "free",
+            "upper": "free"
+          },
+          "duration": 0.788
+        }
+      }
+    },
+    "oblique-S": {
+      "mode": "S",
+      "h": 100,
+      "degree": 4,
+      "angle": 25,
+      "beam": true,
+      "layered": false,
+      "layer": 0,
+      "incident": 0.17413214759158932,
+      "incident_control_difference": 0.00027285034995580527,
+      "free_reflection": 1.1804498024739292,
+      "residual_reflection": 0.5253869848585283,
+      "reflection_ratio": 0.44507355057152614,
+      "suppression_db": -7.031364276207277,
+      "reflected_waveform_ratio": 0.4043801662857846,
+      "interior_field_ratio": 0.2111378169126135,
+      "interior_field_error_rms": 0.011021884187393343,
+      "free_field_error_rms": 0.05220232144370007,
+      "reflected_waveform_rms": 0.027904958426072015,
+      "free_arrival_error": -0.007222222222222241,
+      "reference_incident_time": 0.629,
+      "provenance": {
+        "free": {
+          "dt": 0.001,
+          "safe_dt": 0.0028970300434057556,
+          "mesh": {
+            "lower": [
+              0.0,
+              -4800.0
+            ],
+            "upper": [
+              2400.0,
+              4800.0
+            ],
+            "cells": [
+              24,
+              96
+            ],
+            "diagonal": "right"
+          },
+          "material": {
+            "density": 2400.0,
+            "vp": 3200.0,
+            "vs": 1800.0,
+            "lambda": null,
+            "mu": null
+          },
+          "receiver": [
+            1856.21532777801,
+            253.57095704441966
+          ],
+          "center": [
+            949.9075407413602,
+            -676.1892187851191
+          ],
+          "degree": 4,
+          "mode": "S",
+          "angle": 25,
+          "beam": true,
+          "frequency": 8.0,
+          "transverse_width": 400.0,
+          "longitudinal_width": 71.6197243913529,
+          "direction": [
+            0.9063077870366499,
+            0.42261826174069944
+          ],
+          "boundaries": {
+            "left": "free",
+            "right": "free",
+            "lower": "free",
+            "upper": "free"
+          },
+          "duration": 1.323
+        },
+        "absorbing": {
+          "dt": 0.001,
+          "safe_dt": 0.0028970300434057556,
+          "mesh": {
+            "lower": [
+              0.0,
+              -4800.0
+            ],
+            "upper": [
+              2400.0,
+              4800.0
+            ],
+            "cells": [
+              24,
+              96
+            ],
+            "diagonal": "right"
+          },
+          "material": {
+            "density": 2400.0,
+            "vp": 3200.0,
+            "vs": 1800.0,
+            "lambda": null,
+            "mu": null
+          },
+          "receiver": [
+            1856.21532777801,
+            253.57095704441966
+          ],
+          "center": [
+            949.9075407413602,
+            -676.1892187851191
+          ],
+          "degree": 4,
+          "mode": "S",
+          "angle": 25,
+          "beam": true,
+          "frequency": 8.0,
+          "transverse_width": 400.0,
+          "longitudinal_width": 71.6197243913529,
+          "direction": [
+            0.9063077870366499,
+            0.42261826174069944
+          ],
+          "boundaries": {
+            "left": "free",
+            "right": "absorbing",
+            "lower": "free",
+            "upper": "free"
+          },
+          "duration": 1.323
+        },
+        "reference": {
+          "dt": 0.001,
+          "safe_dt": 0.0028970300434057556,
+          "mesh": {
+            "lower": [
+              0.0,
+              -4800.0
+            ],
+            "upper": [
+              4800.0,
+              4800.0
+            ],
+            "cells": [
+              48,
+              96
+            ],
+            "diagonal": "right"
+          },
+          "material": {
+            "density": 2400.0,
+            "vp": 3200.0,
+            "vs": 1800.0,
+            "lambda": null,
+            "mu": null
+          },
+          "receiver": [
+            1856.21532777801,
+            253.57095704441966
+          ],
+          "center": [
+            949.9075407413602,
+            -676.1892187851191
+          ],
+          "degree": 4,
+          "mode": "S",
+          "angle": 25,
+          "beam": true,
+          "frequency": 8.0,
+          "transverse_width": 400.0,
+          "longitudinal_width": 71.6197243913529,
+          "direction": [
+            0.9063077870366499,
+            0.42261826174069944
+          ],
+          "boundaries": {
+            "left": "free",
+            "right": "free",
+            "lower": "free",
+            "upper": "free"
+          },
+          "duration": 1.323
+        }
+      }
+    },
+    "operator-p1-left-right-lower-layeredFalse": {
+      "degree": 1,
+      "sides": [
+        "left",
+        "right",
+        "lower"
+      ],
+      "layered": false,
+      "reference_error": 2.257816243097602e-16,
+      "offdiagonal": 0.0
+    },
+    "operator-p1-left-right-lower-layeredTrue": {
+      "degree": 1,
+      "sides": [
+        "left",
+        "right",
+        "lower"
+      ],
+      "layered": true,
+      "reference_error": 1.8366136975948936e-16,
+      "offdiagonal": 0.0
+    },
+    "operator-p1-left-right-lower-upper-layeredFalse": {
+      "degree": 1,
+      "sides": [
+        "left",
+        "right",
+        "lower",
+        "upper"
+      ],
+      "layered": false,
+      "reference_error": 2.171275374448422e-16,
+      "offdiagonal": 0.0
+    },
+    "operator-p1-left-right-lower-upper-layeredTrue": {
+      "degree": 1,
+      "sides": [
+        "left",
+        "right",
+        "lower",
+        "upper"
+      ],
+      "layered": true,
+      "reference_error": 1.7181751840394832e-16,
+      "offdiagonal": 0.0
+    },
+    "operator-p1-right-layeredFalse": {
+      "degree": 1,
+      "sides": [
+        "right"
+      ],
+      "layered": false,
+      "reference_error": 2.3518652587462287e-16,
+      "offdiagonal": 0.0
+    },
+    "operator-p1-right-layeredTrue": {
+      "degree": 1,
+      "sides": [
+        "right"
+      ],
+      "layered": true,
+      "reference_error": 2.1000896067426619e-16,
+      "offdiagonal": 0.0
+    },
+    "operator-p1-right-lower-layeredFalse": {
+      "degree": 1,
+      "sides": [
+        "right",
+        "lower"
+      ],
+      "layered": false,
+      "reference_error": 2.228442913634777e-16,
+      "offdiagonal": 0.0
+    },
+    "operator-p1-right-lower-layeredTrue": {
+      "degree": 1,
+      "sides": [
+        "right",
+        "lower"
+      ],
+      "layered": true,
+      "reference_error": 1.8534130377524718e-16,
+      "offdiagonal": 0.0
+    },
+    "operator-p2-left-right-lower-layeredFalse": {
+      "degree": 2,
+      "sides": [
+        "left",
+        "right",
+        "lower"
+      ],
+      "layered": false,
+      "reference_error": 5.256797390399322e-16,
+      "offdiagonal": 0.0
+    },
+    "operator-p2-left-right-lower-layeredTrue": {
+      "degree": 2,
+      "sides": [
+        "left",
+        "right",
+        "lower"
+      ],
+      "layered": true,
+      "reference_error": 5.038196280997056e-16,
+      "offdiagonal": 0.0
+    },
+    "operator-p2-left-right-lower-upper-layeredFalse": {
+      "degree": 2,
+      "sides": [
+        "left",
+        "right",
+        "lower",
+        "upper"
+      ],
+      "layered": false,
+      "reference_error": 5.341998499161505e-16,
+      "offdiagonal": 0.0
+    },
+    "operator-p2-left-right-lower-upper-layeredTrue": {
+      "degree": 2,
+      "sides": [
+        "left",
+        "right",
+        "lower",
+        "upper"
+      ],
+      "layered": true,
+      "reference_error": 4.934547528902153e-16,
+      "offdiagonal": 0.0
+    },
+    "operator-p2-right-layeredFalse": {
+      "degree": 2,
+      "sides": [
+        "right"
+      ],
+      "layered": false,
+      "reference_error": 5.031884950255885e-16,
+      "offdiagonal": 0.0
+    },
+    "operator-p2-right-layeredTrue": {
+      "degree": 2,
+      "sides": [
+        "right"
+      ],
+      "layered": true,
+      "reference_error": 5.195542488064777e-16,
+      "offdiagonal": 0.0
+    },
+    "operator-p2-right-lower-layeredFalse": {
+      "degree": 2,
+      "sides": [
+        "right",
+        "lower"
+      ],
+      "layered": false,
+      "reference_error": 5.391838957219197e-16,
+      "offdiagonal": 0.0
+    },
+    "operator-p2-right-lower-layeredTrue": {
+      "degree": 2,
+      "sides": [
+        "right",
+        "lower"
+      ],
+      "layered": true,
+      "reference_error": 4.941670421963163e-16,
+      "offdiagonal": 0.0
+    },
+    "operator-p4-left-right-lower-layeredFalse": {
+      "degree": 4,
+      "sides": [
+        "left",
+        "right",
+        "lower"
+      ],
+      "layered": false,
+      "reference_error": 8.460335786389591e-15,
+      "offdiagonal": 0.0
+    },
+    "operator-p4-left-right-lower-layeredTrue": {
+      "degree": 4,
+      "sides": [
+        "left",
+        "right",
+        "lower"
+      ],
+      "layered": true,
+      "reference_error": 8.473553255680051e-15,
+      "offdiagonal": 0.0
+    },
+    "operator-p4-left-right-lower-upper-layeredFalse": {
+      "degree": 4,
+      "sides": [
+        "left",
+        "right",
+        "lower",
+        "upper"
+      ],
+      "layered": false,
+      "reference_error": 8.448183982138488e-15,
+      "offdiagonal": 0.0
+    },
+    "operator-p4-left-right-lower-upper-layeredTrue": {
+      "degree": 4,
+      "sides": [
+        "left",
+        "right",
+        "lower",
+        "upper"
+      ],
+      "layered": true,
+      "reference_error": 8.465993756847217e-15,
+      "offdiagonal": 0.0
+    },
+    "operator-p4-right-layeredFalse": {
+      "degree": 4,
+      "sides": [
+        "right"
+      ],
+      "layered": false,
+      "reference_error": 8.48201819747229e-15,
+      "offdiagonal": 0.0
+    },
+    "operator-p4-right-layeredTrue": {
+      "degree": 4,
+      "sides": [
+        "right"
+      ],
+      "layered": true,
+      "reference_error": 8.481768785740426e-15,
+      "offdiagonal": 0.0
+    },
+    "operator-p4-right-lower-layeredFalse": {
+      "degree": 4,
+      "sides": [
+        "right",
+        "lower"
+      ],
+      "layered": false,
+      "reference_error": 8.461185744067938e-15,
+      "offdiagonal": 0.0
+    },
+    "operator-p4-right-lower-layeredTrue": {
+      "degree": 4,
+      "sides": [
+        "right",
+        "lower"
+      ],
+      "layered": true,
+      "reference_error": 8.473705380275236e-15,
+      "offdiagonal": 0.0
+    },
+    "operator-p6-left-right-lower-layeredFalse": {
+      "degree": 6,
+      "sides": [
+        "left",
+        "right",
+        "lower"
+      ],
+      "layered": false,
+      "reference_error": 1.39790709073277e-13,
+      "offdiagonal": 0.0
+    },
+    "operator-p6-left-right-lower-layeredTrue": {
+      "degree": 6,
+      "sides": [
+        "left",
+        "right",
+        "lower"
+      ],
+      "layered": true,
+      "reference_error": 1.398383747871502e-13,
+      "offdiagonal": 0.0
+    },
+    "operator-p6-left-right-lower-upper-layeredFalse": {
+      "degree": 6,
+      "sides": [
+        "left",
+        "right",
+        "lower",
+        "upper"
+      ],
+      "layered": false,
+      "reference_error": 1.3976886254719478e-13,
+      "offdiagonal": 0.0
+    },
+    "operator-p6-left-right-lower-upper-layeredTrue": {
+      "degree": 6,
+      "sides": [
+        "left",
+        "right",
+        "lower",
+        "upper"
+      ],
+      "layered": true,
+      "reference_error": 1.3981655372213745e-13,
+      "offdiagonal": 0.0
+    },
+    "operator-p6-right-layeredFalse": {
+      "degree": 6,
+      "sides": [
+        "right"
+      ],
+      "layered": false,
+      "reference_error": 1.3986161884540537e-13,
+      "offdiagonal": 0.0
+    },
+    "operator-p6-right-layeredTrue": {
+      "degree": 6,
+      "sides": [
+        "right"
+      ],
+      "layered": true,
+      "reference_error": 1.398776389556106e-13,
+      "offdiagonal": 0.0
+    },
+    "operator-p6-right-lower-layeredFalse": {
+      "degree": 6,
+      "sides": [
+        "right",
+        "lower"
+      ],
+      "layered": false,
+      "reference_error": 1.3983254780613145e-13,
+      "offdiagonal": 0.0
+    },
+    "operator-p6-right-lower-layeredTrue": {
+      "degree": 6,
+      "sides": [
+        "right",
+        "lower"
+      ],
+      "layered": true,
+      "reference_error": 1.3985340219086383e-13,
+      "offdiagonal": 0.0
+    },
+    "source": {
+      "late_error_ratio": 0.11645135984928703,
+      "early_error": 0.00032322127162638794,
+      "direct_window_centers": {
+        "P": 0.51346875,
+        "SV": 0.6795
+      },
+      "direct_component_peaks": {
+        "P": 0.00019825740149261798,
+        "SV": 0.00048529547635684075
+      },
+      "shape": [
+        1801,
+        2,
+        2
+      ],
+      "config": {
+        "domain": {
+          "lower": [
+            -1200.0,
+            -2400.0
+          ],
+          "upper": [
+            1200.0,
+            0.0
+          ],
+          "cells": [
+            24,
+            24
+          ],
+          "diagonal": "right"
+        },
+        "material": {
+          "density": 2400.0,
+          "vp": 3200.0,
+          "vs": 1800.0,
+          "lambda": null,
+          "mu": null
+        },
+        "constraints": [],
+        "boundaries": {
+          "left": "absorbing",
+          "right": "absorbing",
+          "lower": "absorbing",
+          "upper": "free"
+        },
+        "discretization": {
+          "type": "quad_gll",
+          "degree": 4
+        },
+        "time": {
+          "dt": 0.001,
+          "duration": 1.8,
+          "safety": 0.9,
+          "integrator": "central_difference"
+        },
+        "source": {
+          "type": "force",
+          "position": [
+            17.3,
+            -1000.7
+          ],
+          "direction": [
+            1.0,
+            1.0
+          ],
+          "wavelet": {
+            "type": "ricker",
+            "f0": 5.0,
+            "amplitude": 100000000.0,
+            "time_shift": 0.3
+          }
+        },
+        "receivers": [
+          {
+            "name": "far",
+            "position": [
+              700.4,
+              -1000.7
+            ]
+          },
+          {
+            "name": "near",
+            "position": [
+              400.4,
+              -1050.2
+            ]
+          }
+        ]
+      }
+    },
+    "triangle-P": {
+      "mode": "P",
+      "h": 20,
+      "degree": 0,
+      "angle": 0,
+      "beam": false,
+      "layered": false,
+      "layer": 0,
+      "incident": 0.995554432038393,
+      "incident_control_difference": 2.2899537370959156e-14,
+      "free_reflection": 0.9747074151919606,
+      "residual_reflection": 0.008695404595703744,
+      "reflection_ratio": 0.00892104077610947,
+      "suppression_db": -40.99168951123615,
+      "reflected_waveform_ratio": 0.009225204804436529,
+      "interior_field_ratio": 0.009147794205864122,
+      "interior_field_error_rms": 0.002135761057476053,
+      "free_field_error_rms": 0.23347279239261196,
+      "reflected_waveform_rms": 0.002846537481681212,
+      "free_arrival_error": 0.006500000000000061,
+      "reference_incident_time": 0.3155,
+      "provenance": {
+        "free": {
+          "dt": 0.0005,
+          "safe_dt": 0.0057070214486784395,
+          "mesh": {
+            "lower": [
+              0.0,
+              -12000.0
+            ],
+            "upper": [
+              2400.0,
+              12000.0
+            ],
+            "cells": [
+              120,
+              24
+            ],
+            "diagonal": "right"
+          },
+          "material": {
+            "density": 2400.0,
+            "vp": 3200.0,
+            "vs": 1800.0,
+            "lambda": null,
+            "mu": null
+          },
+          "receiver": [
+            1800.0,
+            0.0
+          ],
+          "center": [
+            800.0,
+            0.0
+          ],
+          "degree": 0,
+          "mode": "P",
+          "angle": 0,
+          "beam": false,
+          "frequency": 8.0,
+          "transverse_width": null,
+          "longitudinal_width": 127.32395447351627,
+          "direction": [
+            1.0,
+            0.0
+          ],
+          "boundaries": {
+            "left": "free",
+            "right": "free",
+            "lower": "free",
+            "upper": "free"
+          },
+          "duration": 0.7875
+        },
+        "absorbing": {
+          "dt": 0.0005,
+          "safe_dt": 0.0057070214486784395,
+          "mesh": {
+            "lower": [
+              0.0,
+              -12000.0
+            ],
+            "upper": [
+              2400.0,
+              12000.0
+            ],
+            "cells": [
+              120,
+              24
+            ],
+            "diagonal": "right"
+          },
+          "material": {
+            "density": 2400.0,
+            "vp": 3200.0,
+            "vs": 1800.0,
+            "lambda": null,
+            "mu": null
+          },
+          "receiver": [
+            1800.0,
+            0.0
+          ],
+          "center": [
+            800.0,
+            0.0
+          ],
+          "degree": 0,
+          "mode": "P",
+          "angle": 0,
+          "beam": false,
+          "frequency": 8.0,
+          "transverse_width": null,
+          "longitudinal_width": 127.32395447351627,
+          "direction": [
+            1.0,
+            0.0
+          ],
+          "boundaries": {
+            "left": "free",
+            "right": "absorbing",
+            "lower": "free",
+            "upper": "free"
+          },
+          "duration": 0.7875
+        },
+        "reference": {
+          "dt": 0.0005,
+          "safe_dt": 0.0057070214486784395,
+          "mesh": {
+            "lower": [
+              0.0,
+              -12000.0
+            ],
+            "upper": [
+              4800.0,
+              12000.0
+            ],
+            "cells": [
+              240,
+              24
+            ],
+            "diagonal": "right"
+          },
+          "material": {
+            "density": 2400.0,
+            "vp": 3200.0,
+            "vs": 1800.0,
+            "lambda": null,
+            "mu": null
+          },
+          "receiver": [
+            1800.0,
+            0.0
+          ],
+          "center": [
+            800.0,
+            0.0
+          ],
+          "degree": 0,
+          "mode": "P",
+          "angle": 0,
+          "beam": false,
+          "frequency": 8.0,
+          "transverse_width": null,
+          "longitudinal_width": 127.32395447351627,
+          "direction": [
+            1.0,
+            0.0
+          ],
+          "boundaries": {
+            "left": "free",
+            "right": "free",
+            "lower": "free",
+            "upper": "free"
+          },
+          "duration": 0.7875
+        }
+      }
+    },
+    "triangle-S": {
+      "mode": "S",
+      "h": 20,
+      "degree": 0,
+      "angle": 0,
+      "beam": false,
+      "layered": false,
+      "layer": 0,
+      "incident": 0.8674570935681387,
+      "incident_control_difference": 1.3985739270245201e-18,
+      "free_reflection": 0.8874003482014289,
+      "residual_reflection": 0.0243266780006792,
+      "reflection_ratio": 0.027413419489843775,
+      "suppression_db": -31.240735762800465,
+      "reflected_waveform_ratio": 0.022322302546613347,
+      "interior_field_ratio": 0.030872161536635384,
+      "interior_field_error_rms": 0.0042468739381737635,
+      "free_field_error_rms": 0.1375632196383166,
+      "reflected_waveform_rms": 0.006412427556432383,
+      "free_arrival_error": 0.08377777777777773,
+      "reference_incident_time": 0.5705,
+      "provenance": {
+        "free": {
+          "dt": 0.0005,
+          "safe_dt": 0.0057070214486784395,
+          "mesh": {
+            "lower": [
+              0.0,
+              -12000.0
+            ],
+            "upper": [
+              2400.0,
+              12000.0
+            ],
+            "cells": [
+              120,
+              24
+            ],
+            "diagonal": "right"
+          },
+          "material": {
+            "density": 2400.0,
+            "vp": 3200.0,
+            "vs": 1800.0,
+            "lambda": null,
+            "mu": null
+          },
+          "receiver": [
+            1800.0,
+            0.0
+          ],
+          "center": [
+            800.0,
+            0.0
+          ],
+          "degree": 0,
+          "mode": "S",
+          "angle": 0,
+          "beam": false,
+          "frequency": 8.0,
+          "transverse_width": null,
+          "longitudinal_width": 71.6197243913529,
+          "direction": [
+            1.0,
+            0.0
+          ],
+          "boundaries": {
+            "left": "free",
+            "right": "free",
+            "lower": "free",
+            "upper": "free"
+          },
+          "duration": 1.3225
+        },
+        "absorbing": {
+          "dt": 0.0005,
+          "safe_dt": 0.0057070214486784395,
+          "mesh": {
+            "lower": [
+              0.0,
+              -12000.0
+            ],
+            "upper": [
+              2400.0,
+              12000.0
+            ],
+            "cells": [
+              120,
+              24
+            ],
+            "diagonal": "right"
+          },
+          "material": {
+            "density": 2400.0,
+            "vp": 3200.0,
+            "vs": 1800.0,
+            "lambda": null,
+            "mu": null
+          },
+          "receiver": [
+            1800.0,
+            0.0
+          ],
+          "center": [
+            800.0,
+            0.0
+          ],
+          "degree": 0,
+          "mode": "S",
+          "angle": 0,
+          "beam": false,
+          "frequency": 8.0,
+          "transverse_width": null,
+          "longitudinal_width": 71.6197243913529,
+          "direction": [
+            1.0,
+            0.0
+          ],
+          "boundaries": {
+            "left": "free",
+            "right": "absorbing",
+            "lower": "free",
+            "upper": "free"
+          },
+          "duration": 1.3225
+        },
+        "reference": {
+          "dt": 0.0005,
+          "safe_dt": 0.0057070214486784395,
+          "mesh": {
+            "lower": [
+              0.0,
+              -12000.0
+            ],
+            "upper": [
+              4800.0,
+              12000.0
+            ],
+            "cells": [
+              240,
+              24
+            ],
+            "diagonal": "right"
+          },
+          "material": {
+            "density": 2400.0,
+            "vp": 3200.0,
+            "vs": 1800.0,
+            "lambda": null,
+            "mu": null
+          },
+          "receiver": [
+            1800.0,
+            0.0
+          ],
+          "center": [
+            800.0,
+            0.0
+          ],
+          "degree": 0,
+          "mode": "S",
+          "angle": 0,
+          "beam": false,
+          "frequency": 8.0,
+          "transverse_width": null,
+          "longitudinal_width": 71.6197243913529,
+          "direction": [
+            1.0,
+            0.0
+          ],
+          "boundaries": {
+            "left": "free",
+            "right": "free",
+            "lower": "free",
+            "upper": "free"
+          },
+          "duration": 1.3225
+        }
+      }
+    }
+  }
+}
