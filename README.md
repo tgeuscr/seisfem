@@ -140,6 +140,9 @@ element edge; see the [heterogeneous SEM audit](docs/validation/2d_gll_sem_heter
 Material properties are constant per element, with no nodal averaging.
 For a free top and absorbing sides/bottom, run `python examples/2d/gll_sem_absorbing.py`;
 see the [SEM absorber validation](docs/validation/2d_gll_sem_absorbing.md).
+The [oblique SEM interface audit](docs/validation/2d_gll_sem_oblique_interface.md)
+checks signed P/SV conversion, Snell angles and elastic flux against an
+independent Zoeppritz reference, including reverse-material and MPI controls.
 
 ## 1D scientific contract
 

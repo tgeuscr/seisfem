@@ -1,0 +1,115 @@
+Oblique isotropic GLL SEM interface validation
+Baseline: 18be5ea031c42ecd6f138dfb536ef0bd771f5c04
+Branch: feature/2d-gll-sem
+Production changes: none. Existing numerical acceptance thresholds: unchanged.
+
+All numerical commands use OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1.
+Recorded experiments use SEISFEM_SEM_REPORT_DIR=/tmp/sem-scatter.
+
+Recovery preserved the existing implementation, completed experiment arrays,
+and all pre-existing user files. No merge, tag, push, or history rewrite.
+
+Reference/continuum diagnostic tests:
+  python -m pytest -q tests/sem2d/scattering/test_reference.py \
+    tests/sem2d/scattering/test_continuum.py
+  30 passed in 5.90s.
+  Includes signed recovery, independent legacy-reference comparison, flux,
+  normal/identical limits, Jacobian, blind angle recovery, and a test proving
+  the frequency filter retains a deliberately injected polarization error.
+
+Development SEM sweep:
+  python -m pytest -ra tests/sem2d
+  164 passed, 1 failed in 5810.36s (before the final diagnostic/refinement update).
+  The reverse-SV h=200 m case failed complex-amplitude/closure acceptance.
+  Its measured closure residual was 1.337303931e-2. This result is retained.
+  Resolution was increased to h=150 m; the acceptance thresholds were not relaxed.
+  The completed fine experiment has closure residual 6.623268276e-4.
+  A separate raw-polarization overlap was also found in the exact continuum
+  packet. It is retained as raw_polarization_overlap. Target-frequency isolation
+  uses u and v without projecting out polarization errors; the independent
+  1%-error injection test verifies that distinction.
+
+Relevant existing regression (separate execution):
+  python -m pytest -ra tests/plane_strain tests/absorbing2d \
+    tests/heterogeneous2d tests/heterogeneous_absorbing2d tests/oblique2d \
+    tests/vti2d tests/vti_interface2d
+  283 passed in 4376.73s.
+
+Archived compatibility audit:
+  python -m tests.sem2d.scattering.compatibility /tmp/sem-scatter
+  sem-free: 11 arrays bitwise identical
+  sem-layered: 11 arrays bitwise identical
+  tri-free: 8 arrays bitwise identical
+  tri-layered: 10 arrays bitwise identical
+  The runner uses git archive of baseline src/ into a temporary directory and
+  PYTHONPATH to select archived/current code without switching the checkout.
+
+Additional physical controls:
+  mpiexec -n 4 python -m tests.sem2d.scattering.experiment \
+    /tmp/sem-scatter/scattering-triangle-P.json --mode P --h 25 --degree 0
+  python -m tests.sem2d.scattering.experiment \
+    /tmp/sem-scatter/scattering-reverse-S-coarse.json --mode S --reverse --h 200
+  The triangular control is illustrative, not an equal-work benchmark.
+  The main pytest suite regenerates all accepted SEM refinements, reverse
+  cases, larger-box/zero-contrast controls and 1/2/4-rank equivalence checks.
+
+Report generation:
+  python -m tests.sem2d.scattering.report /tmp/sem-scatter \
+    docs/validation/2d_gll_sem_oblique_interface_measurements.json
+  Four generated figures were inspected: P/S field/rays, receiver waveforms,
+  and complex coefficient refinement. Raw large arrays remain outside git.
+
+Quality commands:
+  ruff check src tests examples docs
+  ruff format --check src tests examples docs
+  pre-commit run --all-files
+  git diff --check
+  git diff --cached --check
+  Passed; 200 Python files formatted. Final checks repeat after report refresh.
+
+Final complete regression:
+  OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 \
+    SEISFEM_SEM_REPORT_DIR=/tmp/sem-scatter python -m pytest -ra
+  588 passed in 5838.96s (1:37:18)
+  Includes all 166 SEM tests, all 37 new scattering tests, and all 283
+  relevant existing 2D tests. No skips or xfails. The successful full run
+  supersedes the failed development SEM sweep without repeating expensive
+  experiments a third time. No numerical acceptance thresholds were weakened.
+
+Final report-generation check:
+  Removed one extra trailing blank line from the report renderer output.
+  No numerical code changed after the successful full regression.
+  Re-generated JSON, tables and figures successfully.
+  Ruff check: passed.
+  Ruff format --check: 200 files already formatted.
+  pre-commit run --all-files: both hooks passed.
+  git diff --check and git diff --cached --check: passed.
+
+Intentional changed files:
+  README.md
+  docs/validation/2d_gll_sem.md
+  docs/validation/2d_gll_sem_heterogeneous.md
+  docs/validation/2d_gll_sem_oblique_interface.md
+  docs/validation/2d_gll_sem_oblique_interface_checks.txt
+  docs/validation/2d_gll_sem_oblique_interface_measurements.json
+  docs/validation/2d_gll_sem_oblique_P.png
+  docs/validation/2d_gll_sem_oblique_S.png
+  docs/validation/2d_gll_sem_oblique_refinement.png
+  docs/validation/2d_gll_sem_oblique_waveforms.png
+  tests/sem2d/scattering/__init__.py
+  tests/sem2d/scattering/compatibility.py
+  tests/sem2d/scattering/conftest.py
+  tests/sem2d/scattering/diagnostics.py
+  tests/sem2d/scattering/experiment.py
+  tests/sem2d/scattering/packets.py
+  tests/sem2d/scattering/reference.py
+  tests/sem2d/scattering/report.py
+  tests/sem2d/scattering/tables.py
+  tests/sem2d/scattering/test_continuum.py
+  tests/sem2d/scattering/test_controls.py
+  tests/sem2d/scattering/test_mpi.py
+  tests/sem2d/scattering/test_reference.py
+  tests/sem2d/scattering/test_scattering.py
+
+Pre-existing untracked plotting/run scripts, runs/, scripts/ and
+seisfem_document_showcase/ were left untouched and excluded from the commit.

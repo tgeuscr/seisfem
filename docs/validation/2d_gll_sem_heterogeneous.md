@@ -10,6 +10,9 @@ scope; no oblique SEM scattering claim is made here.
 
 The subsequent [absorber milestone](2d_gll_sem_absorbing.md) adds local elastic
 absorbing boundaries without changing the free-boundary evidence below.
+The later [oblique interface audit](2d_gll_sem_oblique_interface.md) validates
+P/SV conversion at this aligned interface using an independent Zoeppritz
+reference; the normal-incidence results in this report remain unchanged.
 
 ## Configuration and assignment
 

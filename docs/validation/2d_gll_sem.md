@@ -13,6 +13,10 @@ The correction and equivalence measurements are documented below. The original
 research tables, plots and timing JSON remain the historical results from
 `5023ae3`; they are not new performance measurements of factorized evaluation.
 
+The subsequent [oblique interface validation](2d_gll_sem_oblique_interface.md)
+tests signed P/SV scattering and elastic flux for aligned isotropic layers.
+It uses the existing operators without production changes.
+
 The evidence supports substantially better wave accuracy per DOF in this
 smooth homogeneous regime. It does **not** establish universal speed superiority
 or a universal optimal order. Higher order increases stencil density and usually
